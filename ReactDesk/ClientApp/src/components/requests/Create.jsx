@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export default class Create extends Component{
+export default class CreateRequest extends Component{
     
     render(){
         return(

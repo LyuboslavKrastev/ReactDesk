@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router';
-import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
 import { Register } from './components/users/Register';
 import { Login } from './components/users/Login';
 import { history } from './helpers/history';
@@ -11,11 +8,12 @@ import { Role } from './helpers/role';
 import { authenticationService } from './services/authentication.service';
 import { PrivateRoute } from './components/routing/PrivateRouter';
 import { Router } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import Admin from './components/admin/Admin';
 import Navbar from './components/Navbar';
-import Create from './components/requests/Create';
 import RequestsTable from './components/requests/RequestsTable';
+import SolutionsTables from './components/solutions/SolutionsTables';
+import CreateRequest from './components/requests/Create';
+import CreateSolution from './components/solutions/Create';
 
 
 export default class App extends Component {
@@ -53,8 +51,11 @@ export default class App extends Component {
                             <div>
                                 <Route exact path="/" component={Home} />
                                 <PrivateRoute path="/admin" roles={[Role.Admin]} component={Admin} />
-                                <PrivateRoute path="/requests/create" component={Create} />
-                                <PrivateRoute path="/requests" component={RequestsTable} />
+                                <PrivateRoute path="/requests/create" component={CreateRequest} />
+                                <PrivateRoute exact path="/requests" component={RequestsTable} />
+                                <PrivateRoute exact path="/solutions" component={SolutionsTables} />
+                                <PrivateRoute path="/solutions/create" component={CreateSolution} />
+
 
 
                                 <Route path="/login" component={Login} />

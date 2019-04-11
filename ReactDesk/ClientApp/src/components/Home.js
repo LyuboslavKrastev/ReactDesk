@@ -22,7 +22,7 @@ export class Home extends Component {
         if (this.state.currentUser) {
             return (
                 <div class="col-md-6">
-                    <h4 class="text-center">Your Requests</h4>
+                    <h1 class="text-center">To be implemented</h1>
                     <div class="chart-container">
                         <canvas id="chart"></canvas>
                     </div>
