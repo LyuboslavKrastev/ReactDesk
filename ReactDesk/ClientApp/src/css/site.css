@@ -60,6 +60,15 @@ body {
     background-color: #C6E2FF;
 }
 
+table {
+    table-layout: fixed;
+  }
+
+.searchInput {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .table-striped > tbody > tr:nth-child(2n) > td, .table-striped > tbody > tr:nth-child(2n) > th {
     background-color: white;
 }

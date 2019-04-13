@@ -58,6 +58,10 @@ namespace ReactDesk
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUserRoleService, UserRoleService>();
+
+
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

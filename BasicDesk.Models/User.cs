@@ -28,8 +28,8 @@ namespace BasicDesk.Data.Models
         [Required]
         public byte[] PasswordSalt { get; set; }
 
-        public ICollection<Request> Requests { get; set; }
+        public ICollection<Request> Requests { get; set; } = new List<Request>();
 
-        public IEnumerable<UserRole> Roles { get; set; }
+        public ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
     }
 }

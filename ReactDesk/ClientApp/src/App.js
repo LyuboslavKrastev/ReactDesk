@@ -10,7 +10,7 @@ import { PrivateRoute } from './components/routing/PrivateRouter';
 import { Router } from 'react-router-dom'
 import Admin from './components/admin/Admin';
 import Navbar from './components/Navbar';
-import RequestsTable from './components/requests/RequestsTable';
+import RequestsTable from './components/requests/table/RequestsTable';
 import SolutionsTables from './components/solutions/SolutionsTables';
 import CreateRequest from './components/requests/Create';
 import CreateSolution from './components/solutions/Create';
@@ -40,7 +40,6 @@ export default class App extends Component {
   }
 
   render() {
-    const { currentUser, isAdmin } = this.state;
     return (
         <Router history={history}>
             <div>
@@ -51,12 +50,13 @@ export default class App extends Component {
                             <div>
                                 <Route exact path="/" component={Home} />
                                 <PrivateRoute path="/admin" roles={[Role.Admin]} component={Admin} />
-                                <PrivateRoute path="/requests/create" component={CreateRequest} />
-                                <PrivateRoute exact path="/requests" component={RequestsTable} />
-                                <PrivateRoute exact path="/solutions" component={SolutionsTables} />
+                                <Route path="/requests/create" component={CreateRequest} />
+                                {/* <PrivateRoute path="/requests/create" component={CreateRequest} /> */}
+                                <Route exact path="/requests" component={RequestsTable} />
+                                {/* <PrivateRoute exact path="/requests" component={RequestsTable} /> */}
+                                <Route exact path="/solutions" component={SolutionsTables} />
+                                {/* <PrivateRoute exact path="/solutions" component={SolutionsTables} /> */}
                                 <PrivateRoute path="/solutions/create" component={CreateSolution} />
-
-
 
                                 <Route path="/login" component={Login} />
                                 <Route path="/register" component={Register} />

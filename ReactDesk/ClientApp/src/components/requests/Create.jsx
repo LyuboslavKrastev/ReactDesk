@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 export default class CreateRequest extends Component{
     
@@ -23,7 +24,7 @@ export default class CreateRequest extends Component{
         <br />
         <div className="col-sm-10 col-sm-push-5">
             <input type="submit" value="Create" className="btn btn-success" />
-            <a asp-page="/Index" className="btn btn-danger">Cancel</a>
+            <Link to='/Requests' className="btn btn-danger">Cancel</Link>
         </div>
     </div>
 </form>

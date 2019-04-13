@@ -28,13 +28,15 @@ namespace ReactDesk.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
+        private readonly IUserRoleService userRoleService;
         private readonly AppSettings _appSettings;
 
         public UsersController(
-            IUserService userService,
+            IUserService userService, IUserRoleService userRoleService,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
+            this.userRoleService = userRoleService;
             _appSettings = appSettings.Value;
         }
 
@@ -61,6 +63,8 @@ namespace ReactDesk.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
+            var role = userRoleService.GetRoleByUserId(user.Id);
+
             // return basic user info (without password) and token to store client side
             return Ok(new
             {
@@ -68,7 +72,8 @@ namespace ReactDesk.Controllers
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Token = tokenString
+                Token = tokenString,
+                Role = role.Name,
             });
         }
 
@@ -92,9 +97,19 @@ namespace ReactDesk.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public IActionResult GetAll()
         {
+            string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
+            User user = _userService.GetById(int.Parse(userId));
+
+            Role role = userRoleService.GetRoleByUserId(user.Id);
+
+            if (role.Name != "Admin")
+            {
+                return Unauthorized();
+            }
+
             var users = _userService.GetAll();
             var userDtos = Mapper.Map<IList<UserDTO>>(users);
             return Ok(userDtos);

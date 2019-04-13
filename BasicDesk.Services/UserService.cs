@@ -61,6 +61,26 @@ namespace BasicDesk.Services
             user.PasswordSalt = passwordSalt;
 
             _context.Users.Add(user);
+
+            UserRole userRole;
+            if (!_context.UserRoles.Any())
+            {
+                userRole = new UserRole
+                {
+                    RoleId = _context.Roles.FirstOrDefault(r => r.Name == "Admin").Id,
+                    UserId = user.Id
+                };
+            }
+            else
+            {
+                userRole = new UserRole
+                {
+                    RoleId = _context.Roles.FirstOrDefault(r => r.Name == "User").Id,
+                    UserId = user.Id
+                };
+                
+            }
+            user.Roles.Add(userRole);
             _context.SaveChanges();
 
             return user;

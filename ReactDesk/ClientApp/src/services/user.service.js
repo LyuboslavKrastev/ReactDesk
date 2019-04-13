@@ -8,7 +8,7 @@ export const userService = {
 
 function getAll() {
     const requestOptions = { method: 'GET', headers: authHeader() };
-    return fetch(`api/users`, requestOptions).then(handleResponse);
+    return fetch(`api/users/getall`, requestOptions).then(handleResponse);
 }
 
 function getById(id) {
