@@ -9,8 +9,7 @@ export class Register extends Component {
         super(props);
         this.state = {
             Username: '',
-            FirstName: '',
-            LastName: '',
+            FullName: '',
             Password: '',
             ConfirmPassword: ''
         };
@@ -30,7 +29,6 @@ export class Register extends Component {
         console.log(data)
 
         requester.post("api/users/register", data)
-            .then(data => data.json())
             .then(res => {
                 console.log(res)
             })
@@ -48,12 +46,8 @@ export class Register extends Component {
                             <input name="Username" className="form-control" onChange={this.handleInputChange}/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="FirstName">First Name</label>
-                            <input name="FirstName" className="form-control" onChange={this.handleInputChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="LastName">Last Name</label>
-                            <input name="LastName" className="form-control" onChange={this.handleInputChange}/>
+                            <label htmlFor="FullName">Full Name</label>
+                            <input name="FullName" className="form-control" onChange={this.handleInputChange}/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="Password">Password</label>

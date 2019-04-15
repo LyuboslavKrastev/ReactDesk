@@ -2,6 +2,7 @@ using BasicDesk.Data;
 using BasicDesk.Mapping;
 using BasicDesk.Services;
 using BasicDesk.Services.Interfaces;
+using BasicDesk.Services.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ReactDesk.Helpers;
-using System;
 using System.Text;
 
 namespace ReactDesk
@@ -60,6 +60,14 @@ namespace ReactDesk
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserRoleService, UserRoleService>();
+            services.AddScoped(typeof(DbRepository<>), typeof(DbRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
+            services.AddScoped<ISolutionService, SolutionService>();
+            services.AddScoped<IApprovalService, ApprovalService>();
+            services.AddScoped<ICategoriesService, CategoriesService>();
+            services.AddScoped<IRequestService, RequestService>();
+            services.AddScoped(typeof(AttachmentService<>));
+
 
 
 

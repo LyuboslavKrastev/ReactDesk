@@ -16,7 +16,7 @@ namespace BasicDesk.Services
         {
             this._context = context;
         }
-        public Role GetRoleByUserId(int userId)
+        public Role GetRoleByUserId(string userId)
         {
             var userRole = _context.UserRoles.Where(ur => ur.UserId == userId).FirstOrDefault();
             var role = _context.Roles.FirstOrDefault(r => r.Id == userRole.RoleId);

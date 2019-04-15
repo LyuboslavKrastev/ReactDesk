@@ -71,8 +71,6 @@ namespace BasicDesk.Data.Migrations
 
                     b.Property<string>("AssignedToId");
 
-                    b.Property<int?>("AssignedToId1");
-
                     b.Property<int>("CategoryId");
 
                     b.Property<string>("Description")
@@ -81,7 +79,7 @@ namespace BasicDesk.Data.Migrations
 
                     b.Property<DateTime?>("EndTime");
 
-                    b.Property<int>("RequesterId");
+                    b.Property<string>("RequesterId");
 
                     b.Property<string>("Resolution");
 
@@ -95,7 +93,7 @@ namespace BasicDesk.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedToId1");
+                    b.HasIndex("AssignedToId");
 
                     b.HasIndex("CategoryId");
 
@@ -116,15 +114,11 @@ namespace BasicDesk.Data.Migrations
 
                     b.Property<string>("ApproverId");
 
-                    b.Property<int?>("ApproverId1");
-
                     b.Property<string>("Description");
 
                     b.Property<int>("RequestId");
 
                     b.Property<string>("RequesterId");
-
-                    b.Property<int?>("RequesterId1");
 
                     b.Property<int>("StatusId");
 
@@ -133,11 +127,11 @@ namespace BasicDesk.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApproverId1");
+                    b.HasIndex("ApproverId");
 
                     b.HasIndex("RequestId");
 
-                    b.HasIndex("RequesterId1");
+                    b.HasIndex("RequesterId");
 
                     b.HasIndex("StatusId");
 
@@ -214,8 +208,6 @@ namespace BasicDesk.Data.Migrations
 
                     b.Property<string>("AuthorId");
 
-                    b.Property<int?>("AuthorId1");
-
                     b.Property<DateTime>("CreationTime");
 
                     b.Property<string>("Description")
@@ -230,7 +222,7 @@ namespace BasicDesk.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("RequestId");
 
@@ -287,8 +279,6 @@ namespace BasicDesk.Data.Migrations
 
                     b.Property<string>("AuthorId");
 
-                    b.Property<int?>("AuthorId1");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(20000);
@@ -303,7 +293,7 @@ namespace BasicDesk.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Solutions");
                 });
@@ -333,17 +323,12 @@ namespace BasicDesk.Data.Migrations
 
             modelBuilder.Entity("BasicDesk.Data.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                        .HasMaxLength(150);
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired();
@@ -364,7 +349,7 @@ namespace BasicDesk.Data.Migrations
                 {
                     b.Property<int>("RoleId");
 
-                    b.Property<int>("UserId");
+                    b.Property<string>("UserId");
 
                     b.HasKey("RoleId", "UserId");
 
@@ -385,7 +370,7 @@ namespace BasicDesk.Data.Migrations
                 {
                     b.HasOne("BasicDesk.Data.Models.User", "AssignedTo")
                         .WithMany()
-                        .HasForeignKey("AssignedToId1");
+                        .HasForeignKey("AssignedToId");
 
                     b.HasOne("BasicDesk.Data.Models.Requests.RequestCategory", "Category")
                         .WithMany()
@@ -394,8 +379,7 @@ namespace BasicDesk.Data.Migrations
 
                     b.HasOne("BasicDesk.Data.Models.User", "Requester")
                         .WithMany("Requests")
-                        .HasForeignKey("RequesterId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RequesterId");
 
                     b.HasOne("BasicDesk.Data.Models.Requests.RequestStatus", "Status")
                         .WithMany()
@@ -407,7 +391,7 @@ namespace BasicDesk.Data.Migrations
                 {
                     b.HasOne("BasicDesk.Data.Models.User", "Approver")
                         .WithMany()
-                        .HasForeignKey("ApproverId1");
+                        .HasForeignKey("ApproverId");
 
                     b.HasOne("BasicDesk.Data.Models.Requests.Request", "Request")
                         .WithMany("Approvals")
@@ -416,7 +400,7 @@ namespace BasicDesk.Data.Migrations
 
                     b.HasOne("BasicDesk.Data.Models.User", "Requester")
                         .WithMany()
-                        .HasForeignKey("RequesterId1");
+                        .HasForeignKey("RequesterId");
 
                     b.HasOne("BasicDesk.Data.Models.Requests.ApprovalStatus", "Status")
                         .WithMany()
@@ -444,7 +428,7 @@ namespace BasicDesk.Data.Migrations
                 {
                     b.HasOne("BasicDesk.Data.Models.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId1");
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("BasicDesk.Data.Models.Requests.Request", "Request")
                         .WithMany("Repiles")
@@ -456,7 +440,7 @@ namespace BasicDesk.Data.Migrations
                 {
                     b.HasOne("BasicDesk.Data.Models.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId1");
+                        .HasForeignKey("AuthorId");
                 });
 
             modelBuilder.Entity("BasicDesk.Data.Models.Solution.SolutionAttachment", b =>

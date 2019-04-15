@@ -6,7 +6,7 @@ namespace BasicDesk.Data.Models
 {
     public class UserRole
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public int RoleId { get; set; }
     }

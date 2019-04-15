@@ -40,7 +40,7 @@ namespace BasicDesk.Services
             return _context.Users;
         }
 
-        public User GetById(int id)
+        public User GetById(string id)
         {
             return _context.Users.Find(id);
         }
@@ -101,8 +101,7 @@ namespace BasicDesk.Services
             }
 
             // update user properties
-            user.FirstName = userParam.FirstName;
-            user.LastName = userParam.LastName;
+            user.FullName = userParam.FullName;
             user.Username = userParam.Username;
 
             // update password if it was entered

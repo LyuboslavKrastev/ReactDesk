@@ -1,22 +1,20 @@
 ﻿using BasicDesk.Data.Models.Requests;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BasicDesk.Data.Models
 {
     public class User
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string Id { get; set; }
 
         [Required]
         [MinLength(3)]
-        [MaxLength(50)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [MinLength(3)]
-        [MaxLength(50)]
-        public string LastName { get; set; }
+        [MaxLength(150)]
+        public string FullName { get; set; }
 
         [Required]
         [MinLength(3)]

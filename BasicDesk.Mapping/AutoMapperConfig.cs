@@ -59,13 +59,13 @@ namespace BasicDesk.Mapping
                   .ForMember(s => s.Value, opt => opt.MapFrom(s => s.Id))
                   .ForMember(s => s.Text, opt => opt.MapFrom(s => s.Name));
 
-     //           configuration.CreateMap<Request, RequestListingViewModel>()
-					//.ForMember(r => r.Requester, opt => opt.MapFrom(req => req.Requester.FullName))
-					//.ForMember(r => r.AssignedTo, opt => opt.MapFrom(req => req.AssignedTo.FullName))
-					//.ForMember(r => r.Status, opt => opt.MapFrom(req => req.Status.Name));
+                configuration.CreateMap<Request, RequestListingViewModel>()
+                    .ForMember(r => r.Requester, opt => opt.MapFrom(req => req.Requester.FullName))
+                    .ForMember(r => r.AssignedTo, opt => opt.MapFrom(req => req.AssignedTo.FullName))
+                    .ForMember(r => r.Status, opt => opt.MapFrom(req => req.Status.Name));
 
-     //           configuration.CreateMap<Solution, SolutionListingViewModel>()
-					//.ForMember(r => r.Author, opt => opt.MapFrom(s => s.Author.FullName));
+                //           configuration.CreateMap<Solution, SolutionListingViewModel>()
+                //.ForMember(r => r.Author, opt => opt.MapFrom(s => s.Author.FullName));
 
                 configuration.CreateMap<SolutionCreationBindingModel, Solution>()
 					.ForMember(s => s.Attachments, opt => opt.Ignore());

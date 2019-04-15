@@ -7,7 +7,7 @@ namespace BasicDesk.Services.Interfaces
 {
     public interface IUserRoleService
     {
-        Role GetRoleByUserId(int id);
+        Role GetRoleByUserId(string id);
         User GetUserByRoleId(int id);
     }
 }

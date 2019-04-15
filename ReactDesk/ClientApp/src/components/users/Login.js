@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import requester from '../../helpers/requester'
 import { Link } from 'react-router-dom';
 import { authenticationService } from '../../services/authentication.service'
 

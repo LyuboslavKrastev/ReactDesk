@@ -3,6 +3,7 @@ import SearchBar from './SearchBar'
 import RequestsList from './RequestsList';
 import UpperTable from './UpperTable';
 import sorter from './sorter'
+import { requestService } from '../../../services/requests.service'
 
 const statuses = [
     'All Requests',
@@ -11,52 +12,52 @@ const statuses = [
     'Rejected'
 ]
 
-const requests = [
-    {
-        Id: 1,
-        Subject: 'Req 1',
-        Description: "Description 1",
-        AssignedTo: 'Pesho',
-        Status: statuses[1],
-        Requester: 'ASDAS',
-        StartTime: '020319',
-        EndTime: '050319',
-        Notes: []
-    },
-    {
-        Id: 2,
-        Subject: 'Req 2',
-        Description: "Description 2",
-        AssignedTo: 'Pesho 2',
-        Status: statuses[1],
-        Requester: 'ASDAS',
-        StartTime: '030319',
-        EndTime: '060319',
-        Notes: 'Hi'
-    },
-    {
-        Id: 3,
-        Subject: 'Req 3',
-        Description: "Description 3",
-        AssignedTo: 'Pesho 3',
-        Status: statuses[2],
-        Requester: 'ASDASAAAA',
-        StartTime: '530319',
-        EndTime: '060319',
-        Notes: []
-    },
-    {
-        Id: 4,
-        Subject: 'Req 4',
-        Description: "Description 3",
-        AssignedTo: '',
-        Status: statuses[3],
-        Requester: 'ASDASAAAA',
-        StartTime: '530319',
-        EndTime: '060319',
-        Notes: []
-    }
-]
+//const requests = [
+//    {
+//        Id: 1,
+//        Subject: 'Req 1',
+//        Description: "Description 1",
+//        AssignedTo: 'Pesho',
+//        Status: statuses[1],
+//        Requester: 'ASDAS',
+//        StartTime: '020319',
+//        EndTime: '050319',
+//        Notes: []
+//    },
+//    {
+//        Id: 2,
+//        Subject: 'Req 2',
+//        Description: "Description 2",
+//        AssignedTo: 'Pesho 2',
+//        Status: statuses[1],
+//        Requester: 'ASDAS',
+//        StartTime: '030319',
+//        EndTime: '060319',
+//        Notes: 'Hi'
+//    },
+//    {
+//        Id: 3,
+//        Subject: 'Req 3',
+//        Description: "Description 3",
+//        AssignedTo: 'Pesho 3',
+//        Status: statuses[2],
+//        Requester: 'ASDASAAAA',
+//        StartTime: '530319',
+//        EndTime: '060319',
+//        Notes: []
+//    },
+//    {
+//        Id: 4,
+//        Subject: 'Req 4',
+//        Description: "Description 3",
+//        AssignedTo: '',
+//        Status: statuses[3],
+//        Requester: 'ASDASAAAA',
+//        StartTime: '530319',
+//        EndTime: '060319',
+//        Notes: []
+//    }
+//]
 
 function toggle(event) {
     let isChecked = event.target.checked
@@ -76,7 +77,7 @@ export default class RequestsTable extends Component{
         this.state = {
             idSearch: '',
             creationDateSearch: '',
-            requests: requests,
+            requests: [],
             showSearch: false,
             orderBy: ''
         }
@@ -86,13 +87,13 @@ export default class RequestsTable extends Component{
         let value = event.target.value;
         if(value === 'All Requests'){
             this.setState({
-                requests: requests
+                requests: this.requestService.getAll()
             })
             return;
         }
-        
+        let prevRequests = this.state.requests;
         this.setState({
-            requests: requests.filter(r => r.Status == value)
+            requests: prevRequests.filter(r => r.Status == value)
         })
     }
 
@@ -131,6 +132,14 @@ export default class RequestsTable extends Component{
         this.setState({
             showSearch: !showSearchPrev
         })
+    }
+
+    componentDidMount = () => {
+        requestService.getAll()
+            .then(res => 
+                this.setState({
+                requests: res
+            }))
     }
     
     render(){

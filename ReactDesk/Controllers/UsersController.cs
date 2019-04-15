@@ -70,8 +70,7 @@ namespace ReactDesk.Controllers
             {
                 Id = user.Id,
                 Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                FullName = user.FullName,
                 Token = tokenString,
                 Role = role.Name,
             });
@@ -101,7 +100,7 @@ namespace ReactDesk.Controllers
         public IActionResult GetAll()
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
-            User user = _userService.GetById(int.Parse(userId));
+            User user = _userService.GetById(userId);
 
             Role role = userRoleService.GetRoleByUserId(user.Id);
 
@@ -116,7 +115,7 @@ namespace ReactDesk.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(string id)
         {
             //const currentUser = users.find(x => x.role === role);
             //if (id !== currentUser.id && role !== Role.Admin) return unauthorised();
@@ -126,7 +125,7 @@ namespace ReactDesk.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UserDTO userDto)
+        public IActionResult Update(string id, [FromBody]UserDTO userDto)
         {
             // map dto to entity and set id
             var user = Mapper.Map<User>(userDto);

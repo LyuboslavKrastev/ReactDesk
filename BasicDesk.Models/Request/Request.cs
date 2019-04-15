@@ -33,7 +33,7 @@ namespace BasicDesk.Data.Models.Requests
 
         public DateTime? EndTime { get; set; }
 
-        public int RequesterId { get; set; }
+        public string RequesterId { get; set; }
         public User Requester { get; set; }
 
         public string AssignedToId { get; set; }
