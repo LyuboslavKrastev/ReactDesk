@@ -30,5 +30,5 @@ function createRequest(subject, description, category) {
         },
         body: JSON.stringify({ subject, description, category })
     };
-    return fetch(`api/requests`, requestOptions).then(handleResponse);
+    return fetch(`api/requests`, requestOptions).then(handleResponse).catch(err => { return { error: err }});
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { requestService } from '../../services/requests.service'
+import { NotificationManager } from 'react-notifications';
+
 
 export default class CreateRequest extends Component{
 
@@ -28,7 +30,17 @@ export default class CreateRequest extends Component{
         console.log(data)
 
         requestService.createRequest(data.Subject, data.Description, data.CategoryId)
-            .then(this.props.history.push('/'));
+            .then(res => {
+                if (res) {
+                    NotificationManager.success('Successfully created request' + res.subject)
+                    return this.props.history.push('/')
+                    
+                }
+                else {
+                    console.log(res)
+                    return NotificationManager.error(res.error)
+                }
+            })
     }
     
     render(){

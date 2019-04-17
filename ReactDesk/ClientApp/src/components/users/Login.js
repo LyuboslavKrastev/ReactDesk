@@ -1,6 +1,8 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { authenticationService } from '../../services/authentication.service'
+import {  NotificationManager } from 'react-notifications';
+
 
 export class Login extends Component {
     displayName = Login
@@ -33,7 +35,15 @@ export class Login extends Component {
         console.log(data)
 
         authenticationService.login(data.Username, data.Password)
-            .then(this.props.history.push('/'));
+            .then(res => {
+                if (res.username) {
+                    NotificationManager.success(`Welcome, ${res.username}`)
+                    return this.props.history.push('/');
+                }
+                else {
+                    return NotificationManager.error(res)
+                }
+            })
     }
 
     render() {

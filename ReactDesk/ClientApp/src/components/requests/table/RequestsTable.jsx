@@ -85,10 +85,13 @@ export default class RequestsTable extends Component{
 
     filterRequests = (event) => {
         let value = event.target.value;
+        debugger;
         if(value === 'All Requests'){
-            this.setState({
-                requests: this.requestService.getAll()
-            })
+            requestService.getAll()
+                .then(res =>
+                    this.setState({
+                        requests: res
+                    }))
             return;
         }
         let prevRequests = this.state.requests;
@@ -98,7 +101,8 @@ export default class RequestsTable extends Component{
     }
 
     orderRequests = (event) => {
-        let value = event.target.text
+        debugger
+        let value = event.target.text.toLowerCase()
         value = value.replace(/\s/g, ''); // remove spaces
 
         let sorted;

@@ -21,12 +21,14 @@ function login(username, password) {
     return fetch(`api/users/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
+            debugger
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('currentUser', JSON.stringify(user));
             currentUserSubject.next(user);
 
             return user;
-        });
+        })
+        .catch(err => err)
 }
 
 function logout() {

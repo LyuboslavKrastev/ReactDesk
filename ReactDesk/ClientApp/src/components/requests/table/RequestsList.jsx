@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 export default class RequestsList extends Component{
 
     render() {
-        console.log(this.props.requests)
+
         let requestsList = this.props.requests.map(function(request){
             let assignedTo;
             if (request.AssignedTo)

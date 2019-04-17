@@ -14,6 +14,8 @@ import RequestsTable from './components/requests/table/RequestsTable';
 import SolutionsTables from './components/solutions/SolutionsTables';
 import CreateRequest from './components/requests/Create';
 import CreateSolution from './components/solutions/Create';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 
 export default class App extends Component {
@@ -39,11 +41,13 @@ export default class App extends Component {
     history.push('/login');
   }
 
-  render() {
+    render() {
+    
     return (
         <Router history={history}>
             <div>
-                <Navbar/>
+                <Navbar />
+                <NotificationContainer />
                 <div className="jumbotron">
                     <div className="container">
                         <div className="row">
@@ -52,8 +56,8 @@ export default class App extends Component {
                                 <PrivateRoute path="/admin" roles={[Role.Admin]} component={Admin} />
                                 <Route path="/requests/create" component={CreateRequest} />
                                 {/* <PrivateRoute path="/requests/create" component={CreateRequest} /> */}
-                                <Route exact path="/requests" component={RequestsTable} />
-                                {/* <PrivateRoute exact path="/requests" component={RequestsTable} /> */}
+                               
+                                <PrivateRoute exact path="/requests" component={RequestsTable} /> 
                                 <Route exact path="/solutions" component={SolutionsTables} />
                                 {/* <PrivateRoute exact path="/solutions" component={SolutionsTables} /> */}
                                 <PrivateRoute path="/solutions/create" component={CreateSolution} />
