@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { authenticationService } from '../services/authentication.service'
+ import { authenticationService } from '../services/authentication.service'
+
 import { history } from '../helpers/history';
 
 const nStyle= {
@@ -34,9 +35,9 @@ export default class Navbar extends Component{
         let button;
 
         if (isLoggedIn) {
-            button = <a onClick={this.logout} className="nav-item nav-link">Logout</a>
+            button = <a onClick={this.logout} className="nav-item nav-link ml-auto">Logout</a>
         } else {
-            button = <Link to="/Login" className="nav-item nav-link">Login</Link>
+            button = <Link to="/Login" className="nav-item nav-link ml-auto">Login</Link>
         }
 
         return (
@@ -73,11 +74,16 @@ export default class Navbar extends Component{
                                  Create Request <i className="glyphicon-plus"></i>
                              </Link>
                  </li>
+                 <li >
+                             <Link to="/Solutions/Create">
+                                 Create Solution <i className="glyphicon-plus"></i>
+                             </Link>
+                 </li>
                 
-                 <li>{button}</li>
-
-                
-                 
+                              
+    </ul>
+    <ul class="nav navbar-nav float-xs-right">
+    <li>{button}</li>
     </ul>
      </div>
 </nav>  

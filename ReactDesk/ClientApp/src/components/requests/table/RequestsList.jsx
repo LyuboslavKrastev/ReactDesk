@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom';
 
 export default class RequestsList extends Component{
-
+    
     render() {
+        console.log(this.props)
+
+        let showNotes = this.props.showNotes
 
         let requestsList = this.props.requests.map(function(request){
             let assignedTo;
-            if (request.AssignedTo)
+            if (request.assignedto)
             {
-                assignedTo = <a className="text-success"><strong>{request.AssignedTo}</strong></a>
+                assignedTo = <a className="text-success"><strong>{request.assignedto}</strong></a>
             }
             else
             {
@@ -17,21 +21,25 @@ export default class RequestsList extends Component{
 
             let noteColor = '';
 
-            if (request.Notes) {
-                if (request.Notes.length > 0) {
+            if (request.notes) {
+                if (request.notes.length > 0) {
                     noteColor = 'orange'
                 }
             }
-        
+
+            let startDate = new Date(request.startTime).toLocaleDateString();
+
+            console.log('request: ' + request)
             return (   
+               
                 <tr>
                     <td className="text-center"><input value="@item.Id" type="checkbox" className="check"/></td>
-                    <td className="text-center"><a className="glyphicon glyphicon-file" style={{color: noteColor}} name="noteIcon" data-toggle="modal" data-target="#@notesModalId"></a></td>
+                    <td className="text-center"><a className="glyphicon glyphicon-file" style={{color: noteColor}} name="noteIcon" onClick={() => {showNotes(request.id)}}></a></td>
                     <td>
                         {request.id}
                     </td>
                     <td>
-                        <a asp-area="" asp-controller="Requests" asp-action="Details" asp-route-id="@item.Id">{request.subject}</a>
+                        <Link to={`/requests/details/${request.id}`}>{request.subject}</Link>
                     </td>
                     <td>
                         {request.requester}
@@ -40,13 +48,13 @@ export default class RequestsList extends Component{
                         {assignedTo}
                     </td>
                     <td>
-                        {request.StartTime}
+                        {startDate}
                     </td>
                     <td>
-                        {request.EndTime}
+                        {request.endtime}
                     </td>
                     <td>
-                        {request.Status}
+                        {request.status}
                     </td>
                 </tr>
             )

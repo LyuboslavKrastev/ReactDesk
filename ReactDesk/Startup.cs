@@ -66,7 +66,10 @@ namespace ReactDesk
             services.AddScoped<IApprovalService, ApprovalService>();
             services.AddScoped<ICategoriesService, CategoriesService>();
             services.AddScoped<IRequestService, RequestService>();
+            services.AddScoped<StatusService, StatusService>();
+
             services.AddScoped(typeof(AttachmentService<>));
+
 
 
 

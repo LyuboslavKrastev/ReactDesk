@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using BasicDesk.App.Models.Common.BindingModels;
 using BasicDesk.App.Models.Common.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
 
 namespace ReactDesk.Controllers
 {
@@ -38,12 +39,29 @@ namespace ReactDesk.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int? statusId)
         {
-                var requests = this.requestService.GetAll().Include(r => r.Requester)
-                .Include(r => r.Notes).Include(r => r.AssignedTo).ToArray();
+            //var requests = this.requestService.GetAll().Include(r => r.Requester)
+            //.Include(r => r.Notes).Include(r => r.Status)
+            //.Where(r => statusId.HasValue ? r.StatusId == statusId : true).Include(r => r.AssignedTo).ToArray();
+
+
+            var requests = this.requestService.GetAll()
+                .Where(r => statusId.HasValue ? r.StatusId == statusId : true)
+                .ProjectTo<RequestListingViewModel>()
+                .ToArray();
+
+            return Ok(requests.ToArray());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
+            var request = this.requestService.GetRequestDetails(id, userId).Include(r => r.Author);
+            //.Include(r => r.Notes).Include(r => r.AssignedTo).ToArray();
             //var requestViewModels = Mapper.Map<RequestListingViewModel>(requests);
-            return Ok(requests);
+            return Ok(request);
         }
 
 
@@ -52,7 +70,7 @@ namespace ReactDesk.Controllers
         {
             var request = Mapper.Map<Request>(model);
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
-            request.CategoryId = 1;
+            request.RequesterId = userId;
 
             await this.requestService.AddAsync(request);
 

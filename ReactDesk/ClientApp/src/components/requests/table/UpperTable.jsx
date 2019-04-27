@@ -1,15 +1,31 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import AddNoteModal from './AddNoteModal';
+import { statusService } from '../../../services/status.service'
 
 export default class UpperTable extends Component{
     constructor(props){
         super(props)
 
         this.state = {
-            ReqPerPageList: [25, 50, 100, 150, 200, 250, 1000]
+            ReqPerPageList: [25, 50, 100, 150, 200, 250, 1000],
+            statuses: []
         }
     }
     
+    showModal = () => {
+        document.getElementById('noteModal').style.display = 'block'
+    }
+
+    componentDidMount = () => {
+        statusService.getAll()
+            .then(res => {
+                this.setState({
+                    statuses: res
+                })
+            })
+    }
+
     
     render(){
         let selectList = this.state.ReqPerPageList.map(function(selectOption){
@@ -17,41 +33,32 @@ export default class UpperTable extends Component{
                 <option selected="selected" value="@status.Value">{selectOption}</option>
             )
         })
-        let statusList = this.props.statuses.map(function(selectOption){
+        let statusList = this.state.statuses.map(function(status){
             return (   
-                <option value={selectOption}>{selectOption}</option>
+                <option value={status.id}>{status.name}</option>
             )
         })
 
         return(
+            <div>
+<AddNoteModal/>
+
+        
             <table className="table table-hover table-bordered">
         <tr>
             <th>
+            <form method="get" className="form-inline">
                 <div className="form-group">            
-                        <label for="staticEmail">Showing</label>
+                        <label for="currentFilter">Showing </label>
                         <select name='currentFilter' onChange={this.props.filterRequests} className="form-control">
+                             <option value="All Requests">All Requests</option>
                              {statusList}
-
-                            {/* <option value="">All Requests</option>
-                            @{
-                                foreach (var status in Model.Statuses)
-                                {
-                                    if (Model.CurrentFilter == status.Value)
-                                    {
-                                        <option selected="selected" value="@status.Value">@status.Text</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@status.Value">@status.Text</option>
-                                    }
-
-                                }
-                            } */}
                         </select>
                 </div>
+                </form>
             </th>
             <th><Link to="/Requests/Create"className="btn btn-success" style={{width: "100%"}} >New Request <i classNameName="glyphicon-plus"></i></Link></th>
-            <th><a className="btn btn-warning" style={{width: "100%"}} data-toggle="modal" data-target="#noteModal">Add Note</a></th>
+            <th><a className="btn btn-warning" style={{width: "100%"}} onClick={this.showModal}>Add Note</a></th>
             <th><a className="btn btn-warning" style={{width: "100%"}} id="mergeReq">Merge</a></th>
             <th><a className="btn btn-danger" style={{width: "100%"}}  id="deleteReq">Delete</a></th>
 
@@ -95,6 +102,7 @@ export default class UpperTable extends Component{
           
         </tr>
     </table>
+    </div>
         )
     }
 }

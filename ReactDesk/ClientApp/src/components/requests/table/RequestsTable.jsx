@@ -4,60 +4,10 @@ import RequestsList from './RequestsList';
 import UpperTable from './UpperTable';
 import sorter from './sorter'
 import { requestService } from '../../../services/requests.service'
+import { NotificationManager } from 'react-notifications';
 
-const statuses = [
-    'All Requests',
-    'Open',
-    'Closed', 
-    'Rejected'
-]
 
-//const requests = [
-//    {
-//        Id: 1,
-//        Subject: 'Req 1',
-//        Description: "Description 1",
-//        AssignedTo: 'Pesho',
-//        Status: statuses[1],
-//        Requester: 'ASDAS',
-//        StartTime: '020319',
-//        EndTime: '050319',
-//        Notes: []
-//    },
-//    {
-//        Id: 2,
-//        Subject: 'Req 2',
-//        Description: "Description 2",
-//        AssignedTo: 'Pesho 2',
-//        Status: statuses[1],
-//        Requester: 'ASDAS',
-//        StartTime: '030319',
-//        EndTime: '060319',
-//        Notes: 'Hi'
-//    },
-//    {
-//        Id: 3,
-//        Subject: 'Req 3',
-//        Description: "Description 3",
-//        AssignedTo: 'Pesho 3',
-//        Status: statuses[2],
-//        Requester: 'ASDASAAAA',
-//        StartTime: '530319',
-//        EndTime: '060319',
-//        Notes: []
-//    },
-//    {
-//        Id: 4,
-//        Subject: 'Req 4',
-//        Description: "Description 3",
-//        AssignedTo: '',
-//        Status: statuses[3],
-//        Requester: 'ASDASAAAA',
-//        StartTime: '530319',
-//        EndTime: '060319',
-//        Notes: []
-//    }
-//]
+
 
 function toggle(event) {
     let isChecked = event.target.checked
@@ -79,25 +29,35 @@ export default class RequestsTable extends Component{
             creationDateSearch: '',
             requests: [],
             showSearch: false,
-            orderBy: ''
+            orderBy: '',
         }
     }
 
     filterRequests = (event) => {
         let value = event.target.value;
         debugger;
-        if(value === 'All Requests'){
+
+        if (value === 'All Requests') {
             requestService.getAll()
-                .then(res =>
+                .then(res => { 
                     this.setState({
                         requests: res
-                    }))
-            return;
+                    })
+                })
+          
+            return
         }
-        let prevRequests = this.state.requests;
-        this.setState({
-            requests: prevRequests.filter(r => r.Status == value)
-        })
+
+         
+
+        if(value){
+                requestService.getAll(value)
+                    .then(res => {
+                        this.setState({
+                            requests: res
+                        })
+                    })
+        }
     }
 
     orderRequests = (event) => {
@@ -120,8 +80,10 @@ export default class RequestsTable extends Component{
         } else {
             order = 'DESC'
             sorted = sorter(this.state.requests, order, value)
-        }
+           
 
+        }
+        NotificationManager.success(`Ordered by ${order} ${value}`)
         this.setState({
             orderBy: value+order,
             requests: sorted
@@ -138,18 +100,57 @@ export default class RequestsTable extends Component{
         })
     }
 
-    componentDidMount = () => {
+    componentWillMount = () => {
+
         requestService.getAll()
             .then(res => 
                 this.setState({
-                requests: res
-            }))
+                requests: res,
+                    requests: res,
+                }))
+      
+    }
+
+    showNotes = (id) => {
+        document.getElementById(`notes_${id}`).style.display = 'block'
+    }
+
+    hideNotes = (id) => {
+        document.getElementById(`notes_${id}`).style.display = 'none'
     }
     
     render(){
         return (
             <div>
-            <UpperTable filterRequests={this.filterRequests} statuses={statuses}/>
+
+                        {this.state.requests.map(r => 
+                                    <div class="modal" id={'notes_' + r.id} tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content" style={{overflow:'inherit'}}>
+                                            <div class="modal-body modal-wide">
+                        <div class="panel-group">
+                        {r.notes.map(n =>    <div class="panel">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left"><strong>Author:</strong> nekav author nz sa</div>
+                    <div class="pull-right"><strong>Created On:</strong> creation vreme</div>
+                </div>
+                <div class="panel-body">
+                    <strong>Description</strong>
+                    <p>{n}</p>
+                </div>
+            </div>
+             )}
+                <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => {this.hideNotes(r.id)}}>Close</button>
+            </div>
+          </div>
+                </div>
+            </div>
+        </div>
+     
+        </div>)}
+                
+            <UpperTable filterRequests={this.filterRequests}/>
             <table className="table table-hover table-striped table-bordered">
     <thead>
     <th className="text-center"><input onClick={toggle} type="checkbox" className="checkbox-inline" id="checkAll"/></th>
@@ -187,7 +188,7 @@ export default class RequestsTable extends Component{
     </thead>
     <tbody>
         {this.state.showSearch? <SearchBar/> : null}
-        <RequestsList requests={this.state.requests}/>
+        <RequestsList requests={this.state.requests} showNotes={this.showNotes}/>
     </tbody>
 
     

@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import requester from '../../helpers/requester'
 import { Link } from 'react-router-dom';
+import { usernameConstants } from '../../constants/validation/registration'
 
 export class Register extends Component {
     displayName = Register
@@ -11,13 +12,40 @@ export class Register extends Component {
             Username: '',
             FullName: '',
             Password: '',
-            ConfirmPassword: ''
+            ConfirmPassword: '',
+            usernameBorderColor: '',
+            passwordBorderColor: '',
+            confirmPasswordBorderColor: ''
         };
     }
 
     handleInputChange = (event) => {
         let inputName = event.target.name;
         let inputValue = event.target.value;
+
+        if(inputName === 'Username'){
+            if(inputValue){
+                if(inputValue.length < usernameConstants.USERNAME_MIN_LENGTH){
+                    this.setState({
+                        usernameBorderColor: 'red'
+                    })
+                } else if(inputValue.length > usernameConstants.USERNAME_MAX_LENGTH){
+                    this.setState({
+                        usernameBorderColor: 'red'
+                    })
+                } else {
+                    this.setState({
+                        usernameBorderColor: ''
+                    })
+                }
+            } else {
+                this.setState({
+                    usernameBorderColor: ''
+                })
+            }
+          
+        }
+
         this.setState({
             [inputName]: inputValue
         })
@@ -43,7 +71,7 @@ export class Register extends Component {
                         <div asp-validation-summary="All" className="text-danger"></div>
                         <div className="form-group">
                             <label htmlFor="Username">Username</label>
-                            <input name="Username" className="form-control" onChange={this.handleInputChange}/>
+                            <input style={{ borderColor: this.state.usernameBorderColor }} name="Username" className="form-control" onChange={this.handleInputChange}/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="FullName">Full Name</label>
@@ -51,11 +79,11 @@ export class Register extends Component {
                         </div>
                         <div className="form-group">
                             <label htmlFor="Password">Password</label>
-                            <input type="password" name="Password" className="form-control" onChange={this.handleInputChange}/>
+                            <input type="password" style={{ borderColor: this.state.passwordBorderColor }} name="Password" className="form-control" onChange={this.handleInputChange}/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="ConfirmPassword">Confirm Password</label>
-                            <input type="password" name="ConfirmPassword" className="form-control" onChange={this.handleInputChange}/>
+                            <input type="password" style={{ borderColor: this.state.confirmPasswordBorderColor }} name="ConfirmPassword" className="form-control" onChange={this.handleInputChange}/>
                         </div>
                         <button type="submit" className="btn btn-block btn-success">Register</button>
                         <div class="form-group">

@@ -9,9 +9,10 @@ export const requestService = {
     createRequest
 };
 
-function getAll() {
+function getAll(statusId) {
+    let url = statusId ? `api/requests/getall?statusId=${statusId}` : `api/requests/getall`;
     const requestOptions = { method: 'GET', headers: authHeader() };
-    return fetch(`api/requests/getall`, requestOptions).then(handleResponse);
+    return fetch(url, requestOptions).then(handleResponse);
 }
 
 function getById(id) {
@@ -28,7 +29,7 @@ function createRequest(subject, description, category) {
             Authorization: `Bearer ${currentUser.token}`,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ subject, description, category })
+        body: JSON.stringify({ subject, description, categoryId: category })
     };
     return fetch(`api/requests`, requestOptions).then(handleResponse).catch(err => { return { error: err }});
 }

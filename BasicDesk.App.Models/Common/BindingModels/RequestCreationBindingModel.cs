@@ -21,10 +21,7 @@ namespace BasicDesk.App.Models.Common.BindingModels
 
         public DateTime StartTime { get; set; } = DateTime.Now;
 
-        [Display(Name = "Category")]
         public int CategoryId { get; set; }
-
-        public ICollection<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
 
         [DataType(DataType.Upload)]
         public ICollection<IFormFile> Attachments { get; set; }

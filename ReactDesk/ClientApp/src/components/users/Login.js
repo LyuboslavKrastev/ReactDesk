@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { authenticationService } from '../../services/authentication.service'
 import {  NotificationManager } from 'react-notifications';
+import ReactLoading from 'react-loading';
 
 
 export class Login extends Component {
@@ -17,7 +18,8 @@ export class Login extends Component {
 
         this.state = {
             Username: '',
-            Password: ''
+            Password: '',
+            Loading: false
         };
     }
 
@@ -32,7 +34,10 @@ export class Login extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         let data = this.state
-        console.log(data)
+
+        this.setState({
+            Loading: true
+        });
 
         authenticationService.login(data.Username, data.Password)
             .then(res => {
@@ -41,12 +46,22 @@ export class Login extends Component {
                     return this.props.history.push('/');
                 }
                 else {
+                    this.setState({
+                        Loading: false
+                    })
                     return NotificationManager.error(res)
+                   
                 }
             })
+   
     }
 
     render() {
+        if(this.state.Loading){
+            
+            return(<div className="row col-md-4 col-md-offset-5">
+            <ReactLoading type="bars" color="#36648B" height={'100%'} width={'100%'} /></div>)
+        }
         return (
             <div class="row col-md-4 col-md-offset-4">
                 <h2 class="text-center">Login</h2>
