@@ -19,7 +19,9 @@ import RequestDetails from './components/requests/Details';
 import SolutionsIndex from './components/solutions/SolutionsIndex';
 import SolutionDetails from './components/solutions/Details';
 import Chat from './components/chat/Chat';
-
+import ReportsIndex from './components/reports/ReportsIndex';
+import ReportWizard from './components/reports/ReportWizard';
+import PieReport from './components/reports/DeleteThisWhenDbIsImplemented/PieReport';
 
 export default class App extends Component {
   displayName = App.name
@@ -63,13 +65,16 @@ export default class App extends Component {
                                 {/* <PrivateRoute path="/requests/create" component={CreateRequest} /> */}
                                
                                 <PrivateRoute exact path="/requests" component={RequestsTable} /> 
-                                <Route exact path="/solutions" component={SolutionsIndex} />
+                                <PrivateRoute exact path="/solutions" component={SolutionsIndex} />
                                 {/* <PrivateRoute exact path="/solutions" component={SolutionsTables} /> */}
                                 <PrivateRoute path="/solutions/create" component={CreateSolution} />
                                 <Route path="/requests/details/:id" component={RequestDetails} />
                                 <Route path="/solutions/details/:id" component={SolutionDetails} />
                                 <Route path="/login" component={Login} />
                                 <Route path="/register" component={Register} />
+                                <Route exact path="/reports" component={ReportsIndex} />
+                                <Route path="/reports/create" component={ReportWizard} />
+                                <Route path="/reports/details/piereport" component={PieReport} />
                                 <PrivateRoute path="/chat" component={Chat}/>
 
                             </div>

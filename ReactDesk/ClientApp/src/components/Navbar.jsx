@@ -52,7 +52,8 @@ export default class Navbar extends Component{
                      <li><Link to="/"><span className="glyphicon glyphicon-home"></span></Link></li>
                      <li><Link to="/Requests">Requests</Link></li>
                      <li><Link to="/Solutions">Solutions</Link></li>
-                     <li><Link to="/Chat">Chat</Link></li>
+                    
+                     
              {/* if (User.IsInRole(WebConstants.AdminRole))
 {
                  <li className="dropdown">
@@ -79,6 +80,8 @@ export default class Navbar extends Component{
                                  Create Solution <i className="glyphicon-plus"></i>
                              </Link>
                  </li>
+                 <li><Link to="/Reports">Reports</Link></li>
+                 <li><Link to="/Chat">Chat</Link></li>
                 
                               
     </ul>
