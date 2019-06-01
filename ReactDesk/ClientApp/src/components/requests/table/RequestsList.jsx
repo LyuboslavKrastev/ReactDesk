@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 export default class RequestsList extends Component{
     
     render() {
-        console.log(this.props)
 
         let showNotes = this.props.showNotes
 
@@ -29,7 +28,6 @@ export default class RequestsList extends Component{
 
             let startDate = new Date(request.startTime).toLocaleDateString();
 
-            console.log('request: ' + request)
             return (   
                
                 <tr>

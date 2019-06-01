@@ -5,9 +5,6 @@ const showResolution = () => {
     document.getElementById('btn_desc').classList.remove('btn-danger')
     document.getElementById('btn_res').classList.add('btn-danger')
     document.getElementById('btn_hist').classList.remove('btn-danger')
-
-
-
 }
 const showDetails = () => {
     document.getElementById('resolution').style.display = 'none'
@@ -16,8 +13,6 @@ const showDetails = () => {
     document.getElementById('btn_desc').classList.add('btn-danger')
     document.getElementById('btn_res').classList.remove('btn-danger')
     document.getElementById('btn_hist').classList.remove('btn-danger')
-
-
 }
 
 const showHistory = () => {

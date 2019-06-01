@@ -15,8 +15,7 @@ export default class Navbar extends Component{
         this.state = {
             currentUser: null,
             isAdmin: false
-        };
-        
+        };      
     }
 
     componentDidMount() {

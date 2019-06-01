@@ -11,10 +11,10 @@
         public const int ForApprovalStatusId = 5;
 
 
-        public const string AdminRole = "Administrator";
+        public const string AdminRole = "Admin";
         public const string HelpdeskRole = "HelpdeskAgent";
         public const string UserRole = "User";
 
-        public const string ManagementRoles = "Administrator, HelpdeskAgent";
+        public const string ManagementRoles = "Admin, HelpdeskAgent";
     }
 }

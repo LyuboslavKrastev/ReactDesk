@@ -44,7 +44,6 @@ export default class ReportWizard extends Component{
     handleSubmit = (event) => {
         event.preventDefault();
         let data = this.state
-        console.log(data)
 
         // requestService.createRequest(data.Subject, data.Description, data.CategoryId)
         //     .then(res => {

@@ -269,22 +269,22 @@ namespace BasicDesk.Services
         }
 
 
-        public async Task AddNote(IEnumerable<string> requestIds, string userId, string userName, bool isTechnician, string noteDescription)
+        public async Task AddNote(IEnumerable<int> requestIds, string userId, string userName, bool isTechnician, string noteDescription)
         {
             foreach (var id in requestIds)
             {
-                bool isInt = int.TryParse(id, out int requestId);
-                if (!isInt)
-                {
-                    continue;
-                }
-                Request request = await this.repository.All().FirstOrDefaultAsync(r => r.Id == requestId);
+                //bool isInt = int.TryParse(id, out int requestId);
+                //if (!isInt)
+                //{
+                //    continue;
+                //}
+                Request request = await this.repository.All().FirstOrDefaultAsync(r => r.Id == id);
 
                 if (isTechnician || userId == request.RequesterId)
                 {
                     RequestNote note = new RequestNote
                     {
-                        RequestId = requestId,
+                        RequestId = id,
                         Description = noteDescription,
                         CreationTime = DateTime.UtcNow,
                         Author = userName

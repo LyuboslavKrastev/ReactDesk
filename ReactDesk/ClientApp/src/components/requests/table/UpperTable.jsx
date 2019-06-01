@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import AddNoteModal from './AddNoteModal';
+import AddNoteModal from '../modals/AddNoteModal';
 import { statusService } from '../../../services/status.service'
 
 export default class UpperTable extends Component{
