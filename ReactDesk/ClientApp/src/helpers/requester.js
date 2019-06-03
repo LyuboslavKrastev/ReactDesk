@@ -8,18 +8,13 @@ function makeRequest(method, url, data) {
             "Content-type": "application/json"
         },
         body: dataJSON
-    }).then(rawData => {    
-        if(rawData.status === 204){
+    }).then(rawData => {
+        if (rawData.status === 204 || rawData.status === 400) {
           return rawData
         }
         return rawData.json()
     })
     .then(res =>  {
-      if(!res.error){
-         
-      } else {
-         
-      }
       return res
     })
 }

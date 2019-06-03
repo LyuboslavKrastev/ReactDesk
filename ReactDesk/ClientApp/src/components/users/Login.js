@@ -41,6 +41,7 @@ export class Login extends Component {
 
         authenticationService.login(data.Username, data.Password)
             .then(res => {
+                console.log(res)
                 if (res.username) {
                     NotificationManager.success(`Welcome, ${res.username}`)
                     return this.props.history.push('/');
@@ -49,8 +50,7 @@ export class Login extends Component {
                     this.setState({
                         Loading: false
                     })
-                    return NotificationManager.error(res)
-                   
+                    NotificationManager.error(`Invalid credentials`)        
                 }
             })
    

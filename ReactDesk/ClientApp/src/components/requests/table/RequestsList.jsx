@@ -31,7 +31,7 @@ export default class RequestsList extends Component{
             return (   
                
                 <tr>
-                    <td className="text-center"><input value="@item.Id" type="checkbox" className="check"/></td>
+                    <td className="text-center"><input value="@item.Id" type="checkbox" name="requestCheckbox" value={request.id} className="check" /></td>
                     <td className="text-center"><a className="glyphicon glyphicon-file" style={{color: noteColor}} name="noteIcon" onClick={() => {showNotes(request.id)}}></a></td>
                     <td>
                         {request.id}

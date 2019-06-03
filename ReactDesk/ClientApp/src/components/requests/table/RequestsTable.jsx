@@ -5,9 +5,7 @@ import UpperTable from './UpperTable';
 import sorter from './sorter'
 import { requestService } from '../../../services/requests.service'
 import { NotificationManager } from 'react-notifications';
-
-
-
+import { showNotes, hideNotes } from '../modals/note-view-modal-controls'
 
 function toggle(event) {
     let isChecked = event.target.checked
@@ -110,13 +108,7 @@ export default class RequestsTable extends Component {
             })
     }
 
-    showNotes = (id) => {
-        document.getElementById(`notes_${id}`).style.display = 'block'
-    }
 
-    hideNotes = (id) => {
-        document.getElementById(`notes_${id}`).style.display = 'none'
-    }
 
     render() {
 
@@ -145,7 +137,7 @@ export default class RequestsTable extends Component {
                                         )}
                                         </div>
                                         <div className="modal-footer">
-                                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => { this.hideNotes(r.id) }}>Close</button>
+                                            <button type="button" className="btn btn-warning" data-dismiss="modal" onClick={() => { hideNotes(r.id) }}>Close</button>
                                         </div>
                                     </div>
                                 </div>
@@ -190,7 +182,7 @@ export default class RequestsTable extends Component {
                     </thead>
                     <tbody>
                         {this.state.showSearch ? <SearchBar /> : null}
-                        <RequestsList requests={this.state.requests} showNotes={this.showNotes} />
+                        <RequestsList requests={this.state.requests} showNotes={showNotes} />
                     </tbody>
 
 

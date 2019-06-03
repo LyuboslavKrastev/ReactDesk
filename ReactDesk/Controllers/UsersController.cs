@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using ReactDesk.Exceptions;
 using ReactDesk.Helpers;
 using BasicDesk.Services.Interfaces;
+using BasicDesk.App.Models.Common.BindingModels;
 
 namespace ReactDesk.Controllers
 {
@@ -42,12 +43,15 @@ namespace ReactDesk.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public IActionResult Login([FromBody]UserDTO userDto)
+        public IActionResult Login(UserLoggingInModel userDto)
         {
             var user = _userService.Authenticate(userDto.Username, userDto.Password);
 
             if (user == null)
+            {
                 return BadRequest(new { message = "Username or password is incorrect" });
+            }
+              
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -78,7 +82,7 @@ namespace ReactDesk.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public IActionResult Register([FromBody]UserDTO userDto)
+        public IActionResult Register(UserRegisteringModel userDto)
         {
             // map dto to entity
             var user = Mapper.Map<User>(userDto);
@@ -87,12 +91,12 @@ namespace ReactDesk.Controllers
             {
                 // save 
                 _userService.Create(user, userDto.Password);
-                return Ok();
+                return Ok("Successfully registered user");
             }
-            catch (AppException ex)
+            catch (Exception ex)
             {
                 // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new { error = ex.Message });
             }
         }
 
@@ -140,7 +144,7 @@ namespace ReactDesk.Controllers
             catch (AppException ex)
             {
                 // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(ex.Message);
             }
         }
 

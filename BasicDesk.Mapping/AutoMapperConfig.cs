@@ -8,6 +8,7 @@ using BasicDesk.App.Models.Common.ViewModels;
 using BasicDesk.App.Models.Management.BindingModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BasicDesk.App.Models.DTOs;
+using System.Linq;
 
 namespace BasicDesk.Mapping
 {
@@ -28,7 +29,7 @@ namespace BasicDesk.Mapping
             {
                 configuration.CreateMap<User, UserDTO>();
                 configuration.CreateMap<UserDTO, User>();
-
+                configuration.CreateMap<UserRegisteringModel, User>();
                 configuration.CreateMap<User, UserConciseViewModel>();
 
                 //configuration.CreateMap<Request, RequestMergeListingViewModel>()
@@ -70,15 +71,18 @@ namespace BasicDesk.Mapping
                 configuration.CreateMap<SolutionCreationBindingModel, Solution>()
 					.ForMember(s => s.Attachments, opt => opt.Ignore());
 
+                configuration.CreateMap<User, UserDetailsViewModel>()
+                .ForMember(ud => ud.Roles, opt => opt.Ignore());
+
                 configuration.CreateMap<Request, RequestDetailsViewModel>()
-					.ForMember(r => r.CreatedOn, opt => opt.MapFrom(req => req.StartTime.ToString()))
-					.ForMember(r => r.Status, opt => opt.MapFrom(req => req.Status.Name))
-					.ForMember(r => r.Author, opt => opt.MapFrom(req => req.Requester))
-					.ForMember(r => r.Category, opt => opt.MapFrom(req => req.Category.Name))
-					.ForMember(r => r.Attachments, opt => opt.MapFrom(req => req.Attachments))
+                    .ForMember(r => r.CreatedOn, opt => opt.MapFrom(req => req.StartTime.ToString()))
+                    .ForMember(r => r.Status, opt => opt.MapFrom(req => req.Status.Name))
+                    .ForMember(r => r.Author, opt => opt.MapFrom(req => req.Requester))
+                    .ForMember(r => r.Category, opt => opt.MapFrom(req => req.Category.Name))
+                    .ForMember(r => r.Attachments, opt => opt.MapFrom(req => req.Attachments))
                     .ForMember(r => r.Notes, opt => opt.MapFrom(req => req.Notes))
                     .ForMember(r => r.Technician, opt => opt.MapFrom(req => req.AssignedTo))
-                    .ForMember( r=> r.Replies, opt => opt.MapFrom(req => req.Repiles));
+                    .ForMember(r => r.Replies, opt => opt.MapFrom(req => req.Repiles));
 
                 configuration.CreateMap<Request, RequestManagingModel>()
                 .ForMember(r => r.CreatedOn, opt => opt.MapFrom(req => req.StartTime.ToString()))

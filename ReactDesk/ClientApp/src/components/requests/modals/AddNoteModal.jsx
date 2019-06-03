@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { notesService } from '../../../services/notes.service'
 import { NotificationManager } from 'react-notifications';
+import getCheckedBoxes  from '../../../helpers/checkbox-checker'
+import { Notification } from 'rxjs';
 
 export default class AddNoteModal extends Component{
 
@@ -11,6 +13,7 @@ export default class AddNoteModal extends Component{
             description: ''
         })
     }
+
     hideModal = () => {
         document.getElementById('noteModal').style.display = 'none'
     }
@@ -24,15 +27,22 @@ export default class AddNoteModal extends Component{
     }
 
     handleSubmit = (event) => {
+        debugger
         event.preventDefault();
-        if (!this.state.description) {
-            NotificationManager.error('Notes cannot be empty.')
-            this.props.history.push('/')
-            return; 
+       
+        let description = this.state.description
+        if (!description) {
+            NotificationManager.error('Notes must have a description.')
+            return;
         }
-        let data = this.state.description
-        let ids = [13, 14] // change this
-        notesService.createNote(ids, data)
+
+        let ids = getCheckedBoxes("requestCheckbox");
+        if (!ids) {
+            NotificationManager.error('Please select request[s] in order to add a note.');
+            return;
+        }
+       
+        notesService.createNote(ids, description)
             .then(res => {
                 if (res) {
                     NotificationManager.success('Successfully added note')

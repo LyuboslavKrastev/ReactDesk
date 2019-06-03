@@ -139,7 +139,7 @@ namespace BasicDesk.Services
         {
             IQueryable<RequestDetailsViewModel> request = this.repository.All()
                 .Where(r => r.Id == id)
-                .Where(r => r.RequesterId == userId)
+                //.Where(r => r.RequesterId == userId)
                 .ProjectTo<RequestDetailsViewModel>();
 
             return request.AsNoTracking();

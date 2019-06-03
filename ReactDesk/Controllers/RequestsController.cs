@@ -58,8 +58,7 @@ namespace ReactDesk.Controllers
         public IActionResult GetById(int id)
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
-            var request = this.requestService.GetRequestDetails(id, userId).Include(r => r.Author);
-            //.Include(r => r.Notes).Include(r => r.AssignedTo).ToArray();
+            var request = this.requestService.GetRequestDetails(id, userId).FirstOrDefault();
             //var requestViewModels = Mapper.Map<RequestListingViewModel>(requests);
             return Ok(request);
         }

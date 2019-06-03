@@ -326,6 +326,9 @@ namespace BasicDesk.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Email")
+                        .IsRequired();
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(150);

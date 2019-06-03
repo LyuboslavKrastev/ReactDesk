@@ -1,4 +1,5 @@
-﻿using BasicDesk.Data.Models.Requests;
+﻿using BasicDesk.Common.Constants.Validation;
+using BasicDesk.Data.Models.Requests;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,14 +13,20 @@ namespace BasicDesk.Data.Models
         public string Id { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(150)]
+        [MinLength(UserConstants.FullNameMinLength)]
+        [MaxLength(UserConstants.FullNameMaxLength)]
         public string FullName { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(50)]
+        [MinLength(UserConstants.UsernameMinLength)]
+        [MaxLength(UserConstants.UsernameMaxLength)]
         public string Username { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [MinLength(3)]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
 
         [Required]
         public byte[] PasswordHash { get; set; }
