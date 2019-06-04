@@ -137,6 +137,7 @@ namespace BasicDesk.Services
 
         public IQueryable<RequestDetailsViewModel> GetRequestDetails(int id, string userId)
         {
+            var reqq = this.repository.ById(id).Include(r => r.Repiles).FirstOrDefault();
             IQueryable<RequestDetailsViewModel> request = this.repository.All()
                 .Where(r => r.Id == id)
                 //.Where(r => r.RequesterId == userId)

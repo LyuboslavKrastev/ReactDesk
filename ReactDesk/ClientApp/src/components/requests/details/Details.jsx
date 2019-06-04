@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { showHistory, showDetails, showResolution } from './DetailsButtons'
-import { requestService } from '../../services/requests.service'
+import { requestService } from '../../../services/requests.service'
+import AddNoteModal from '../modals/AddNoteModal'
+import { showNotes, hideNotes } from '../modals/note-view-modal-controls'
 
 export default class RequestDetails extends Component {
 
@@ -24,21 +26,20 @@ export default class RequestDetails extends Component {
             })
     }
 
-    showNotes = (id) => {
-        document.getElementById(`notes_${id}`).style.display = 'block'
+    showModal = () => {
+        document.getElementById('noteModal').style.display = 'block'
     }
 
-    hideNotes = (id) => {
-        document.getElementById(`notes_${id}`).style.display = 'none'
-    }
 
     render() {
-
         let request = this.state.request;
-        console.log('---------------------------' + request.notes)
+        console.log('notes: ')
+        console.log(request.notes);
+
         return (
             <div>
-                {request.notes ? <div class="modal" id={'notes_' + request.id} tabindex="-1" role="dialog">
+                <AddNoteModal requestId={request.id} />
+                {request.notes != undefined && request.notes.length > 0 ? <div class="modal" id={'notes_' + request.id} tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-dialog-scrollable" role="document">
                         <div class="modal-content" style={{ overflow: 'inherit' }}>
                             <div class="modal-body modal-wide">
@@ -57,7 +58,7 @@ export default class RequestDetails extends Component {
                                     )}
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => { this.hideNotes(request.id) }}>Close</button>
+                                    <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => { hideNotes(request.id) }}>Close</button>
                                 </div>
                             </div>
                         </div>
@@ -85,8 +86,8 @@ export default class RequestDetails extends Component {
 
                 <div class="btn-group btn-group-toggle pull-right" data-toggle="buttons">
                     <button className="btn btn-info" data-toggle="modal" data-target="#approvalModal">Submit for Approval</button>
-                    <button className="btn btn-info" data-toggle="modal" data-target="#noteModal">Add Note</button>
-                    {request.notes ? <button className="btn btn-info" data-toggle="modal" onClick={() => this.showNotes(request.id)} > View Notes</button> : null}
+                    <button className="btn btn-info" data-toggle="modal" onClick={this.showModal}>Add Note</button>
+                    {request.notes != undefined && request.notes.length > 0 ? <button className="btn btn-info" data-toggle="modal" onClick={() => showNotes(request.id)} > View Notes</button> : null}
 
                     <button className="btn btn-info pull-right" id="mergeButton">Merge Request</button>
                 </div>

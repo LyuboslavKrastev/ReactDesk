@@ -6,7 +6,9 @@ import { authenticationService } from '../services/authentication.service';
 export const requestService = {
     getAll,
     getById,
-    createRequest
+    createRequest,
+    mergeRequests,
+    deleteRequests
 };
 
 function getAll(statusId) {
@@ -32,4 +34,32 @@ function createRequest(subject, description, category) {
         body: JSON.stringify({ subject, description, categoryId: category })
     };
     return fetch(`api/requests`, requestOptions).then(handleResponse).catch(err => { return { error: err }});
+}
+
+function mergeRequests(ids) {
+    const currentUser = authenticationService.currentUserValue;
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ids)
+    };
+    return fetch(`api/requests/merge`, requestOptions).then(handleResponse).catch(err => { return { error: err } });
+}
+
+function deleteRequests(ids) {
+    const currentUser = authenticationService.currentUserValue;
+
+    const requestOptions = {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ids)
+    };
+    return fetch(`api/requests/`, requestOptions).then(handleResponse).catch(err => { return { error: err } });
 }

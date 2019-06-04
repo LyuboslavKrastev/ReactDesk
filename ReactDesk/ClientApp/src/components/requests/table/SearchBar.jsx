@@ -31,7 +31,7 @@ export default class SearchBar extends Component{
                                 <input form="searchForm" className="text-right searchInput" type="text" placeholder="MM/DD/YYYY" name="ClosingDateSearch"  value={this.props.CurrentSearch? this.props.CurrentSearch.RequesterSearch: ''} />
                             </td>
                             <td>
-                                <button type="submit" className="btn btn-success" onClick={this.props.searchRequests}>Search</button>
+                                <button type="submit" className="btn btn-success" onClick={this.searchRequests}>Search</button>
                             </td>                
                     </tr>
                 );

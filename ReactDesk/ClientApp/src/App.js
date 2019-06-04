@@ -15,7 +15,7 @@ import CreateRequest from './components/requests/Create';
 import CreateSolution from './components/solutions/Create';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import RequestDetails from './components/requests/Details';
+import RequestDetails from './components/requests/details/Details';
 import SolutionsIndex from './components/solutions/SolutionsIndex';
 import SolutionDetails from './components/solutions/Details';
 import Chat from './components/chat/Chat';

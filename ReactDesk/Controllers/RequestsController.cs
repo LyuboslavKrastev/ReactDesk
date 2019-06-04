@@ -1,25 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using AutoMapper;
-using BasicDesk.App.Models.DTOs;
-using BasicDesk.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using ReactDesk.Exceptions;
-using ReactDesk.Helpers;
 using BasicDesk.Services.Interfaces;
 using BasicDesk.Data.Models.Requests;
-using System.IO;
 using System.Threading.Tasks;
 using BasicDesk.App.Models.Common.BindingModels;
 using BasicDesk.App.Models.Common.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 
 namespace ReactDesk.Controllers
@@ -47,8 +36,9 @@ namespace ReactDesk.Controllers
 
 
             var requests = this.requestService.GetAll()
-                .Where(r => statusId.HasValue ? r.StatusId == statusId : true)
+                .Where(r => statusId.HasValue ? r.StatusId == statusId : true)             
                 .ProjectTo<RequestListingViewModel>()
+                .OrderByDescending(r => r.Id)
                 .ToArray();
 
             return Ok(requests.ToArray());
@@ -69,7 +59,15 @@ namespace ReactDesk.Controllers
         {
             var request = Mapper.Map<Request>(model);
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
-            request.RequesterId = userId;
+
+            var user = userService.GetById(userId);
+
+            if(user == null)
+            {
+                return BadRequest();
+            }
+
+            request.RequesterId = user.Id;
 
             await this.requestService.AddAsync(request);
 
@@ -98,6 +96,38 @@ namespace ReactDesk.Controllers
             //this.alerter.AddMessage(MessageType.Success, "Request created successfully");
 
             return this.Ok(request);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Merge(IEnumerable<int> ids)
+        {
+            if (!ids.Any())
+            {
+                return BadRequest(new { error = "Please select request[s] for merging" });
+            }
+
+            //ids are merged from highest to lowest
+            IEnumerable<int> requestIds = ids.OrderByDescending(i => i);
+
+            await this.requestService.Merge(requestIds);
+            await this.requestService.DeleteRange(requestIds.SkipLast(1));
+            string message = $"Successfully merged request[s] {string.Join(", ", ids)}";
+
+            return this.Ok(new { message = message });
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(IEnumerable<int> ids)
+        {
+            if (!ids.Any())
+            {
+                return BadRequest(new { error = "Please select request[s] for deletion" });
+            }
+
+            await this.requestService.DeleteRange(ids);
+            string message = $"Successfully deleted request[s] {string.Join(", ", ids)}";
+
+            return this.Ok(new { message = message });
         }
     }
 }

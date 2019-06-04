@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { notesService } from '../../../services/notes.service'
 import { NotificationManager } from 'react-notifications';
 import getCheckedBoxes  from '../../../helpers/checkbox-checker'
-import { Notification } from 'rxjs';
 
 export default class AddNoteModal extends Component{
 
@@ -33,19 +32,28 @@ export default class AddNoteModal extends Component{
         let description = this.state.description
         if (!description) {
             NotificationManager.error('Notes must have a description.')
+            
             return;
         }
-
-        let ids = getCheckedBoxes("requestCheckbox");
-        if (!ids) {
-            NotificationManager.error('Please select request[s] in order to add a note.');
-            return;
+        // Get the id, passed from the details page, or the checked checkboxes from the requests table
+        let ids = [];
+        let requestId = this.props.requestId;
+        if (requestId) {
+            ids.push(requestId)
+        } else {
+            ids = getCheckedBoxes("requestCheckbox");
+            if (!ids) {
+                NotificationManager.error('Please select request[s] in order to add a note.');
+                return;
+            }
         }
        
         notesService.createNote(ids, description)
             .then(res => {
                 if (res) {
-                    NotificationManager.success('Successfully added note')
+                    NotificationManager.success('Successfully added note.');
+                    setTimeout(window.location.reload(), 4000);
+                    
                     return this.hideModal();
 
                 }

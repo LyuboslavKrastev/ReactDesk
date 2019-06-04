@@ -28,13 +28,14 @@ export default class CreateRequest extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         let data = this.state
-        console.log(data)
 
         requestService.createRequest(data.Subject, data.Description, data.CategoryId)
             .then(res => {
                 if (res) {
-                    NotificationManager.success('Successfully created request' + res.subject)
-                    return this.props.history.push('/')
+                    alert(res.Subject)
+                    console.log(res)
+                    NotificationManager.success('Successfully created request ' + res.Subject)
+                    return this.props.history.push('/requests')
 
                 }
                 else {
