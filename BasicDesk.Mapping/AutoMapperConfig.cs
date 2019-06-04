@@ -44,9 +44,9 @@ namespace BasicDesk.Mapping
                 //configuration.CreateMap<User, UserDetailsViewModel>()
                 //.ForMember(u => u.Phone, opt => opt.MapFrom(u => u.PhoneNumber));
 
-                //configuration.CreateMap<RequestReply, RequestReplyViewModel>()
-                //.ForMember(u => u.Author, opt => opt.MapFrom(u => u.Author.UserName))
-                //.ForMember(r => r.CreationTime, opt => opt.MapFrom(rep => rep.CreationTime));
+                configuration.CreateMap<RequestReply, RequestReplyViewModel>()
+                .ForMember(u => u.Author, opt => opt.MapFrom(u => u.Author.Username))
+                .ForMember(r => r.CreationTime, opt => opt.MapFrom(rep => rep.CreationTime));
 
                 configuration.CreateMap<RequestCreationBindingModel, Request>()
 					.ForMember(r => r.CategoryId, opt => opt.MapFrom(r => r.CategoryId))

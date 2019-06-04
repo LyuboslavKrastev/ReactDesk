@@ -3,6 +3,8 @@ import { showHistory, showDetails, showResolution } from './DetailsButtons'
 import { requestService } from '../../../services/requests.service'
 import AddNoteModal from '../modals/AddNoteModal'
 import { showNotes, hideNotes } from '../modals/note-view-modal-controls'
+import Replies from './Replies';
+import AddReply from './AddReply';
 
 export default class RequestDetails extends Component {
 
@@ -29,6 +31,13 @@ export default class RequestDetails extends Component {
     showModal = () => {
         document.getElementById('noteModal').style.display = 'block'
     }
+
+    showAddReplyModal = () => {
+        debugger;
+        document.getElementById('replyModal').style.display = 'block'
+    }
+
+
 
 
     render() {
@@ -112,7 +121,7 @@ export default class RequestDetails extends Component {
                         </div>
 
                         <div className="panel-footer clearfix">
-                            <div className="pull-left"><strong>Status:</strong> {request.Status}</div>
+                            <div className="pull-left"><strong>Status:</strong> {request.status}</div>
                             {
                                 request.assignedTo ?
                                     <div className="pull-right"><strong>Technician:</strong><a data-toggle="modal" data-target="#@Model.Technician.Id">{request.assignedTo}</a>
@@ -155,7 +164,7 @@ export default class RequestDetails extends Component {
                             <div className="pull-left"><strong>Resolution</strong></div>
                         </div>
                         <div className="panel-body">
-                            @Model.Resolution
+                           TO BE IMPLEMENTED
         </div>
                     </div>
                 </div>
@@ -164,16 +173,13 @@ export default class RequestDetails extends Component {
                         <div className="panel-heading clearfix">
                             <div className="pull-left"><strong>History</strong></div>
                         </div>
-                        <div className="panel-body"><p>Model.History</p></div>
+                        <div className="panel-body"><p>TO BE IMPLEMENTED</p></div>
                     </div>
                 </div>
 
-                <partial name="ReplyListPartial" for="Replies" />
-                <button className="btn btn-info" data-toggle="modal" data-target="#replyModal">Reply</button>
-
-                <div className="modal fade" id="dynamic-modal" tabindex="-1" role="dialog">
-                    <div className="modal-dialog" role="document"></div>
-                </div>
+                <Replies replies={request.replies} />
+                <button className="btn btn-success" onClick={this.showAddReplyModal}>Reply</button>
+                <AddReply requestId={request.id} />
 
             </div>
         )
