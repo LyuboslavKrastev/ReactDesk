@@ -79,8 +79,8 @@ export default class CreateRequest extends Component {
                     <div className="form-group">
                         <br />
                         <div className="col-sm-10 col-sm-push-5">
-                            <input type="submit" value="Create" className="btn btn-success" />
                             <Link to='/Requests' className="btn btn-danger">Cancel</Link>
+                            <input type="submit" value="Create" className="btn btn-success" />                       
                         </div>
                     </div>
                 </form>

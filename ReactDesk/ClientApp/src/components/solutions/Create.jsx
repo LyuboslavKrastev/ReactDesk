@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { solutionService } from '../../services/solutions.service';
 
 export default class CreateSolution extends Component{
     constructor(props) {
@@ -22,21 +23,26 @@ export default class CreateSolution extends Component{
 
     handleSubmit = (event) => {
         event.preventDefault();
-        let data = this.state
-        console.log(data)
+        let content = this.state.Title
+        let title = this.state.Title
 
-        // requestService.createRequest(data.Subject, data.Description, data.CategoryId)
-        //     .then(res => {
-        //         if (res) {
-        //             NotificationManager.success('Successfully created solution' + res.subject)
-        //             return this.props.history.push('/')
+        if (!title || !content) {
+            NotificationManager.error('Solutions must have a title and content')
+            return;
+        }
+
+        solutionService.createSolution(title, content)
+             .then(res => {
+                 if (res) {
+                     NotificationManager.success('Successfully created solution' + res.subject)
+                     return this.props.history.push(`/solutions/details/${res.id}`);
                     
-        //         }
-        //         else {
-        //             console.log(res)
-        //             return NotificationManager.error(res.error)
-        //         }
-        //     })
+                 }
+                 else {
+                     console.log(res)
+                     return NotificationManager.error(res.error)
+                 }
+             })
     }
     render(){
         return (
@@ -52,9 +58,9 @@ export default class CreateSolution extends Component{
                 <input class="center-block" asp-for="Model.Attachments" type="file" multiple />
                 <div className="form-group">
                             <br />
-                            <div className="col-sm-10 col-sm-push-5">
-                                <input type="submit" value="Create" className="btn btn-success" />
+                        <div className="col-sm-10 col-sm-push-5">
                                 <Link to='/Solutions' className="btn btn-danger">Cancel</Link>
+                                <input type="submit" value="Create" className="btn btn-success" />                      
                             </div>
                         </div>
             </form>

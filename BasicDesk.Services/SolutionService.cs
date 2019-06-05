@@ -1,9 +1,12 @@
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using BasicDesk.App.Models.Common.ViewModels;
 using BasicDesk.Data.Models.Solution;
 using BasicDesk.Services.Interfaces;
 using BasicDesk.Services.Repository;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BasicDesk.Services
@@ -17,15 +20,22 @@ namespace BasicDesk.Services
         }
 
 
-        public async Task<SolutionDetailsViewModel> GetSolutionDetails(int id)
+        public IQueryable<SolutionDetailsViewModel> GetSolutionDetails(int id)
         {
-            Solution solution = await this.ById(id)
-                .Include(s => s.Author)
-                .Include(s => s.Attachments)
-                .FirstAsync(s => s.Id == id);
-            solution.Views++;
-            await this.SaveChangesAsync();
-            return Mapper.Map<SolutionDetailsViewModel>(solution);
+            IQueryable<SolutionDetailsViewModel> solution = this.ById(id).ProjectTo<SolutionDetailsViewModel>();
+
+            return solution;
         }
+
+        public async Task IncreaseViewCount(int solutionId)
+        {
+            Solution solution = this.ById(solutionId).FirstOrDefault();
+
+            if (solution != null)
+            {
+                solution.Views++;
+            }
+            await this.SaveChangesAsync();
+        } 
     }
 }

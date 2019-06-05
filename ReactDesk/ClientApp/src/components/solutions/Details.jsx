@@ -23,7 +23,7 @@ export default class SolutionDetails extends Component{
 
     render() {
         let solution = this.state.solution
-
+        console.log(solution)
         return(
             <div>
             <h2 class="text-center">Details for Solution {solution.id}</h2>
@@ -33,7 +33,7 @@ export default class SolutionDetails extends Component{
         <div class="panel panel-primary">
             <div class="panel-heading clearfix">
                 <div class="pull-left"><strong>Subject:</strong> {solution.title}</div>
-                <div class="pull-right"><strong>Created On:</strong> {solution.creationTime}</div>
+                <div class="pull-right"><strong>Created On:</strong> {solution.createdOn}</div>
             </div>
             <div class="panel-body"><strong>Description:</strong> <p>{solution.content}</p></div>
             <div class="panel-footer clearfix">

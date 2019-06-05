@@ -1,5 +1,6 @@
 ﻿using BasicDesk.Common.Constants.Validation;
 using BasicDesk.Data.Models.Requests;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,6 +12,11 @@ namespace BasicDesk.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
+
+        public static string FindFirst(string name)
+        {
+            throw new NotImplementedException();
+        }
 
         [Required]
         [MinLength(UserConstants.FullNameMinLength)]
