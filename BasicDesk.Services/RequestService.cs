@@ -219,7 +219,7 @@ namespace BasicDesk.Services
             }
         }
 
-        public async Task AddReply(int requestId, string userId, bool isTechnician, string noteDescription)
+        public async Task AddReply(int requestId, string userId, bool isTechnician, string description)
         {
             Request request = await this.ById(requestId).FirstAsync();
 
@@ -232,7 +232,7 @@ namespace BasicDesk.Services
                 {
                     Subject = $"Re: [{request.Subject}]",
                     RequestId = requestId,
-                    Description = noteDescription,
+                    Description = description,
                     CreationTime = DateTime.UtcNow,
                     Author = author
                 };

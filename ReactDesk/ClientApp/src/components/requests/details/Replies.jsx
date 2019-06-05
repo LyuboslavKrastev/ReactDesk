@@ -29,7 +29,10 @@ export default class Replies extends Component {
 
         return (
             replies ? <div>
-                <button type="button" className={buttonColor} data-toggle="collapse" onClick={this.showOrHideReplies}>{buttonText}</button>
+                <div className='text-center'>
+                    <button type="button" className={buttonColor} data-toggle="collapse" onClick={this.showOrHideReplies}>{buttonText}</button>
+                </div>
+                <br/>
                 <div id="replies" className="collapse">
                     <div className="panel">
                         <div className="panel-heading clearfix">

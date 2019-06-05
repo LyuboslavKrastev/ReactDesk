@@ -1,4 +1,5 @@
-﻿using BasicDesk.Common.Constants;
+﻿using BasicDesk.App.Models.Common.BindingModels;
+using BasicDesk.Common.Constants;
 using BasicDesk.Data.Models;
 using BasicDesk.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -23,20 +24,15 @@ namespace ReactDesk.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(int requestId, string replyDescription)
+        public async Task<IActionResult> Post(ReplyCreationBindingModel model)
         {
-            if (string.IsNullOrWhiteSpace(replyDescription))
-            {
-                return BadRequest();
-            }
-
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             var user = this.userService.GetById(userId);
             bool isTechnician = User.IsInRole(WebConstants.AdminRole) || User.IsInRole(WebConstants.HelpdeskRole);
 
-            await this.requestService.AddReply(requestId, userId, isTechnician, replyDescription);
+            await this.requestService.AddReply(model.RequestId, userId, isTechnician, model.Description);
 
-            return Ok();
+            return Ok("Reply added successfully");
         }
     }
 

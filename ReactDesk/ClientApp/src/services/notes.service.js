@@ -4,15 +4,9 @@ import { authenticationService } from '../services/authentication.service';
 
 
 export const notesService = {
-    getAll,
     createNote
 };
 
-function getAll(requestId) {
-    let url = `api/notes/getall?requestId=${requestId}` 
-    const requestOptions = { method: 'GET', headers: authHeader() };
-    return fetch(url, requestOptions).then(handleResponse);
-}
 
 
 function createNote(ids, description) {

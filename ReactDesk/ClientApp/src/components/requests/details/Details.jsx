@@ -43,7 +43,7 @@ export default class RequestDetails extends Component {
     render() {
         let request = this.state.request;
         console.log('notes: ')
-        console.log(request.notes);
+        console.log(request.author);
 
         return (
             <div>
@@ -76,7 +76,7 @@ export default class RequestDetails extends Component {
 
                 
                 <div className="btn-group btn-group-toggle" data-toggle="buttons">
-                    <button className="btn disabled" style={{ display: 'table', 'background-color': '#00611C', color: 'white' }}>Request ID: {request.id}</button>
+                    <button className="btn disabled" style={{ display: 'table', 'backgroundColor': '#00611C', color: 'white' }}>Request ID: {request.id}</button>
                     <button id="btn_desc" class="btn btn btn-danger" onClick={showDetails}>Request</button>
                     <button id="btn_res" class="btn btn" onClick={showResolution}>Resolution</button>
                     <button id="btn_hist" class="btn btn" onClick={showHistory}>History</button>
@@ -111,8 +111,8 @@ export default class RequestDetails extends Component {
                 <div className="panel-group" id="request">
                     <div className="panel">
                         <div className="panel-heading clearfix">
-                            <div className="pull-left"><strong>Requester:</strong> <a data-toggle="modal" data-target="#@Model.Author.Id">{request.requester}</a></div>
-                            <div className="pull-right"><strong>Created On:</strong> {request.StartTime}</div>
+                            <div className="pull-left"><strong>Requester:</strong> <a data-toggle="modal" data-target="#@Model.Author.Id">{request.author? request.author.fullName : null}</a></div>
+                            <div className="pull-right"><strong>Created On:</strong> {request.createdOn}</div>
                         </div>
                         <div className="panel-body" style={{ height: '300px', 'overflow-y': 'scroll' }}>
                             <p><strong>Subject:</strong> {request.subject}</p>
@@ -177,8 +177,10 @@ export default class RequestDetails extends Component {
                     </div>
                 </div>
 
-                <Replies replies={request.replies} />
-                <button className="btn btn-success" onClick={this.showAddReplyModal}>Reply</button>
+                {request.replies !== undefined && request.replies.length > 0 ? <Replies replies={request.replies} /> : null}
+                <div className='text-center'>
+                    <button className="btn btn-success" onClick={this.showAddReplyModal}>Reply</button>
+                </div>
                 <AddReply requestId={request.id} />
 
             </div>

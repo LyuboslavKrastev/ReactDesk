@@ -84,7 +84,7 @@ export default class Navbar extends Component{
                 
                               
     </ul>
-    <ul class="nav navbar-nav float-xs-right">
+    <ul className="nav navbar-nav float-xs-right">
     <li>{button}</li>
     </ul>
      </div>

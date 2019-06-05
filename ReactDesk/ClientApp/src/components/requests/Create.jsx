@@ -63,7 +63,7 @@ export default class CreateRequest extends Component {
             <div>
                 <h2 className="text-center">Create a request</h2>
 
-                <form onSubmit={this.handleSubmit} className="form-horizontal" enctype="multipart/form-data">
+                <form onSubmit={this.handleSubmit} className="form-horizontal" encType="multipart/form-data">
                     <label htmlFor="Subject">Subject</label>
                     <input className="form-control" name="Subject" onChange={this.handleInputChange} />
                     <label htmlFor="description">Description</label>

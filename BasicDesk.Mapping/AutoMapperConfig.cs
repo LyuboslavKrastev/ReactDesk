@@ -7,9 +7,6 @@ using BasicDesk.Data.Models;
 using BasicDesk.App.Models.Common.ViewModels;
 using BasicDesk.App.Models.Management.BindingModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BasicDesk.App.Models.DTOs;
-using System.Linq;
-
 namespace BasicDesk.Mapping
 {
     public static class AutoMapperConfig
@@ -27,8 +24,6 @@ namespace BasicDesk.Mapping
 
             Mapper.Initialize(configuration =>
             {
-                configuration.CreateMap<User, UserDTO>();
-                configuration.CreateMap<UserDTO, User>();
                 configuration.CreateMap<UserRegisteringModel, User>();
                 configuration.CreateMap<User, UserConciseViewModel>();
 
@@ -45,7 +40,7 @@ namespace BasicDesk.Mapping
                 //.ForMember(u => u.Phone, opt => opt.MapFrom(u => u.PhoneNumber));
 
                 configuration.CreateMap<RequestReply, RequestReplyViewModel>()
-                .ForMember(u => u.Author, opt => opt.MapFrom(u => u.Author.Username))
+                .ForMember(u => u.Author, opt => opt.MapFrom(u => u.Author.FullName))
                 .ForMember(r => r.CreationTime, opt => opt.MapFrom(rep => rep.CreationTime));
 
                 configuration.CreateMap<RequestCreationBindingModel, Request>()

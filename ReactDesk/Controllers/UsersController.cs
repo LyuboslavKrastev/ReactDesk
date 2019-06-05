@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
-using BasicDesk.App.Models.DTOs;
 using BasicDesk.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +13,7 @@ using ReactDesk.Exceptions;
 using ReactDesk.Helpers;
 using BasicDesk.Services.Interfaces;
 using BasicDesk.App.Models.Common.BindingModels;
+using BasicDesk.App.Models.Management.ViewModels;
 
 namespace ReactDesk.Controllers
 {
@@ -114,39 +113,37 @@ namespace ReactDesk.Controllers
             }
 
             var users = _userService.GetAll();
-            var userDtos = Mapper.Map<IList<UserDTO>>(users);
+            var userDtos = Mapper.Map<IList<UserConciseViewModel>>(users);
             return Ok(userDtos);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
-            //const currentUser = users.find(x => x.role === role);
-            //if (id !== currentUser.id && role !== Role.Admin) return unauthorised();
             var user = _userService.GetById(id);
-            var userDto = Mapper.Map<UserDTO>(user);
+            var userDto = Mapper.Map<UserDetailsViewModel>(user);
             return Ok(userDto);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(string id, [FromBody]UserDTO userDto)
-        {
-            // map dto to entity and set id
-            var user = Mapper.Map<User>(userDto);
-            user.Id = id;
+        //[HttpPut("{id}")]
+        //public IActionResult Update(string id, [FromBody]UserDTO userDto)
+        //{
+        //    // map dto to entity and set id
+        //    var user = Mapper.Map<User>(userDto);
+        //    user.Id = id;
 
-            try
-            {
-                // save 
-                _userService.Update(user, userDto.Password);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(ex.Message);
-            }
-        }
+        //    try
+        //    {
+        //        // save 
+        //        _userService.Update(user, userDto.Password);
+        //        return Ok();
+        //    }
+        //    catch (AppException ex)
+        //    {
+        //        // return error message if there was an exception
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

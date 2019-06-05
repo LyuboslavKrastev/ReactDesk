@@ -26,13 +26,6 @@ namespace ReactDesk.Controllers
             this.userRoleService = userRoleService;
         }
 
-        [HttpGet("[action]")]
-        public IActionResult GetAll(int requestId)
-        {          
-            var notes = this.requestService.GetAll().ToArray();
-
-            return Ok(notes);
-        }
 
         [HttpPost]
         public async Task<IActionResult> Post(JObject data)
