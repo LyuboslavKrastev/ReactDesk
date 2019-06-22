@@ -76,7 +76,7 @@ export default class AddNoteModal extends Component{
                             <textarea id="noteDescription" name='description' className="form-control" rows="4" style={{ 'min-width': '100%', resize: 'none' }} onChange={this.handleInputChange} ></textarea>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.hideModal}>Close</button>
+                            <button type="button" className="btn btn-danger" onClick={this.hideModal}>Close</button>
                             <button type="button" className="btn btn-success" id="noteBtn" onClick={this.handleSubmit}>Add Note</button>
                         </div>
                     </div>

@@ -2,7 +2,6 @@
 import { repliesService } from '../../../services/replies.service' 
 import { NotificationManager } from 'react-notifications';
 
-
 export default class AddReply extends Component {
 
     constructor(props) {

@@ -22,19 +22,42 @@ function getById(id) {
     return fetch(`api/requests/${id}`, requestOptions).then(handleResponse);
 }
 
-function createRequest(subject, description, category) {
+function createRequest(subject, description, category, attachments) {
     const currentUser = authenticationService.currentUserValue;
+    debugger
+    let formData = new FormData()
+    formData.append('subject', subject)
+    formData.append('description', description)
+    formData.append('categoryId', category)
 
-    const requestOptions = {
+    if (attachments) {
+        let files = [];
+        for (const file of attachments) {
+            formData.append('attachments', file, file.name)
+        }
+    }
+
+    const reqOptions = {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${currentUser.token}`,
-            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ subject, description, categoryId: category })
+        body: formData
     };
-    return fetch(`api/requests`, requestOptions).then(handleResponse).catch(err => { return { error: err }});
+
+    return fetch(`api/requests`, reqOptions).then(handleResponse).catch(err => { return { error: err } });
 }
+
+//const requestOptions = {
+//    method: 'POST',
+//    headers: {
+//        Authorization: `Bearer ${currentUser.token}`,
+//        'Content-Type': 'application/json'
+//    },
+//    body: JSON.stringify({ subject, description, categoryId: category, attachments })
+//};
+//return fetch(`api/requests`, requestOptions).then(handleResponse).catch(err => { return { error: err }});
+
 
 function mergeRequests(ids) {
     const currentUser = authenticationService.currentUserValue;

@@ -55,7 +55,7 @@ namespace ReactDesk.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(RequestCreationBindingModel model)
+        public async Task<IActionResult> Post([FromForm]RequestCreationBindingModel model)
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             var user = userService.GetById(userId);
@@ -65,10 +65,7 @@ namespace ReactDesk.Controllers
                 return BadRequest();
             }
 
-            var request = Mapper.Map<Request>(model);
-      
-
-          
+            var request = Mapper.Map<Request>(model);     
 
             request.RequesterId = user.Id;
 

@@ -25,14 +25,23 @@ export default class CreateRequest extends Component {
         })
     }
 
+    handleFileUpload = (event) => {
+        let files = event.target.files
+
+        console.log(files);
+
+        this.setState({
+            Attachments: files
+        })
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
         let data = this.state
 
-        requestService.createRequest(data.Subject, data.Description, data.CategoryId)
+        requestService.createRequest(data.Subject, data.Description, data.CategoryId, data.Attachments)
             .then(res => {
                 if (res) {
-                    alert(res.Subject)
                     console.log(res)
                     NotificationManager.success('Successfully created request ' + res.Subject)
                     return this.props.history.push('/requests')
@@ -75,7 +84,7 @@ export default class CreateRequest extends Component {
                     </select>
 
                     <br />
-                    <input className="center-block" asp-for="Attachments" type="file" multiple />
+                    <input onChange={this.handleFileUpload} className='text-center' type='file' id='multi' multiple />
                     <div className="form-group">
                         <br />
                         <div className="col-sm-10 col-sm-push-5">
