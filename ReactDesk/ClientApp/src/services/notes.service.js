@@ -11,6 +11,7 @@ export const notesService = {
 
 function createNote(ids, description) {
     const currentUser = authenticationService.currentUserValue;
+    debugger;
 
     const requestOptions = {
         method: 'POST',

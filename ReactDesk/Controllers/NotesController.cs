@@ -28,9 +28,9 @@ namespace ReactDesk.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(JObject data)
+        public async Task<IActionResult> Post([FromBody]JObject data)
         {
-
+            var idss = data["ids"];
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             IEnumerable<int> ids = data["ids"].ToObject<int[]>();
             string description = data["description"].ToObject<string>();

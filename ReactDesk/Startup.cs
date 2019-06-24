@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ReactDesk.Helpers;
+using ReactDesk.Helpers.Interfaces;
 using System.Text;
 
 namespace ReactDesk
@@ -69,6 +70,7 @@ namespace ReactDesk
             services.AddScoped<StatusService, StatusService>();
 
             services.AddScoped(typeof(AttachmentService<>));
+            services.AddScoped<IFileUploader, FileUploader>();
 
 
 

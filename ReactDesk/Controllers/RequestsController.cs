@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using BasicDesk.App.Models.Common.BindingModels;
 using BasicDesk.App.Models.Common.ViewModels;
 using AutoMapper.QueryableExtensions;
+using ReactDesk.Helpers.Interfaces;
+using System.IO;
+using BasicDesk.Services;
 
 namespace ReactDesk.Controllers
 {
@@ -20,11 +23,16 @@ namespace ReactDesk.Controllers
     {
         private readonly IUserService userService;
         private readonly IRequestService requestService;
+        private readonly IFileUploader fileUploader;
+        private readonly AttachmentService<RequestAttachment> attachmentService;
 
-        public RequestsController(IUserService userService, IRequestService requestService)
+        public RequestsController(IUserService userService, IRequestService requestService, 
+            IFileUploader fileUploader, AttachmentService<RequestAttachment> attachmentService)
         {
             this.userService = userService;
             this.requestService = requestService;
+            this.fileUploader = fileUploader;
+            this.attachmentService = attachmentService;
         }
 
         [HttpGet("[action]")]
@@ -71,25 +79,25 @@ namespace ReactDesk.Controllers
 
             await this.requestService.AddAsync(request);
 
-            //if (model.Attachments != null)
-            //{
-            //    string path = await fileUploader.CreateAttachmentAsync(model.Subject, model.Attachments, "Requests");
+            if (model.Attachments != null)
+            {
+                string path = await fileUploader.CreateAttachmentAsync(model.Subject, model.Attachments, "Requests");
 
-            //    ICollection<RequestAttachment> attachments = new List<RequestAttachment>();
+                ICollection<RequestAttachment> attachments = new List<RequestAttachment>();
 
-            //    foreach (var attachment in model.Attachments)
-            //    {
-            //        RequestAttachment requestAttachment = new RequestAttachment
-            //        {
-            //            FileName = attachment.FileName,
-            //            PathToFile = Path.Combine(path, attachment.FileName),
-            //            RequestId = request.Id
-            //        };
-            //        attachments.Add(requestAttachment);
-            //    }
+                foreach (var attachment in model.Attachments)
+                {
+                    RequestAttachment requestAttachment = new RequestAttachment
+                    {
+                        FileName = attachment.FileName,
+                        PathToFile = Path.Combine(path, attachment.FileName),
+                        RequestId = request.Id
+                    };
+                    attachments.Add(requestAttachment);
+                }
 
-            //    await this.attachmentService.AddRangeAsync(attachments);
-            //}
+                await this.attachmentService.AddRangeAsync(attachments);
+            }
 
             await this.requestService.SaveChangesAsync();
 
