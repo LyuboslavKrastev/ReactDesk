@@ -1,4 +1,4 @@
-﻿namespace BasicDesk.App.Models.Common.ViewModels
+﻿namespace BasicDesk.App.Models.Common.ViewModels.Solutions
 {
     public class SolutionAttachmentViewModel
     {

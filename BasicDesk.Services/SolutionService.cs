@@ -1,11 +1,8 @@
-using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using BasicDesk.App.Models.Common.ViewModels;
+using BasicDesk.App.Models.Common.ViewModels.Solutions;
 using BasicDesk.Data.Models.Solution;
 using BasicDesk.Services.Interfaces;
 using BasicDesk.Services.Repository;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 

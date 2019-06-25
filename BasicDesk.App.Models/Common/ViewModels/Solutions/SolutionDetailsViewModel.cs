@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BasicDesk.App.Models.Common.ViewModels
+namespace BasicDesk.App.Models.Common.ViewModels.Solutions
 {
     public class SolutionDetailsViewModel
     {

@@ -2,7 +2,7 @@
 using BasicDesk.Data.Models.Requests;
 using System.Collections.Generic;
 
-namespace BasicDesk.App.Models.Common.ViewModels
+namespace BasicDesk.App.Models.Common.ViewModels.Requests
 {
     public class RequestDetailsViewModel
     {

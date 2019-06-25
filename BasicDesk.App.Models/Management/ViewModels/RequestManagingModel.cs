@@ -1,4 +1,4 @@
-﻿using BasicDesk.App.Models.Common.ViewModels;
+﻿using BasicDesk.App.Models.Common.ViewModels.Requests;
 using BasicDesk.Data.Models.Requests;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;

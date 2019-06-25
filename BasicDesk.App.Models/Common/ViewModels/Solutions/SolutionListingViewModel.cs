@@ -1,4 +1,4 @@
-﻿namespace BasicDesk.App.Models.ViewModels
+﻿namespace BasicDesk.App.Models.Common.ViewModels.Solutions
 {
     public class SolutionListingViewModel
     {

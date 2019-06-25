@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using BasicDesk.App.Models.Common.ViewModels;
+using BasicDesk.App.Models.Common.ViewModels.Solutions;
 using BasicDesk.Data.Models.Solution;
 
 namespace BasicDesk.Services.Interfaces

@@ -4,10 +4,10 @@ using BasicDesk.Data.Models.Solution;
 using BasicDesk.Data.Models.Requests;
 using BasicDesk.App.Models.Management.ViewModels;
 using BasicDesk.Data.Models;
-using BasicDesk.App.Models.Common.ViewModels;
+using BasicDesk.App.Models.Common.ViewModels.Requests;
 using BasicDesk.App.Models.Management.BindingModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using BasicDesk.App.Models.ViewModels;
+using BasicDesk.App.Models.Common.ViewModels.Solutions;
 
 namespace BasicDesk.Mapping
 {

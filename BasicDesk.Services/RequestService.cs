@@ -1,13 +1,11 @@
 ﻿using AutoMapper.QueryableExtensions;
-using BasicDesk.App.Models.Common;
-using BasicDesk.App.Models.Common.ViewModels;
+using BasicDesk.App.Models.Common.ViewModels.Requests;
 using BasicDesk.App.Models.Management.BindingModels;
 using BasicDesk.App.Models.Management.ViewModels;
 using BasicDesk.Data.Models;
 using BasicDesk.Data.Models.Requests;
 using BasicDesk.Services.Interfaces;
 using BasicDesk.Services.Repository;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

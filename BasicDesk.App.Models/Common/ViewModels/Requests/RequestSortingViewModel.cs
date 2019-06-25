@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using X.PagedList;
 
-namespace BasicDesk.App.Models.Common.ViewModels
+namespace BasicDesk.App.Models.Common.ViewModels.Requests
 {
     public class RequestSortingViewModel
     {

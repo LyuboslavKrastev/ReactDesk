@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BasicDesk.App.Models.Management.BindingModels;
-using BasicDesk.App.Models.ViewModels;
+using BasicDesk.App.Models.Common.ViewModels.Solutions;
 using BasicDesk.Data.Models;
 using BasicDesk.Data.Models.Solution;
 using BasicDesk.Services;

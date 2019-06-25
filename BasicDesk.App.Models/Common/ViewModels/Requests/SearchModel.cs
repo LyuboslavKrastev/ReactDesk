@@ -1,4 +1,4 @@
-﻿namespace BasicDesk.App.Models.Common
+﻿namespace BasicDesk.App.Models.Common.ViewModels.Requests
 {
     public class SearchModel
     {

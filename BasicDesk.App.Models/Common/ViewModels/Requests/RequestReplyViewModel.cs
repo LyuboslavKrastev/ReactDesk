@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BasicDesk.App.Models.Common.ViewModels
+namespace BasicDesk.App.Models.Common.ViewModels.Requests
 {
     public class RequestReplyViewModel
     {

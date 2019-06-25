@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BasicDesk.App.Models.Common;
-using BasicDesk.App.Models.Common.ViewModels;
+using BasicDesk.App.Models.Common.ViewModels.Requests;
 using BasicDesk.App.Models.Management.BindingModels;
 using BasicDesk.App.Models.Management.ViewModels;
 using BasicDesk.Data.Models.Requests;
