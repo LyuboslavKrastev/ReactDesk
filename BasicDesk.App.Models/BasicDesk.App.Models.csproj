@@ -12,4 +12,9 @@
     <ProjectReference Include="..\BasicDesk.Models\BasicDesk.Data.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\ViewModels\Requests\" />
+    <Folder Include="Common\ViewModels\Solutions\" />
+  </ItemGroup>
+
 </Project>

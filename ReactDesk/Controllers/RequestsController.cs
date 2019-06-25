@@ -57,10 +57,12 @@ namespace ReactDesk.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             var request = this.requestService.GetRequestDetails(id, userId).FirstOrDefault();
-            //var requestViewModels = Mapper.Map<RequestListingViewModel>(requests);
+            if (request == null)
+            {
+                return NotFound();
+            }
             return Ok(request);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Post([FromForm]RequestCreationBindingModel model)
@@ -100,8 +102,6 @@ namespace ReactDesk.Controllers
             }
 
             await this.requestService.SaveChangesAsync();
-
-            //this.alerter.AddMessage(MessageType.Success, "Request created successfully");
 
             return this.Ok(request);
         }

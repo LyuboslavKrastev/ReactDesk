@@ -28,8 +28,6 @@ export default class CreateRequest extends Component {
     handleFileUpload = (event) => {
         let files = event.target.files
 
-        console.log(files);
-
         this.setState({
             Attachments: files
         })
@@ -89,7 +87,7 @@ export default class CreateRequest extends Component {
                         <br />
                         <div className="col-sm-10 col-sm-push-5">
                             <Link to='/Requests' className="btn btn-danger">Cancel</Link>
-                            <input type="submit" value="Create" className="btn btn-success" />                       
+                            <input type="submit" value="Create" className="btn btn-success" />
                         </div>
                     </div>
                 </form>

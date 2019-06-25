@@ -24,14 +24,13 @@ function getById(id) {
 
 function createRequest(subject, description, category, attachments) {
     const currentUser = authenticationService.currentUserValue;
-    debugger
+
     let formData = new FormData()
     formData.append('subject', subject)
     formData.append('description', description)
     formData.append('categoryId', category)
 
     if (attachments) {
-        let files = [];
         for (const file of attachments) {
             formData.append('attachments', file, file.name)
         }

@@ -19,16 +19,33 @@ function getById(id) {
     return fetch(`api/solutions/${id}`, requestOptions).then(handleResponse);
 }
 
-function createSolution(title, content) {
+function createSolution(title, content, attachments) {
     const currentUser = authenticationService.currentUserValue;
 
-    const requestOptions = {
+    let formData = new FormData()
+    formData.append('title', title)
+    formData.append('content', content)
+
+    if (attachments) {
+        for (const file of attachments) {
+            formData.append('attachments', file, file.name)
+        }
+    }
+
+    const reqOptions = {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${currentUser.token}`,
-            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title, content})
+        body: formData
     };
-    return fetch(`api/solutions`, requestOptions).then(handleResponse).catch(err => { return { error: err } });
+    //const requestOptions = {
+    //    method: 'POST',
+    //    headers: {
+    //        Authorization: `Bearer ${currentUser.token}`,
+    //        'Content-Type': 'application/json'
+    //    },
+    //    body: JSON.stringify({ title, content})
+    //};
+    return fetch(`api/solutions`, reqOptions).then(handleResponse).catch(err => { return { error: err } });
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,11 +10,11 @@ using BasicDesk.App.Models.Management.BindingModels;
 using BasicDesk.App.Models.ViewModels;
 using BasicDesk.Data.Models;
 using BasicDesk.Data.Models.Solution;
+using BasicDesk.Services;
 using BasicDesk.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using ReactDesk.Helpers.Interfaces;
 
 namespace ReactDesk.Controllers
 {
@@ -24,11 +25,16 @@ namespace ReactDesk.Controllers
     {
 		private readonly IUserService userService;
         private readonly ISolutionService solutionService;
+        private readonly AttachmentService<SolutionAttachment> attachmentService;
+        private readonly IFileUploader fileUploader;
 
-        public SolutionsController(IUserService userService, ISolutionService solutionService)
+        public SolutionsController(IUserService userService, ISolutionService solutionService, 
+            AttachmentService<SolutionAttachment> attachmentService, IFileUploader fileUploader)
         {
             this.userService = userService;
             this.solutionService = solutionService;
+            this.attachmentService = attachmentService;
+            this.fileUploader = fileUploader;
         }
 
 		[HttpGet("[action]")]
@@ -56,7 +62,7 @@ namespace ReactDesk.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(SolutionCreationBindingModel model)
+        public async Task<IActionResult> Post([FromForm]SolutionCreationBindingModel model)
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value;
             User user = this.userService.GetById(userId);
@@ -71,31 +77,29 @@ namespace ReactDesk.Controllers
 
             await this.solutionService.AddAsync(solution);
 
-            //if (Model.Attachments != null)
-            //{
-            //    string path = await fileUploader.CreateAttachmentAsync(Model.Title, Model.Attachments, "Solutions");
+            if (model.Attachments != null)
+            {
+                string path = await fileUploader.CreateAttachmentAsync(solution.Title, model.Attachments, "Solutions");
 
-            //    ICollection<SolutionAttachment> attachments = new List<SolutionAttachment>();
+                ICollection<SolutionAttachment> attachments = new List<SolutionAttachment>();
 
-            //    foreach (var attachment in Model.Attachments)
-            //    {
-            //        SolutionAttachment solutionAttachment = new SolutionAttachment
-            //        {
-            //            FileName = attachment.FileName,
-            //            PathToFile = Path.Combine(path, attachment.FileName),
-            //            SolutionId = solution.Id
-            //        };
-            //        attachments.Add(solutionAttachment);
-            //    }
+                foreach (var attachment in model.Attachments)
+                {
+                    SolutionAttachment solutionAttachment = new SolutionAttachment
+                    {
+                        FileName = attachment.FileName,
+                        PathToFile = Path.Combine(path, attachment.FileName),
+                        SolutionId = solution.Id
+                    };
+                    attachments.Add(solutionAttachment);
+                }
 
-            //    await this.attachmentService.AddRangeAsync(attachments);
-            //}
+                await this.attachmentService.AddRangeAsync(attachments);
+            }
 
             await this.solutionService.SaveChangesAsync();
 
-            //alerter.AddMessage(MessageType.Success, "Solution created successfully");
-
-            return Ok(solution);
+            return Ok(new { solution.Id, solution.Title});
         }
     }
 }
