@@ -1,7 +1,9 @@
 import { authenticationService } from '../services/authentication.service';
 
 export function handleResponse(response) {
-    
+    if (response.status >= 500) {
+        return Promise.reject('error');;
+    }
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {

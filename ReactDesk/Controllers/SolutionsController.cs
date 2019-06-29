@@ -20,19 +20,17 @@ namespace ReactDesk.Controllers
     [Route("api/[controller]")]
 	[Authorize]
     [ApiController]
-    public class SolutionsController : ControllerBase
+    public class SolutionsController : ControllerBaseWithDownloads<SolutionAttachment>
     {
 		private readonly IUserService userService;
         private readonly ISolutionService solutionService;
-        private readonly AttachmentService<SolutionAttachment> attachmentService;
         private readonly IFileUploader fileUploader;
 
         public SolutionsController(IUserService userService, ISolutionService solutionService, 
-            AttachmentService<SolutionAttachment> attachmentService, IFileUploader fileUploader)
+            AttachmentService<SolutionAttachment> attachmentService, IFileUploader fileUploader) : base(attachmentService)
         {
             this.userService = userService;
             this.solutionService = solutionService;
-            this.attachmentService = attachmentService;
             this.fileUploader = fileUploader;
         }
 

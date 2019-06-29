@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { solutionService } from '../../services/solutions.service'
 
-export default class SolutionDetails extends Component{
+export default class SolutionDetails extends Component {
 
     constructor(props) {
         super(props)
@@ -19,45 +19,51 @@ export default class SolutionDetails extends Component{
                 solution: res
             }))
     }
-    
+
+    getFile = (fileName, filePath, id) => {
+        solutionService.getFile(fileName, filePath, id)
+            .then(res => console.log(res))
+    }
+
 
     render() {
         let solution = this.state.solution
         console.log(solution)
-        return(
+        return (
             <div>
-            <h2 class="text-center">Details for Solution {solution.id}</h2>
+                <h2 class="text-center">Details for Solution {solution.id}</h2>
 
-<div class="container">
-    <div class="panel-group">
-        <div class="panel panel-primary">
-            <div class="panel-heading clearfix">
-                <div class="pull-left"><strong>Subject:</strong> {solution.title}</div>
-                <div class="pull-right"><strong>Created On:</strong> {solution.createdOn}</div>
-            </div>
-            <div class="panel-body"><strong>Description:</strong> <p>{solution.content}</p></div>
-            <div class="panel-footer clearfix">
-                <div class="text-center"><strong> Author:</strong> {solution.author}</div>
-            </div>
-            {/* @if (Model.Attachments.Any())
-            {
-                <div class="text-center">
-                    @foreach (var attachment in Model.Attachments)
-                    {
-                        <label asp-for="@attachment">Attachment: </label>
-                        <a asp-controller="Solutions" asp-action="Download"
-                           asp-route-filename="@attachment.FileName" asp-route-filePath="@attachment.PathToFile" asp-route-attachmentId="@attachment.Id">
-                            @attachment.FileName
-                        </a>
-                        <br />
-                    }
+                <div class="container">
+                    <div class="panel-group">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading clearfix">
+                                <div class="pull-left"><strong>Subject:</strong> {solution.title}</div>
+                                <div class="pull-right"><strong>Created On:</strong> {solution.createdOn}</div>
+                            </div>
+                            <div class="panel-body"><strong>Description:</strong> <p>{solution.content}</p></div>
+                            <div class="panel-footer clearfix">
+                                <div class="text-center"><strong> Author:</strong> {solution.author}</div>
+                            </div>
+                            {solution.attachments != undefined && solution.attachments.length > 0 ?
+                                <div className="text-center">
+                                    <br />
+                                    <label className="text-center">Attachments: </label>
+                                    <hr />
+                                    {solution.attachments.map(a =>
+                                        <div>
+                                            <a onClick={() => this.getFile(a.fileName, a.pathToFile, a.id)}>
+                                                {a.fileName}
+                                            </a>
+                                            <br />
+                                        </div>
+                                    )}
+                                </div>
+                                : null}
+                        </div>
+
+                    </div>
                 </div>
-            } */}
-        </div>
-
-    </div>
-</div>
-</div>
+            </div>
         )
     }
 }

@@ -20,20 +20,19 @@ namespace ReactDesk.Controllers
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
-    public class RequestsController : ControllerBase
+    public class RequestsController : ControllerBaseWithDownloads<RequestAttachment>
     {
         private readonly IUserService userService;
         private readonly IRequestService requestService;
         private readonly IFileUploader fileUploader;
-        private readonly AttachmentService<RequestAttachment> attachmentService;
 
-        public RequestsController(IUserService userService, IRequestService requestService, 
-            IFileUploader fileUploader, AttachmentService<RequestAttachment> attachmentService)
+        public RequestsController(IUserService userService, IRequestService requestService,IFileUploader fileUploader, 
+            AttachmentService<RequestAttachment> attachmentService) : base(attachmentService)
         {
-            this.userService = userService;
-            this.requestService = requestService;
-            this.fileUploader = fileUploader;
-            this.attachmentService = attachmentService;
+
+                this.userService = userService;
+                this.requestService = requestService;
+                this.fileUploader = fileUploader;
         }
 
         [HttpGet("[action]")]
@@ -139,39 +138,39 @@ namespace ReactDesk.Controllers
             return this.Ok(new { message = message });
         }
 
-        // WARNING: NOT SECURE (No validation)!
-        [HttpGet("[action]")]
-        public async Task<IActionResult> Download(string fileName, string filePath, string attachmentId)
-        {
-            var memory = new MemoryStream();
-            try
-            {
-                using (var stream = new FileStream(filePath, FileMode.Open))
-                {
-                    await stream.CopyToAsync(memory);
-                }
-            }
-            // Delete the attachment from the database attachments table, if it no longer exists in the attachments directory
-            catch (IOException)
-            {       
-                // Check if the attachmentId is an integer
-                if (int.TryParse(attachmentId, out int id))
-                {
-                    var entity = this.attachmentService.ById(id).First();
-                    await this.attachmentService.Delete(entity.Id);        
-                }
+        //// WARNING: NOT SECURE (No validation)!
+        //[HttpGet("[action]")]
+        //public async Task<IActionResult> Download(string fileName, string filePath, string attachmentId)
+        //{
+        //    var memory = new MemoryStream();
+        //    try
+        //    {
+        //        using (var stream = new FileStream(filePath, FileMode.Open))
+        //        {
+        //            await stream.CopyToAsync(memory);
+        //        }
+        //    }
+        //    // Delete the attachment from the database attachments table, if it no longer exists in the attachments directory
+        //    catch (IOException)
+        //    {       
+        //        // Check if the attachmentId is an integer
+        //        if (int.TryParse(attachmentId, out int id))
+        //        {
+        //            var entity = this.attachmentService.ById(id).First();
+        //            await this.attachmentService.Delete(entity.Id);        
+        //        }
 
-                return NotFound();
-            }
-            memory.Position = 0;
-            return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
-        }
+        //        return NotFound();
+        //    }
+        //    memory.Position = 0;
+        //    return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+        //}
 
-        private string GetContentType(string path)
-        {
-            var types = FileFormatValidator.GetMimeTypes();
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return types[ext];
-        }
+        //private string GetContentType(string path)
+        //{
+        //    var types = FileFormatValidator.GetMimeTypes();
+        //    var ext = Path.GetExtension(path).ToLowerInvariant();
+        //    return types[ext];
+        //}
     }
 }
