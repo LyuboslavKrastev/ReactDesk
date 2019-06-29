@@ -13,7 +13,7 @@ using AutoMapper.QueryableExtensions;
 using ReactDesk.Helpers.Interfaces;
 using System.IO;
 using BasicDesk.Services;
-
+using ReactDesk.Helpers;
 
 namespace ReactDesk.Controllers
 {
@@ -56,7 +56,7 @@ namespace ReactDesk.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
+           string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             var request = this.requestService.GetRequestDetails(id, userId).FirstOrDefault();
             if (request == null)
             {
@@ -137,6 +137,41 @@ namespace ReactDesk.Controllers
             string message = $"Successfully deleted request[s] {string.Join(", ", ids)}";
 
             return this.Ok(new { message = message });
+        }
+
+        // WARNING: NOT SECURE (No validation)!
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Download(string fileName, string filePath, string attachmentId)
+        {
+            var memory = new MemoryStream();
+            try
+            {
+                using (var stream = new FileStream(filePath, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                }
+            }
+            // Delete the attachment from the database attachments table, if it no longer exists in the attachments directory
+            catch (IOException)
+            {       
+                // Check if the attachmentId is an integer
+                if (int.TryParse(attachmentId, out int id))
+                {
+                    var entity = this.attachmentService.ById(id).First();
+                    await this.attachmentService.Delete(entity.Id);        
+                }
+
+                return NotFound();
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+        }
+
+        private string GetContentType(string path)
+        {
+            var types = FileFormatValidator.GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
         }
     }
 }

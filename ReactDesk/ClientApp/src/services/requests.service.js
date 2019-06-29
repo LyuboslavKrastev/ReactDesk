@@ -8,7 +8,8 @@ export const requestService = {
     getById,
     createRequest,
     mergeRequests,
-    deleteRequests
+    deleteRequests,
+    getFile
 };
 
 function getAll(statusId) {
@@ -20,6 +21,30 @@ function getAll(statusId) {
 function getById(id) {
     const requestOptions = { method: 'GET', headers: authHeader() };
     return fetch(`api/requests/${id}`, requestOptions).then(handleResponse);
+}
+
+function getFile(fileName, filePath, attachmentId) {
+   //Solution used for file downloading: https://medium.com/yellowcode/download-api-files-with-react-fetch-393e4dae0d9e
+    const requestOptions = { method: 'GET', headers: authHeader() };
+    return fetch(`api/requests/download?fileName=${fileName}&filePath=${filePath}&attachmentId=${attachmentId}`, requestOptions)
+            // 1. Convert the data into 'blob'
+        .then((response) => response.blob())
+        .then((blob) => {      
+            // 2. Create blob link to download
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${fileName}`);
+            // 3. Append to html page
+            document.body.appendChild(link);
+            // 4. Force download
+            link.click();
+            // 5. Clean up and remove the link
+            link.parentNode.removeChild(link);
+        })
+        .catch((error) => {
+            console.log(error)
+        }); 
 }
 
 function createRequest(subject, description, category, attachments) {

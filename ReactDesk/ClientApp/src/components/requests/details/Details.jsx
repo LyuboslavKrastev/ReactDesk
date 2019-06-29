@@ -32,8 +32,12 @@ export default class RequestDetails extends Component {
         document.getElementById('noteModal').style.display = 'block'
     }
 
+    getFile = (fileName, filePath, id) => {
+        requestService.getFile(fileName, filePath, id)
+            .then(res => console.log(res))
+    }
+
     showAddReplyModal = () => {
-        debugger;
         document.getElementById('replyModal').style.display = 'block'
     }
 
@@ -131,15 +135,15 @@ export default class RequestDetails extends Component {
 
                             }
                             <br />
-                            <div className="pull-left"><strong>Category:</strong> {request.category}</div>
+                            <div className="pull-left"><strong>Category:</strong> {request.category}</div>                     
                             {request.attachments != undefined && request.attachments.length > 0 ? 
-
                                 <div className="text-center">
+                                    <br/>
+                                    <label className="text-center">Attachments: </label>
+                                    <hr/>
                                     {request.attachments.map(a =>
                                         <div>
-                                        <label asp-for="@attachment">Attachment: </label>
-                                        <a asp-controller="Requests" asp-action="Download"
-                                            asp-route-filename="@attachment.FileName" asp-route-filePath="@attachment.PathToFile" asp-route-requestId="@Model.Id">
+                                            <a onClick={() => this.getFile(a.fileName, a.pathToFile, a.id)}>
                                             {a.fileName}
                                         </a>
                                             <br />
