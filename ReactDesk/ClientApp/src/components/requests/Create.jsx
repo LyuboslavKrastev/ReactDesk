@@ -40,6 +40,7 @@ export default class CreateRequest extends Component {
         requestService.createRequest(data.Subject, data.Description, data.CategoryId, data.Attachments)
             .then(res => {
                 if (res) {
+                    debugger;   
                     console.log(res)
                     NotificationManager.success('Successfully created request ' + res.Subject)
                     return this.props.history.push('/requests')

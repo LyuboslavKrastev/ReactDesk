@@ -1,4 +1,5 @@
 ﻿using AutoMapper.QueryableExtensions;
+using BasicDesk.App.Models.Common;
 using BasicDesk.App.Models.Common.ViewModels.Requests;
 using BasicDesk.App.Models.Management.BindingModels;
 using BasicDesk.App.Models.Management.ViewModels;
@@ -85,16 +86,16 @@ namespace BasicDesk.Services
             return this.repository.All();
         }
 
-        public IQueryable<Request> GetBySearch(string userId, bool isTechnician, SearchModel searchModel, IQueryable<Request> requests)
+        public IQueryable<Request> GetBySearch(string userId, bool isTechnician, TableFilteringModel searchModel, IQueryable<Request> requests)
         {
             if (!requests.Any())
             {
                 requests = GetAll(userId, isTechnician);
             }
 
-            if (int.TryParse(searchModel.IdSearch, out int id))
+            if (searchModel.IdSearch != null)
             {
-                requests = requests.Where(r => r.Id == id);
+                requests = requests.Where(r => r.Id == searchModel.IdSearch);
             }
             if (searchModel.RequesterSearch != null)
             {
@@ -108,11 +109,11 @@ namespace BasicDesk.Services
             {
                 requests = requests.Where(r => r.Subject.Contains(searchModel.SubjectSearch));
             }
-            if (DateTime.TryParse(searchModel.CreationDateSearch, out DateTime creationDateTime))
+            if (DateTime.TryParse(searchModel.StartTimeSearch, out DateTime creationDateTime))
             {
                 requests = requests.Where(r => r.StartTime.Date == creationDateTime.Date);
             }
-            if (DateTime.TryParse(searchModel.ClosingDateSearch, out DateTime closingDateTime))
+            if (DateTime.TryParse(searchModel.EndTimeSearch, out DateTime closingDateTime))
             {
 
                 requests = requests.Where(r => r.EndTime.Value.Date == closingDateTime.Date);

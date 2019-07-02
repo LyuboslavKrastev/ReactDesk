@@ -41,14 +41,8 @@ export default class RequestDetails extends Component {
         document.getElementById('replyModal').style.display = 'block'
     }
 
-
-
-
     render() {
         let request = this.state.request;
-        console.log('notes: ')
-        console.log(request.author);
-        console.log(request)
 
         return (
             <div>

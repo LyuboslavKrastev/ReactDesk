@@ -15,7 +15,7 @@ namespace BasicDesk.App.Models.Common.ViewModels.Requests
         public string StatusSort { get; set; }
         public string CurrentFilter { get; set; }
         public string CurrentSort { get; set; }
-        public SearchModel CurrentSearch { get; set; }
+        public TableFilteringModel CurrentSearch { get; set; }
 
         public int? RequestsPerPage { get; set; }
 

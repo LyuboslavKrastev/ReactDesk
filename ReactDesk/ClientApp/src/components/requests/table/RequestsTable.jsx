@@ -17,6 +17,26 @@ function toggle(event) {
     }
 }
 
+function isObject(obj) {
+    var type = typeof obj;
+    return type === 'function'
+    type === 'object' && !!obj;
+};
+function iterationCopy(src) {
+    let target = {};
+    for (let prop in src) {
+        if (src.hasOwnProperty(prop)) {
+            // if the value is a nested object, recursively copy all it's properties
+            if (isObject(src[prop])) {
+                target[prop] = iterationCopy(src[prop]);
+            } else {
+                target[prop] = src[prop];
+            }
+        }
+    }
+    return target;
+}
+
 export default class RequestsTable extends Component {
 
     constructor(props) {
@@ -32,30 +52,50 @@ export default class RequestsTable extends Component {
     }
 
     filterRequests = (event) => {
-        let value = event.target.value;
         debugger;
+        let value = event.target.value;
+
+        let data = { 'StatusId': value }
 
         if (value === 'All Requests') {
             requestService.getAll()
                 .then(res => {
                     this.setState({
+                        StatusId: null,
                         requests: res
                     })
                 })
-
+            console.log(this.state)
             return
         }
 
-
-
         if (value) {
-            requestService.getAll(value)
+            requestService.getAll(data)
                 .then(res => {
                     this.setState({
+                        StatusId: value,
                         requests: res
                     })
                 })
         }
+    }
+
+
+    searchRequests = (data) => {
+        //append the current filter to the data, so we can search trough the filtered results
+        debugger
+        let result = iterationCopy(data);
+
+        if (this.state.StatusId) {
+            result['StatusId'] = this.state.StatusId
+        }
+        debugger
+        requestService.getAll(result)
+            .then(res => {
+                this.setState({
+                    requests: res
+                })
+            })
     }
 
     orderRequests = (event) => {
@@ -90,7 +130,6 @@ export default class RequestsTable extends Component {
         })
 
     }
-
 
     showSearchBar = () => {
         let showSearchPrev = this.state.showSearch
@@ -181,7 +220,7 @@ export default class RequestsTable extends Component {
                         </th>
                     </thead>
                     <tbody>
-                        {this.state.showSearch ? <SearchBar /> : null}
+                        {this.state.showSearch ? <SearchBar searchRequests={this.searchRequests}/> : null}
                         <RequestsList requests={this.state.requests} showNotes={showNotes} />
                     </tbody>
 

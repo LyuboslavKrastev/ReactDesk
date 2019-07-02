@@ -14,6 +14,7 @@ using ReactDesk.Helpers.Interfaces;
 using System.IO;
 using BasicDesk.Services;
 using ReactDesk.Helpers;
+using BasicDesk.App.Models.Common;
 
 namespace ReactDesk.Controllers
 {
@@ -36,7 +37,7 @@ namespace ReactDesk.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetAll(int? statusId)
+        public IActionResult GetAll([FromQuery]TableFilteringModel searchModel)
         {
             //var requests = this.requestService.GetAll().Include(r => r.Requester)
             //.Include(r => r.Notes).Include(r => r.Status)
@@ -44,7 +45,9 @@ namespace ReactDesk.Controllers
 
 
             var requests = this.requestService.GetAll()
-                .Where(r => statusId.HasValue ? r.StatusId == statusId : true)             
+                .Where(r => searchModel.StatusId.HasValue ? r.StatusId == searchModel.StatusId : true)
+                .Where(r => searchModel.IdSearch.HasValue ? r.Id == searchModel.IdSearch : true)
+                .Where(r => !string.IsNullOrWhiteSpace(searchModel.SubjectSearch) ? r.Subject.Contains(searchModel.SubjectSearch) : true)              
                 .ProjectTo<RequestListingViewModel>()
                 .OrderByDescending(r => r.Id)
                 .ToArray();

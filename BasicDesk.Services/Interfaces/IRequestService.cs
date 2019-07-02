@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BasicDesk.App.Models.Common;
 using BasicDesk.App.Models.Common.ViewModels.Requests;
 using BasicDesk.App.Models.Management.BindingModels;
 using BasicDesk.App.Models.Management.ViewModels;
@@ -17,7 +18,7 @@ namespace BasicDesk.Services.Interfaces
         Task AddReply(int requestId, string userId, bool isTechnician, string noteDescription);
         IQueryable<RequestStatus> GetAllStatuses();
         IQueryable<Request> GetByFilter(string userId, bool isTechnician, string currentFilter);
-        IQueryable<Request> GetBySearch(string userId, bool isTechnician, SearchModel searchModel, IQueryable<Request> requests);
+        IQueryable<Request> GetBySearch(string userId, bool isTechnician, TableFilteringModel searchModel, IQueryable<Request> requests);
         IQueryable<RequestDetailsViewModel> GetRequestDetails(int id, string userId);
         IQueryable<RequestManagingModel> GetRequestManagingDetails(int id);
         Task Merge(IEnumerable<int> requestIds);

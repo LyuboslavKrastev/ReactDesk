@@ -43,8 +43,6 @@ export default class CreateSolution extends Component {
         solutionService.createSolution(data.Title, data.Content, data.Attachments)
             .then(res => {
                 if (res) {
-                    console.log('responseeeeeeeee')
-                    console.log(res)
                     NotificationManager.success('Successfully created solution' + res.title)
                     return this.props.history.push(`/solutions/details/${res.id}`);
 

@@ -12,8 +12,33 @@ export const requestService = {
     getFile
 };
 
-function getAll(statusId) {
-    let url = statusId ? `api/requests/getall?statusId=${statusId}` : `api/requests/getall`;
+function getAll(params) {
+    const buildQuery = (data) => {
+        if (typeof (data) === 'string') return data;
+
+        // Create a query array to hold the key/value pairs
+        var query = [];
+
+        // Loop through the data object
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+
+                // Encode each key and value, concatenate them into a string, and push them to the array
+                query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+            }
+        }
+
+        // Join each item in the array with a `&` and return the resulting string
+        return query.join('&');
+    }
+    debugger;
+
+    let query = buildQuery(params);
+
+    let endPoint = 'api/requests/getall';
+    //let url = data ? `api/requests/getall?statusId=${statusId}` : `api/requests/getall`;
+
+    let url = endPoint + '?' + query;
     const requestOptions = { method: 'GET', headers: authHeader() };
     return fetch(url, requestOptions).then(handleResponse);
 }
@@ -76,7 +101,7 @@ function deleteRequests(ids) {
     return fetch(`api/requests/`, requestOptions).then(handleResponse).catch(err => { return { error: err } });
 }
 
-//NOTE: Broke the DRY principle - this function is basically the same as getFile in requests.service
+//NOTE: Broke the DRY principle - this function is basically the same as getFile in requests.service. I may come back to fix this at a later time.
 function getFile(fileName, filePath, attachmentId) {
     //Solution used for file downloading: https://medium.com/yellowcode/download-api-files-with-react-fetch-393e4dae0d9e
     const requestOptions = { method: 'GET', headers: authHeader() };

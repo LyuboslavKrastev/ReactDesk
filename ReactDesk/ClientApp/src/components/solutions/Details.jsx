@@ -60,7 +60,6 @@ export default class SolutionDetails extends Component {
                                 </div>
                                 : null}
                         </div>
-
                     </div>
                 </div>
             </div>
