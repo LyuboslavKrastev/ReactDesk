@@ -15,7 +15,7 @@ namespace BasicDesk.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -174,6 +174,14 @@ namespace BasicDesk.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RequestCategories");
+
+                    b.HasData(
+                        new { Id = 1, Name = "First Category" },
+                        new { Id = 2, Name = "Second Category" },
+                        new { Id = 3, Name = "Third Category" },
+                        new { Id = 4, Name = "Fourth Category" },
+                        new { Id = 5, Name = "Fifth Category" }
+                    );
                 });
 
             modelBuilder.Entity("BasicDesk.Data.Models.Requests.RequestNote", b =>

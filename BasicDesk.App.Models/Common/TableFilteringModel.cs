@@ -1,4 +1,6 @@
-﻿namespace BasicDesk.App.Models.Common
+﻿using System;
+
+namespace BasicDesk.App.Models.Common
 {
     public class TableFilteringModel
     {
@@ -15,5 +17,51 @@
         public string StartTimeSearch { get; set; }
 
         public string EndTimeSearch { get; set; }
+
+        public bool HasStatusIdFilter()
+        {
+            return this.StatusId.HasValue;
+        }
+
+        public bool HasIdFilter()
+        {
+            return this.IdSearch.HasValue;
+        }
+
+        public bool HasValidStartTimeFilter()
+        {
+            return DateTime.TryParse(this.StartTimeSearch, out _);
+        }
+
+        public DateTime GetStartTimeAsDateTime()
+        {
+            DateTime.TryParse(this.StartTimeSearch, out DateTime result);
+            return result;
+        }
+
+        public bool HasValidEndTimeFilter()
+        {
+            return DateTime.TryParse(this.EndTimeSearch, out _);
+        }
+        public DateTime GetEndTimeAsDateTime()
+        {
+            DateTime.TryParse(this.EndTimeSearch, out DateTime result);
+            return result;
+        }
+
+        public bool HasSubjectFilter()
+        {
+            return !string.IsNullOrWhiteSpace(this.SubjectSearch);
+        }
+
+        public bool HasRequesterFilter()
+        {
+            return !string.IsNullOrWhiteSpace(this.RequesterSearch);
+        }
+
+        public bool HasAssignedToFilter()
+        {
+            return !string.IsNullOrWhiteSpace(this.AssignedToSearch);
+        }
     }
 }

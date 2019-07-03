@@ -81,7 +81,13 @@ namespace BasicDesk.Data
                 new RequestStatus { Id = WebConstants.ForApprovalStatusId, Name = "For Approval" }
            );
 
- 
+            builder.Entity<RequestCategory>().HasData(
+               new RequestCategory { Id = WebConstants.FirstCategoryId, Name = "First Category" },
+               new RequestCategory { Id = WebConstants.SecondCategoryId, Name = "Second Category" },
+               new RequestCategory { Id = WebConstants.ThirdCategoryId, Name = "Third Category" },
+               new RequestCategory { Id = WebConstants.FourthCategoryId, Name = "Fourth Category" },
+               new RequestCategory { Id = WebConstants.FifthCategoryId, Name = "Fifth Category" }
+          );
 
             base.OnModelCreating(builder);
         }

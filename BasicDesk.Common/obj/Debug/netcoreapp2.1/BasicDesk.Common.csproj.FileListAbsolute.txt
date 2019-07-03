@@ -33,3 +33,12 @@ C:\Users\Zorko\Documents\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\Basi
 C:\Users\Zorko\Documents\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.AssemblyInfo.cs
 C:\Users\Zorko\Documents\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.dll
 C:\Users\Zorko\Documents\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.pdb
+D:\GitHub\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.dll
+D:\GitHub\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.pdb
+D:\GitHub\ReactDesk\BasicDesk.Common\bin\Debug\netcoreapp2.1\BasicDesk.Common.deps.json
+D:\GitHub\ReactDesk\BasicDesk.Common\bin\Debug\netcoreapp2.1\BasicDesk.Common.dll
+D:\GitHub\ReactDesk\BasicDesk.Common\bin\Debug\netcoreapp2.1\BasicDesk.Common.pdb
+D:\GitHub\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.csprojAssemblyReference.cache
+D:\GitHub\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.csproj.CoreCompileInputs.cache
+D:\GitHub\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.AssemblyInfoInputs.cache
+D:\GitHub\ReactDesk\BasicDesk.Common\obj\Debug\netcoreapp2.1\BasicDesk.Common.AssemblyInfo.cs

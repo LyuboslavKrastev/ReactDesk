@@ -15,6 +15,7 @@ using System.IO;
 using BasicDesk.Services;
 using ReactDesk.Helpers;
 using BasicDesk.App.Models.Common;
+using System;
 
 namespace ReactDesk.Controllers
 {
@@ -37,21 +38,27 @@ namespace ReactDesk.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetAll([FromQuery]TableFilteringModel searchModel)
+        public IActionResult GetAll([FromQuery]TableFilteringModel model)
         {
-            //var requests = this.requestService.GetAll().Include(r => r.Requester)
-            //.Include(r => r.Notes).Include(r => r.Status)
-            //.Where(r => statusId.HasValue ? r.StatusId == statusId : true).Include(r => r.AssignedTo).ToArray();
-
-
             var requests = this.requestService.GetAll()
-                .Where(r => searchModel.StatusId.HasValue ? r.StatusId == searchModel.StatusId : true)
-                .Where(r => searchModel.IdSearch.HasValue ? r.Id == searchModel.IdSearch : true)
-                .Where(r => !string.IsNullOrWhiteSpace(searchModel.SubjectSearch) ? r.Subject.Contains(searchModel.SubjectSearch) : true)              
+                .Where(r => model.HasStatusIdFilter() ? 
+                    r.StatusId == model.StatusId : true)
+                .Where(r => model.HasIdFilter() ? 
+                    r.Id == model.IdSearch : true)
+                .Where(r => model.HasSubjectFilter() ? 
+                    r.Subject.Contains(model.SubjectSearch) : true)
+                .Where(r => model.HasRequesterFilter() ?
+                    r.Requester.FullName == model.RequesterSearch : true)
+                .Where(r => model.HasAssignedToFilter() ?
+                    r.AssignedTo.FullName == model.AssignedToSearch : true)
+                .Where(r => model.HasValidStartTimeFilter() ? 
+                    r.StartTime.Date.CompareTo(model.GetStartTimeAsDateTime()) == 0 : true)
+                .Where(r => model.HasValidEndTimeFilter()  && r.EndTime.HasValue ? 
+                    r.EndTime.Value.Date.CompareTo(model.GetEndTimeAsDateTime()) == 0 : true)
                 .ProjectTo<RequestListingViewModel>()
                 .OrderByDescending(r => r.Id)
                 .ToArray();
-
+           
             return Ok(requests.ToArray());
         }
 
@@ -140,40 +147,5 @@ namespace ReactDesk.Controllers
 
             return this.Ok(new { message = message });
         }
-
-        //// WARNING: NOT SECURE (No validation)!
-        //[HttpGet("[action]")]
-        //public async Task<IActionResult> Download(string fileName, string filePath, string attachmentId)
-        //{
-        //    var memory = new MemoryStream();
-        //    try
-        //    {
-        //        using (var stream = new FileStream(filePath, FileMode.Open))
-        //        {
-        //            await stream.CopyToAsync(memory);
-        //        }
-        //    }
-        //    // Delete the attachment from the database attachments table, if it no longer exists in the attachments directory
-        //    catch (IOException)
-        //    {       
-        //        // Check if the attachmentId is an integer
-        //        if (int.TryParse(attachmentId, out int id))
-        //        {
-        //            var entity = this.attachmentService.ById(id).First();
-        //            await this.attachmentService.Delete(entity.Id);        
-        //        }
-
-        //        return NotFound();
-        //    }
-        //    memory.Position = 0;
-        //    return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
-        //}
-
-        //private string GetContentType(string path)
-        //{
-        //    var types = FileFormatValidator.GetMimeTypes();
-        //    var ext = Path.GetExtension(path).ToLowerInvariant();
-        //    return types[ext];
-        //}
     }
 }

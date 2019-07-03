@@ -81,9 +81,13 @@ namespace BasicDesk.Services
         {
             if (!isTechnician)
             {
-                return this.repository.All().Where(r => r.RequesterId == userId);
+                return this.repository.All().Where(r => r.RequesterId == userId)
+                    .Include(r => r.Requester)
+                    .Include(r => r.AssignedTo);
             }
-            return this.repository.All();
+            return this.repository.All()
+                .Include(r => r.Requester)
+                .Include(r => r.AssignedTo);
         }
 
         public IQueryable<Request> GetBySearch(string userId, bool isTechnician, TableFilteringModel searchModel, IQueryable<Request> requests)
