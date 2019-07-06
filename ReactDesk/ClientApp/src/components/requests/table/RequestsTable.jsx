@@ -6,6 +6,7 @@ import sorter from './sorter'
 import { requestService } from '../../../services/requests.service'
 import { NotificationManager } from 'react-notifications';
 import { showNotes, hideNotes } from '../modals/note-view-modal-controls'
+import ReactPaginate from 'react-paginate';
 
 function toggle(event) {
     let isChecked = event.target.checked
@@ -22,6 +23,7 @@ function isObject(obj) {
     return type === 'function'
     type === 'object' && !!obj;
 };
+
 function iterationCopy(src) {
     let target = {};
     for (let prop in src) {
@@ -44,62 +46,104 @@ export default class RequestsTable extends Component {
 
         this.state = {
             idSearch: '',
-            creationDateSearch: '',
+            subjectSearch: '',
+            requesterSearch: '',
+            assignedToSearch: '',
+            startTimeSearch: '',
+            endTimeSearch: '',
+            statusId: null,
             requests: [],
             showSearch: false,
             orderBy: '',
+            perPage: 50
         }
+    }
+
+    getStateCriteria = () => {
+        let result = {
+            'idSearch': this.state.idSearch,
+            'subjectSearch': this.state.subjectSearch,
+            'requesterSearch': this.state.requesterSearch,
+            'assignedToSearch': this.state.assignedToSearch,
+            'startTimeSearch': this.state.startTimeSearch,
+            'endTimeSearch': this.state.endTimeSearch,
+            'offset': this.state.offset,
+            'perPage': this.state.perPage,
+            'orderBy': this.state.orderBy,
+            'statusId': this.state.statusId
+        };
+
+        return result;
     }
 
     filterRequests = (event) => {
-        debugger;
         let value = event.target.value;
 
-        let data = { 'StatusId': value }
+        if (value !== 'All Requests' && isNaN(value)) {
+            return;
+        }
+        let id = value === "All Requests" ? null : value;
 
-        if (value === 'All Requests') {
-            requestService.getAll()
+        this.setState({
+            statusId: id
+        }, function () {
+            debugger;
+            let criteria = this.getStateCriteria();
+            requestService.getAll(criteria)
                 .then(res => {
                     this.setState({
-                        StatusId: null,
-                        requests: res
+                        requests: res.requests,
+                        pageCount: Math.ceil(res.total / this.state.perPage)
                     })
                 })
-            console.log(this.state)
-            return
-        }
-
-        if (value) {
-            requestService.getAll(data)
-                .then(res => {
-                    this.setState({
-                        StatusId: value,
-                        requests: res
-                    })
-                })
-        }
+        })
     }
 
+    setRequestsPerPage = (event) => {
+        let value = event.target.value;
+
+        if (isNaN(value)) {
+            return;
+        }
+
+        this.setState({
+            perPage: value
+        }, function () {
+            debugger;
+            let criteria = this.getStateCriteria();
+            requestService.getAll(criteria)
+                .then(res => {
+                    this.setState({
+                        requests: res.requests,
+                        pageCount: Math.ceil(res.total / this.state.perPage)
+                    })
+                })
+        })
+    }
 
     searchRequests = (data) => {
-        //append the current filter to the data, so we can search trough the filtered results
-        debugger
-        let result = iterationCopy(data);
-
-        if (this.state.StatusId) {
-            result['StatusId'] = this.state.StatusId
-        }
-        debugger
-        requestService.getAll(result)
-            .then(res => {
-                this.setState({
-                    requests: res
+        this.setState({
+            'idSearch': data.IdSearch,
+            'subjectSearch': data.SubjectSearch,
+            'requesterSearch': data.RequesterSearch,
+            'assignedToSearch': data.AssignedToSearch,
+            'startTimeSearch': data.StartTimeSearch,
+            'endTimeSearch': data.EndTimeSearch,
+        }, function () {
+            let criteria = this.getStateCriteria();
+            requestService.getAll(criteria)
+                .then(res => {
+                    this.setState({
+                        requests: res.requests,
+                        pageCount: Math.ceil(res.total / this.state.perPage)
+                    })
                 })
-            })
+        })
+
+
     }
 
     orderRequests = (event) => {
-        debugger
         let value = event.target.text.toLowerCase()
         value = value.replace(/\s/g, ''); // remove spaces
         if (value === 'starttime') {
@@ -120,8 +164,6 @@ export default class RequestsTable extends Component {
         } else {
             order = 'DESC'
             sorted = sorter(this.state.requests, order, value)
-
-
         }
         NotificationManager.success(`Ordered by ${order} ${value}`)
         this.setState({
@@ -139,21 +181,39 @@ export default class RequestsTable extends Component {
         })
     }
 
-    componentWillMount = () => {
-
-        requestService.getAll()
+    componentDidMount = () => {
+        let criteria = this.getStateCriteria();
+        requestService.getAll(criteria)
             .then(res => {
                 this.setState({
-                    requests: res
+                    requests: res.requests,
+                    pageCount: Math.ceil(res.total / this.state.perPage)
                 })
             })
     }
 
+    handlePageClick = (data) => {
+        let selected = data.selected;
+        let offset = Math.ceil(selected * this.state.perPage);
+
+        this.setState({
+            'offset': offset,
+            'perPage': this.state.perPage
+        }, function () {
+            let criteria = this.getStateCriteria();
+
+            requestService.getAll(criteria).then(res => {
+                this.setState({
+                    requests: res.requests,
+                    pageCount: Math.ceil(res.total / this.state.perPage),
+                })
+            })
+        })
+    };
+
 
 
     render() {
-
-
         return (
             <div>
 
@@ -187,7 +247,7 @@ export default class RequestsTable extends Component {
 
                     </div>)}
 
-                <UpperTable filterRequests={this.filterRequests} />
+                <UpperTable filterRequests={this.filterRequests} setRequestsPerPage={this.setRequestsPerPage} perPage={this.state.perPage} />
                 <table className="table table-hover table-striped table-bordered">
                     <thead>
                         <th className="text-center"><input onClick={toggle} type="checkbox" className="checkbox-inline" id="checkAll" /></th>
@@ -220,12 +280,25 @@ export default class RequestsTable extends Component {
                         </th>
                     </thead>
                     <tbody>
-                        {this.state.showSearch ? <SearchBar searchRequests={this.searchRequests}/> : null}
+                        {this.state.showSearch ? <SearchBar searchRequests={this.searchRequests} /> : null}
                         <RequestsList requests={this.state.requests} showNotes={showNotes} />
                     </tbody>
 
 
                 </table>
+                <ReactPaginate
+                    previousLabel={'previous'}
+                    nextLabel={'next'}
+                    breakLabel={'...'}
+                    breakClassName={'break-me'}
+                    pageCount={this.state.pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={this.handlePageClick}
+                    containerClassName={'pagination'}
+                    subContainerClassName={'pages pagination'}
+                    activeClassName={'active'}
+                />
             </div>
         )
     }

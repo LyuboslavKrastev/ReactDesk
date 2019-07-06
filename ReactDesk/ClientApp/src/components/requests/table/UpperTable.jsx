@@ -11,7 +11,7 @@ export default class UpperTable extends Component {
         super(props)
 
         this.state = {
-            ReqPerPageList: [25, 50, 100, 150, 200, 250, 1000],
+            ReqPerPageList: [1, 5, 10, 15, 25, 50, 100, 150, 200, 250, 1000],
             statuses: []
         }
     }
@@ -72,9 +72,10 @@ export default class UpperTable extends Component {
 
 
     render() {
+        let perPage = this.props.perPage;
         let selectList = this.state.ReqPerPageList.map(function (selectOption) {
             return (
-                <option selected="selected" value="@status.Value">{selectOption}</option>
+                    <option value={selectOption}>{selectOption}</option>
             )
         })
         let statusList = this.state.statuses.map(function (status) {
@@ -109,41 +110,15 @@ export default class UpperTable extends Component {
                         <th>
                             <form method="get" className="form-inline">
                                 <div className="form-group">
-                                    <label for="myfield">Show</label>
-                                    {/* @{
-                            if (Model.CurrentFilter != null)
-                            {
-                                <input style="display:none" name="currentFilter" value="@Model.CurrentFilter" />
-                            }
-                            if (Model.CurrentSearch != null)
-                            {
-                                <input style="display:none" name="searchString" value="@Model.CurrentSearch" />
-                            }
-                            if (Model.CurrentSort != null)
-                            {
-                                <input style="display:none" name="sortOrder" value="@Model.CurrentSort" />
-                            }
-                        } */}
+                                    <label for="myfield">Show</label>                                  
 
-                                    <select name="requestsPerPage" onchange='this.form.submit()' className="form-control">
-                                        {selectList}
-                                        {/* @foreach (var option in Model.ReqPerPageList)
-                            {
-                                if (Model.RequestsPerPage == int.Parse(option.Value))
-                                {
-                                    <option selected="selected" value="@option.Value">@option.Text</option>
-                                }
-                                else
-                                {
-                                    <option value="@option.Value">@option.Text</option>
-                                }
-                            } */}
+                                    <select name="requestsPerPage" onChange={this.props.setRequestsPerPage} defaultValue={perPage} className="form-control">
+                                        {selectList}                         
                                     </select>
                                     <label for="myfield">per page</label>
                                 </div>
                             </form>
                         </th>
-
                     </tr>
                 </table>
             </div>

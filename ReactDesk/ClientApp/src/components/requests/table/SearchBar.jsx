@@ -4,14 +4,9 @@ let data = {};
 export default class SearchBar extends Component {
     
     handleInputChange = (event) => {
-        debugger;
         let inputName = event.target.name;
         let inputValue = event.target.value;
-
         data[inputName] = inputValue;
-        //this.setState({
-        //    [inputName]: inputValue
-        //})
     }
 
     render() {

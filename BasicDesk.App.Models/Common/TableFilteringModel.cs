@@ -18,6 +18,11 @@ namespace BasicDesk.App.Models.Common
 
         public string EndTimeSearch { get; set; }
 
+        public int PerPage { get; set; } = 50;
+
+        public int Offset { get; set; }
+
+        #region Methods
         public bool HasStatusIdFilter()
         {
             return this.StatusId.HasValue;
@@ -49,6 +54,7 @@ namespace BasicDesk.App.Models.Common
             return result;
         }
 
+
         public bool HasSubjectFilter()
         {
             return !string.IsNullOrWhiteSpace(this.SubjectSearch);
@@ -63,5 +69,6 @@ namespace BasicDesk.App.Models.Common
         {
             return !string.IsNullOrWhiteSpace(this.AssignedToSearch);
         }
+        #endregion
     }
 }

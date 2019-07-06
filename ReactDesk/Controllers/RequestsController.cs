@@ -39,27 +39,35 @@ namespace ReactDesk.Controllers
 
         [HttpGet("[action]")]
         public IActionResult GetAll([FromQuery]TableFilteringModel model)
-        {
-            var requests = this.requestService.GetAll()
-                .Where(r => model.HasStatusIdFilter() ? 
+       {
+            // Filter the requests, depending on the criteria in the model
+            var requestQueryable = this.requestService.GetAll()
+                .Where(r => model.HasStatusIdFilter() ?
                     r.StatusId == model.StatusId : true)
-                .Where(r => model.HasIdFilter() ? 
+                .Where(r => model.HasIdFilter() ?
                     r.Id == model.IdSearch : true)
-                .Where(r => model.HasSubjectFilter() ? 
+                .Where(r => model.HasSubjectFilter() ?
                     r.Subject.Contains(model.SubjectSearch) : true)
                 .Where(r => model.HasRequesterFilter() ?
-                    r.Requester.FullName == model.RequesterSearch : true)
+                    r.Requester.FullName.Contains(model.RequesterSearch) : true)
                 .Where(r => model.HasAssignedToFilter() ?
                     r.AssignedTo.FullName == model.AssignedToSearch : true)
-                .Where(r => model.HasValidStartTimeFilter() ? 
+                .Where(r => model.HasValidStartTimeFilter() ?
                     r.StartTime.Date.CompareTo(model.GetStartTimeAsDateTime()) == 0 : true)
-                .Where(r => model.HasValidEndTimeFilter()  && r.EndTime.HasValue ? 
+                .Where(r => model.HasValidEndTimeFilter() && r.EndTime.HasValue ?
                     r.EndTime.Value.Date.CompareTo(model.GetEndTimeAsDateTime()) == 0 : true)
                 .ProjectTo<RequestListingViewModel>()
-                .OrderByDescending(r => r.Id)
+                .OrderByDescending(r => r.Id);
+
+            // Needed for the calculation of the number of pages to be displayed
+            int total = requestQueryable.Count();
+
+            var requests = requestQueryable
+                .Skip(model.Offset)
+                .Take(model.PerPage) // The default value is 50
                 .ToArray();
-           
-            return Ok(requests.ToArray());
+
+            return Ok(new { requests, total});
         }
 
         [HttpGet("{id}")]

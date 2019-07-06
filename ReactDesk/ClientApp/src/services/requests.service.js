@@ -22,9 +22,11 @@ function getAll(params) {
         // Loop through the data object
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
-
-                // Encode each key and value, concatenate them into a string, and push them to the array
-                query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+                if (data[key]) { // append if the key has a value
+                    // Encode each key and value, concatenate them into a string, and push them to the array
+                    query.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+                }
+               
             }
         }
 
