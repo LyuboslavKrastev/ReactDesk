@@ -34,17 +34,17 @@ export default class SolutionDetails extends Component {
                 <h2 class="text-center">Details for Solution {solution.id}</h2>
 
                 <div class="container">
-                    <div class="panel-group">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading clearfix">
-                                <div class="pull-left"><strong>Subject:</strong> {solution.title}</div>
-                                <div class="pull-right"><strong>Created On:</strong> {solution.createdOn}</div>
+                    <div className="panel-group">
+                        <div className="panel panel-primary">
+                            <div className="panel-heading clearfix">
+                                <div className="pull-left"><strong>Subject:</strong> {solution.title}</div>
+                                <div className="pull-right"><strong>Created On:</strong> {solution.createdOn}</div>
                             </div>
-                            <div class="panel-body"><strong>Description:</strong> <p>{solution.content}</p></div>
-                            <div class="panel-footer clearfix">
-                                <div class="text-center"><strong> Author:</strong> {solution.author}</div>
+                            <div className="panel-body"><strong>Description:</strong> <p>{solution.content}</p></div>
+                            <div className="panel-footer clearfix">
+                                <div className="text-center"><strong> Author:</strong> {solution.author}</div>
                             </div>
-                            {solution.attachments != undefined && solution.attachments.length > 0 ?
+                            {solution.attachments !== undefined && solution.attachments.length > 0 ?
                                 <div className="text-center">
                                     <br />
                                     <label className="text-center">Attachments: </label>

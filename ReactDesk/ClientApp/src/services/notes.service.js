@@ -1,13 +1,9 @@
-﻿import { authHeader } from '../helpers/auth-header';
-import { handleResponse } from '../helpers/handle-response'
+﻿import { handleResponse } from '../helpers/handle-response'
 import { authenticationService } from '../services/authentication.service';
-
 
 export const notesService = {
     createNote
 };
-
-
 
 function createNote(ids, description) {
     const currentUser = authenticationService.currentUserValue;

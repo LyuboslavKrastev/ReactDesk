@@ -8,6 +8,7 @@ import { NotificationManager } from 'react-notifications';
 import { showNotes, hideNotes } from '../modals/note-view-modal-controls'
 import ReactPaginate from 'react-paginate';
 
+// checks all checkboxes
 function toggle(event) {
     let isChecked = event.target.checked
 
@@ -18,26 +19,7 @@ function toggle(event) {
     }
 }
 
-function isObject(obj) {
-    var type = typeof obj;
-    return type === 'function'
-    type === 'object' && !!obj;
-};
-
-function iterationCopy(src) {
-    let target = {};
-    for (let prop in src) {
-        if (src.hasOwnProperty(prop)) {
-            // if the value is a nested object, recursively copy all it's properties
-            if (isObject(src[prop])) {
-                target[prop] = iterationCopy(src[prop]);
-            } else {
-                target[prop] = src[prop];
-            }
-        }
-    }
-    return target;
-}
+const DEFAULT_PERPAGE = 50;
 
 export default class RequestsTable extends Component {
 
@@ -55,10 +37,11 @@ export default class RequestsTable extends Component {
             requests: [],
             showSearch: false,
             orderBy: '',
-            perPage: 50
+            perPage: DEFAULT_PERPAGE
         }
     }
 
+    // gets the filtering information from the state
     getStateCriteria = () => {
         let result = {
             'idSearch': this.state.idSearch,
@@ -76,6 +59,20 @@ export default class RequestsTable extends Component {
         return result;
     }
 
+    // sends a GET request to the API, containing the filtering criteria, contained in the state
+    loadRequests = () => {
+        let criteria = this.getStateCriteria();
+        NotificationManager.info("Loading requests...")
+        requestService.getAll(criteria)
+            .then(res => {
+                this.setState({
+                    requests: res.requests,
+                    pageCount: Math.ceil(res.total / this.state.perPage)
+                })
+            }).then(NotificationManager.success("Requests loaded!"))
+    }
+
+    // filters the requests by status type (open, closed, rejected, etc.)
     filterRequests = (event) => {
         let value = event.target.value;
 
@@ -87,18 +84,11 @@ export default class RequestsTable extends Component {
         this.setState({
             statusId: id
         }, function () {
-            debugger;
-            let criteria = this.getStateCriteria();
-            requestService.getAll(criteria)
-                .then(res => {
-                    this.setState({
-                        requests: res.requests,
-                        pageCount: Math.ceil(res.total / this.state.perPage)
-                    })
-                })
+            this.loadRequests();
         })
     }
 
+    // sets the number of requests, displayed per page
     setRequestsPerPage = (event) => {
         let value = event.target.value;
 
@@ -109,18 +99,11 @@ export default class RequestsTable extends Component {
         this.setState({
             perPage: value
         }, function () {
-            debugger;
-            let criteria = this.getStateCriteria();
-            requestService.getAll(criteria)
-                .then(res => {
-                    this.setState({
-                        requests: res.requests,
-                        pageCount: Math.ceil(res.total / this.state.perPage)
-                    })
-                })
+            this.loadRequests();
         })
     }
 
+    // searches requests by the given fields
     searchRequests = (data) => {
         this.setState({
             'idSearch': data.IdSearch,
@@ -130,19 +113,11 @@ export default class RequestsTable extends Component {
             'startTimeSearch': data.StartTimeSearch,
             'endTimeSearch': data.EndTimeSearch,
         }, function () {
-            let criteria = this.getStateCriteria();
-            requestService.getAll(criteria)
-                .then(res => {
-                    this.setState({
-                        requests: res.requests,
-                        pageCount: Math.ceil(res.total / this.state.perPage)
-                    })
-                })
+            this.loadRequests();
         })
-
-
     }
 
+    // this needs to be changed, ordering should be done on the backend
     orderRequests = (event) => {
         let value = event.target.text.toLowerCase()
         value = value.replace(/\s/g, ''); // remove spaces
@@ -173,6 +148,7 @@ export default class RequestsTable extends Component {
 
     }
 
+    // shows or hides the search bar
     showSearchBar = () => {
         let showSearchPrev = this.state.showSearch
 
@@ -182,16 +158,10 @@ export default class RequestsTable extends Component {
     }
 
     componentDidMount = () => {
-        let criteria = this.getStateCriteria();
-        requestService.getAll(criteria)
-            .then(res => {
-                this.setState({
-                    requests: res.requests,
-                    pageCount: Math.ceil(res.total / this.state.perPage)
-                })
-            })
+        this.loadRequests();
     }
 
+    // switches between pages
     handlePageClick = (data) => {
         let selected = data.selected;
         let offset = Math.ceil(selected * this.state.perPage);
@@ -200,37 +170,28 @@ export default class RequestsTable extends Component {
             'offset': offset,
             'perPage': this.state.perPage
         }, function () {
-            let criteria = this.getStateCriteria();
-
-            requestService.getAll(criteria).then(res => {
-                this.setState({
-                    requests: res.requests,
-                    pageCount: Math.ceil(res.total / this.state.perPage),
-                })
-            })
+            this.loadRequests();
         })
     };
-
-
 
     render() {
         return (
             <div>
 
-                {this.state.requests.map(r =>
-                    <div class="modal" id={'notes_' + r.id} tabindex="-1" role="dialog">
-                        <div class="modal-dialog modal-dialog-scrollable" role="document">
-                            <div class="modal-content" style={{ overflow: 'inherit' }}>
-                                <div class="modal-body modal-wide">
-                                    <div class="panel-group">
-                                        <div class="panel">
-                                            {r.notes.map(n =>
-                                                <div>
-                                                    <div class="panel-heading clearfix">
-                                                        <div class="pull-left"><strong>Author:</strong> {n.author}</div>
-                                                        <div class="pull-right"><strong>Created On:</strong> {new Date(n.creationTime).toLocaleDateString()}</div>
+                {this.state.requests.map((r, index) =>
+                    <div key={index} className="modal" id={'notes_' + r.id} tabIndex="-1" role="dialog">
+                        <div className="modal-dialog modal-dialog-scrollable" role="document">
+                            <div className="modal-content" style={{ overflow: 'inherit' }}>
+                                <div className="modal-body modal-wide">
+                                    <div className="panel-group">
+                                        <div className="panel">
+                                            {r.notes.map((n, index) =>
+                                                <div key={index}>
+                                                    <div className="panel-heading clearfix">
+                                                        <div className="pull-left"><strong>Author:</strong> {n.author}</div>
+                                                        <div className="pull-right"><strong>Created On:</strong> {new Date(n.creationTime).toLocaleDateString()}</div>
                                                     </div>
-                                                    <div class="panel-body">
+                                                    <div className="panel-body">
                                                         <strong>Description</strong>
                                                         <p>{n.description}</p>
                                                     </div>
@@ -247,9 +208,10 @@ export default class RequestsTable extends Component {
 
                     </div>)}
 
-                <UpperTable filterRequests={this.filterRequests} setRequestsPerPage={this.setRequestsPerPage} perPage={this.state.perPage} />
+                <UpperTable filterRequests={this.filterRequests} loadRequests={this.loadRequests} setRequestsPerPage={this.setRequestsPerPage} perPage={this.state.perPage} />
                 <table className="table table-hover table-striped table-bordered">
                     <thead>
+                        <tr>
                         <th className="text-center"><input onClick={toggle} type="checkbox" className="checkbox-inline" id="checkAll" /></th>
                         <th className="text-center">Notes</th>
                         <th>
@@ -277,7 +239,8 @@ export default class RequestsTable extends Component {
                         <th>
                             <a onClick={this.orderRequests}>Status</a>
                             <a id="searchIcon"><i className="glyphicon glyphicon-zoom-in pull-right" onClick={this.showSearchBar}></i></a>
-                        </th>
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
                         {this.state.showSearch ? <SearchBar searchRequests={this.searchRequests} /> : null}

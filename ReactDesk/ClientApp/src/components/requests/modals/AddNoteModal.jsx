@@ -66,14 +66,14 @@ export default class AddNoteModal extends Component{
 
     render(){
         return(
-            <div className="modal" id="noteModal" tabindex="-1" role="dialog">
+            <div className="modal" id="noteModal" tabIndex="-1" role="dialog">
                 <div className="modal-dialog modal-dialog-centered" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h3 className="modal-title text-center">Add Note</h3>
                         </div>
                         <div className="modal-body">
-                            <textarea id="noteDescription" name='description' className="form-control" rows="4" style={{ 'min-width': '100%', resize: 'none' }} onChange={this.handleInputChange} ></textarea>
+                            <textarea id="noteDescription" name='description' className="form-control" rows="4" style={{ minWidth: '100%', resize: 'none' }} onChange={this.handleInputChange} ></textarea>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-danger" onClick={this.hideModal}>Close</button>

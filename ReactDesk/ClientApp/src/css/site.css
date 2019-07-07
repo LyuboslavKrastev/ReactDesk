@@ -118,8 +118,6 @@ hr {
     color: white;
 }
 
-
-
 .panel-heading a {
     color: gold;
     font-weight: bold;
@@ -170,7 +168,10 @@ hr {
     color: white;
 }
 
-a {
+a:hover {
+    cursor: pointer;
+}
+li:hover {
     cursor: pointer;
 }
 
@@ -196,9 +197,7 @@ body {
     background-color: #63B8FF;
     color: white;
 }
-body {
-    background-color: whitesmoke;
-}
+
 .myBtn {
     background-color: #36648B;
     color: white;

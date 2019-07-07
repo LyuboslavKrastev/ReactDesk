@@ -6,6 +6,9 @@ import getCheckedBoxes from '../../../helpers/checkbox-checker'
 import { requestService } from '../../../services/requests.service'
 import { NotificationManager } from 'react-notifications';
 
+let statusList;
+let selectList; 
+
 export default class UpperTable extends Component {
     constructor(props) {
         super(props)
@@ -21,10 +24,26 @@ export default class UpperTable extends Component {
     }
 
     componentDidMount = () => {
+        let perPage = this.props.perPage
         statusService.getAll()
             .then(res => {
                 this.setState({
                     statuses: res
+                }, function () {
+                    selectList = this.state.ReqPerPageList.map(function (selectOption, index) {
+                        let option = selectOption === perPage ?  
+                            <option selected="selected" key={index} value={selectOption}>{selectOption}</option> :
+                            <option key={index} value={selectOption}>{selectOption}</option>
+                        return (                          
+                              option
+                        )
+                    })
+                    statusList = this.state.statuses.map(function (status, index) {
+                        return (
+                            <option key={index} value={status.id}>{status.name}</option>
+                        )
+                    })
+
                 })
             })
     }
@@ -50,7 +69,6 @@ export default class UpperTable extends Component {
     }
 
     deleteRequests = () => {
-        debugger
         let ids = getCheckedBoxes('requestCheckbox');
 
         if (!ids) {
@@ -72,55 +90,46 @@ export default class UpperTable extends Component {
 
 
     render() {
-        let perPage = this.props.perPage;
-        let selectList = this.state.ReqPerPageList.map(function (selectOption) {
-            return (
-                    <option value={selectOption}>{selectOption}</option>
-            )
-        })
-        let statusList = this.state.statuses.map(function (status) {
-            return (
-                <option value={status.id}>{status.name}</option>
-            )
-        })
-
         return (
             <div>
                 <AddNoteModal />
 
-
                 <table className="table table-hover table-bordered">
+                    <thead>
                     <tr>
                         <th>
-                            <form method="get" className="form-inline">
                                 <div className="form-group">
-                                    <label for="currentFilter">Showing </label>
+                                <label htmlFor="currentFilter">Showing </label>
                                     <select name='currentFilter' onChange={this.props.filterRequests} className="form-control">
                                         <option value="All Requests">All Requests</option>
                                         {statusList}
                                     </select>
                                 </div>
-                            </form>
-                        </th>
-                        <th><Link to="/Requests/Create" className="btn btn-success" style={{ width: "100%" }} >New Request <i classNameName="glyphicon-plus"></i></Link></th>
-                        <th><a className="btn btn-warning" style={{ width: "100%" }} onClick={this.showModal}>Add Note</a></th>
-                        <th><a className="btn btn-warning" style={{ width: "100%" }} onClick={this.mergeRequests} id="mergeReq">Merge</a></th>
-                        <th><a className="btn btn-danger" style={{ width: "100%" }} onClick={this.deleteRequests}>Delete</a></th>
+                            </th>
+                            <th><div className="form-group"><Link to="/Requests/Create" className="btn btn-success" style={{ width: "100%" }} >New</Link></div></th>
+                            <th><div className="form-group"><a className="btn btn-warning" style={{ width: "100%" }} onClick={this.showModal}>Add Note</a></div></th>
+                            <th><div className="form-group"><a className="btn btn-warning" style={{ width: "100%" }} onClick={this.mergeRequests} id="mergeReq">Merge</a></div></th>
+                            <th><div className="form-group"><a className="btn btn-danger" style={{ width: "100%" }} onClick={this.deleteRequests}>Delete</a></div></th>
 
                         <th>
-                            <form method="get" className="form-inline">
-                                <div className="form-group">
-                                    <label for="myfield">Show</label>                                  
-
-                                    <select name="requestsPerPage" onChange={this.props.setRequestsPerPage} defaultValue={perPage} className="form-control">
+                            <div className="form-group">
+                                <label htmlFor="myfield">Show per page</label>                                  
+                                    <select name="requestsPerPage" onChange={this.props.setRequestsPerPage}  className="form-control">
                                         {selectList}                         
                                     </select>
-                                    <label for="myfield">per page</label>
+                                
                                 </div>
-                            </form>
                         </th>
-                    </tr>
-                </table>
+                        <th>
+                            <div className="form-group text-center">
+                                <label htmlFor="myfield">Refresh</label>
+                                <br />
+                                <a id="refreshIcon"><i style={{ fontSize: '30px' }} className="glyphicon glyphicon-refresh" onClick={this.props.loadRequests}></i></a>
+                            </div>
+                        </th>
+                        </tr>
+                    </thead>
+                    </table>
             </div>
         )
     }

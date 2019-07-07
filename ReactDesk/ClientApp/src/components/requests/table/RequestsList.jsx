@@ -7,15 +7,15 @@ export default class RequestsList extends Component{
 
         let showNotes = this.props.showNotes
 
-        let requestsList = this.props.requests.map(function(request){
+        let requestsList = this.props.requests.map(function(request, index){
             let assignedTo;
             if (request.assignedto)
             {
-                assignedTo = <a className="text-success"><strong>{request.assignedto}</strong></a>
+                assignedTo = <a key={index} className="text-success"><strong>{request.assignedto}</strong></a>
             }
             else
             {
-                assignedTo = <label className="text-danger">Unassigned</label>
+                assignedTo = <label key={index} className="text-danger">Unassigned</label>
             }
 
             let noteColor = '';
@@ -31,7 +31,7 @@ export default class RequestsList extends Component{
             return (   
                
                 <tr>
-                    <td className="text-center"><input value="@item.Id" type="checkbox" name="requestCheckbox" value={request.id} className="check" /></td>
+                    <td className="text-center"><input type="checkbox" name="requestCheckbox" value={request.id} className="check" /></td>
                     <td className="text-center"><a className="glyphicon glyphicon-file" style={{color: noteColor}} name="noteIcon" onClick={() => {showNotes(request.id)}}></a></td>
                     <td>
                         {request.id}

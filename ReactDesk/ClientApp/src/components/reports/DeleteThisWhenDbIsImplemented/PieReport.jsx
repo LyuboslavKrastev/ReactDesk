@@ -36,7 +36,7 @@ export default class PieReport extends Component{
 
         var ctx = document.getElementById('myChart').getContext('2d');
 
-        this.state.myChart = new Chart(ctx, {
+        let chart = new Chart(ctx, {
             type: type,
             data: {
                 labels: dataArr,
@@ -57,6 +57,10 @@ export default class PieReport extends Component{
                 }
             }
         });
+        this.setState({
+            myChart: chart
+        }
+        )
     }
 
     changeType = (event) => {      

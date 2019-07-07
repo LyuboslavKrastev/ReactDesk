@@ -49,12 +49,12 @@ class Chat extends Component {
 
     return (
         <div>
-            <div class="row">
-    <form class="form-horizontal col-md-6 col-lg-offset-3" onSubmit={this.sendMessage}>
-        <input class="form-control text-center" type="text" id="username" value={this.state.username} style={{'background-color': '#36648B', 'color': 'white'}} disabled />
-        <textarea class="form-control" id="question" placeholder="What is on your mind?" rows="5"  onChange={e => this.setState({ message: e.target.value })}></textarea>
-        <br />
-        <input type="submit" value="Submit" id="submit-button"  class="btn btn-info  col-md-offset-6" />
+            <div className="row">
+                <form className="form-horizontal col-md-6 col-lg-offset-3" onSubmit={this.sendMessage}>
+                    <input className="form-control text-center" type="text" id="username" value={this.state.username} style={{ backgroundColor: '#36648B', 'color': 'white' }} disabled />
+                    <textarea className="form-control" id="question" placeholder="What is on your mind?" rows="5"  onChange={e => this.setState({ message: e.target.value })}></textarea>
+                    <br />
+                    <input type="submit" value="Submit" id="submit-button" className="btn btn-info  col-md-offset-6" />
     </form>
     </div>
 

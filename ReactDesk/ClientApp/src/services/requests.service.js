@@ -33,7 +33,6 @@ function getAll(params) {
         // Join each item in the array with a `&` and return the resulting string
         return query.join('&');
     }
-    debugger;
 
     let query = buildQuery(params);
 
