@@ -42,7 +42,7 @@ namespace ReactDesk.Controllers
             }
 
             Role role = this.userRoleService.GetRoleByUserId(user.Id);
-            bool isTechnician = role.Name == WebConstants.AdminRole || role.Name == WebConstants.HelpdeskRole;
+            bool isTechnician = role.Name == WebConstants.AdminRoleName || role.Name == WebConstants.HelpdeskRoleName;
 
             await this.requestService.AddNote(ids, userId, user.Username, isTechnician, description);
 

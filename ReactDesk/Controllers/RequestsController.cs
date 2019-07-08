@@ -16,6 +16,7 @@ using BasicDesk.Services;
 using ReactDesk.Helpers;
 using BasicDesk.App.Models.Common;
 using System;
+using BasicDesk.App.Models.Management.BindingModels;
 
 namespace ReactDesk.Controllers
 {
@@ -140,6 +141,24 @@ namespace ReactDesk.Controllers
             string message = $"Successfully merged request[s] {string.Join(", ", ids)}";
 
             return this.Ok(new { message = message });
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromForm]RequestEditingBindingModel model)
+        {
+            try
+            {
+                await requestService.UpdateRequestAsync(model);
+                string message = $"Successfully updated request {model.Id}";
+
+                return this.Ok(new { message = message });
+            }
+            catch
+            {
+                string message = $"Failed to update request";
+                return BadRequest(new { message = message });
+            }
+         
         }
 
         [HttpDelete]

@@ -28,7 +28,7 @@ namespace ReactDesk.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             var user = this.userService.GetById(userId);
-            bool isTechnician = User.IsInRole(WebConstants.AdminRole) || User.IsInRole(WebConstants.HelpdeskRole);
+            bool isTechnician = User.IsInRole(WebConstants.AdminRoleName) || User.IsInRole(WebConstants.HelpdeskRoleName);
 
             await this.requestService.AddReply(model.RequestId, userId, isTechnician, model.Description);
 

@@ -23,6 +23,6 @@ namespace BasicDesk.Services.Interfaces
         IQueryable<RequestManagingModel> GetRequestManagingDetails(int id);
         Task Merge(IEnumerable<int> requestIds);
         Task SaveResolutionAsync(int id, string resolution);
-        Task UpdateRequestAsync(int id, RequestEditingBindingModel model);
+        Task UpdateRequestAsync(RequestEditingBindingModel model);
     }
 }

@@ -9,7 +9,8 @@ export const requestService = {
     createRequest,
     mergeRequests,
     deleteRequests,
-    getFile
+    getFile,
+    updateRequest
 };
 
 function getAll(params) {
@@ -65,6 +66,25 @@ function createRequest(subject, description, category, attachments) {
 
     const reqOptions = {
         method: 'POST',
+        headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+        },
+        body: formData
+    };
+
+    return fetch(`api/requests`, reqOptions).then(handleResponse).catch(err => { return { error: err } });
+}
+
+function updateRequest(data) {
+    const currentUser = authenticationService.currentUserValue;
+    debugger;
+    let formData = new FormData()
+
+    for (var key in data) {
+        formData.append(key, data[key])
+    }
+    const reqOptions = {
+        method: 'PUT',
         headers: {
             Authorization: `Bearer ${currentUser.token}`,
         },

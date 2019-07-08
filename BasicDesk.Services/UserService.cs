@@ -1,6 +1,8 @@
-﻿using BasicDesk.Data;
+﻿using BasicDesk.Common.Constants;
+using BasicDesk.Data;
 using BasicDesk.Data.Models;
 using BasicDesk.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +40,16 @@ namespace BasicDesk.Services
         public IEnumerable<User> GetAll()
         {
             return _context.Users;
+        }
+
+        public IEnumerable<User> GetAllTechnicians()
+        {
+            var userIds = _context.UserRoles
+                .Where(r => r.RoleId == WebConstants.HelpdeskRoleId || r.RoleId == WebConstants.AdminRoleId)
+                .Select(u => u.UserId);
+
+            var users = _context.Users.Where(u => userIds.Contains(u.Id));
+            return users;
         }
 
         public User GetById(string id)

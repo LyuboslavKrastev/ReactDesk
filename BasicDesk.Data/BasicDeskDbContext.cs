@@ -68,9 +68,9 @@ namespace BasicDesk.Data
             );
 
             builder.Entity<Role>().HasData(
-              new Role { Id = 1, Name = "User" },
-              new Role { Id = 2, Name = "Helpdesk" },
-              new Role { Id = 3, Name = "Admin" }
+              new Role { Id = WebConstants.UserRoleId, Name = WebConstants.UserRoleName },
+              new Role { Id = WebConstants.HelpdeskRoleId, Name = WebConstants.HelpdeskRoleName },
+              new Role { Id = WebConstants.AdminRoleId, Name = WebConstants.AdminRoleName }
             );
 
             builder.Entity<RequestStatus>().HasData(

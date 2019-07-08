@@ -158,9 +158,9 @@ namespace BasicDesk.Services
             return request.AsNoTracking();
         }
 
-        public async Task UpdateRequestAsync(int id, RequestEditingBindingModel model)
+        public async Task UpdateRequestAsync(RequestEditingBindingModel model)
         {
-            Request request = await this.repository.All().FirstOrDefaultAsync(r => r.Id == id);
+            Request request = await this.repository.All().FirstOrDefaultAsync(r => r.Id == model.Id);
 
             if (model.StatusId != null && model.StatusId != request.StatusId)
             {

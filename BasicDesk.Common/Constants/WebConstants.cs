@@ -16,9 +16,14 @@
         public const int FourthCategoryId = 4;
         public const int FifthCategoryId = 5;
 
-        public const string AdminRole = "Admin";
-        public const string HelpdeskRole = "HelpdeskAgent";
-        public const string UserRole = "User";
+        public const int UserRoleId = 1;
+        public const int HelpdeskRoleId = 2;
+        public const int AdminRoleId = 3;
+
+        public const string UserRoleName = "User";
+        public const string HelpdeskRoleName = "Helpdesk";
+        public const string AdminRoleName = "Admin";
+
 
         public const string ManagementRoles = "Admin, HelpdeskAgent";
     }
