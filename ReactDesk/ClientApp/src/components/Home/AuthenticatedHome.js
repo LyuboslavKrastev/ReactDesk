@@ -4,47 +4,14 @@ import MyRequestsReport from '../reports/MyRequestsReport'
 
 
 export default class AuthenticatedHome extends Component {
-    constructor() {
-        super()
-        this.state = {
-            labels: [],
-            data: [],
-        }
-    }
-    //componentDidMount = () => {
-    //    reportsService.getMyRequests()
-    //        .then(res =>
-    //        {
-    //            let labels = [];
-    //            let data = [];
-
-    //            for (var index in res) {
-    //                labels.push(res[index].dimensionOne);
-    //                data.push(res[index].quantity);
-    //            }
-    //            debugger;
-
-    //            this.setState({
-    //                labels: labels,
-    //                data: data
-    //            })
-    //        }
-    //        );
-    //}
-
     render() {
-        debugger
-        let labels = this.state.labels;
-        let data = this.state.data
-
-
         return (
             <div>
                 <div class="box-body clearfix row">
                     <div class="col-md-6">
                         <h4 class="text-center">Your Requests</h4>
                         <hr />
-                        <MyRequestsReport data={data} labels={labels} />
+                        <MyRequestsReport />
                     </div>
                     <div class="col-md-6">
                         <h4 class="text-center">Actions</h4>
