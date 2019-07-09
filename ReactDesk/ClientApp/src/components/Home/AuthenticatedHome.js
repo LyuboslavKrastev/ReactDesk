@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import MyRequestsReport from '../reports/MyRequestsReport'
-import { reportsService } from '../../services/reports.service'
+
 
 export default class AuthenticatedHome extends Component {
     constructor() {
@@ -11,26 +11,26 @@ export default class AuthenticatedHome extends Component {
             data: [],
         }
     }
-    componentDidMount = () => {
-        reportsService.getMyRequests()
-            .then(res =>
-            {
-                let labels = [];
-                let data = [];
+    //componentDidMount = () => {
+    //    reportsService.getMyRequests()
+    //        .then(res =>
+    //        {
+    //            let labels = [];
+    //            let data = [];
 
-                for (var index in res) {
-                    labels.push(res[index].dimensionOne);
-                    data.push(res[index].quantity);
-                }
-                debugger;
+    //            for (var index in res) {
+    //                labels.push(res[index].dimensionOne);
+    //                data.push(res[index].quantity);
+    //            }
+    //            debugger;
 
-                this.setState({
-                    labels: labels,
-                    data: data
-                })
-            }
-            );
-    }
+    //            this.setState({
+    //                labels: labels,
+    //                data: data
+    //            })
+    //        }
+    //        );
+    //}
 
     render() {
         debugger
