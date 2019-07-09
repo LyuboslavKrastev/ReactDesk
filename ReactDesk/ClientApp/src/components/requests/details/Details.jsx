@@ -11,6 +11,11 @@ import { categoriesService } from '../../../services/categories.service'
 import { statusService } from '../../../services/status.service'
 import { NotificationManager } from 'react-notifications';
 import { userService } from '../../../services/user.service';
+import TechnicianPanel from './TechnicianPanel';
+import UserPanel from './UserPanel';
+import NoteViewingModal from './NoteViewingModal';
+import AttachmentsSection from './AttachmentsSection';
+import Menu from './Menu';
 
 
 
@@ -74,8 +79,6 @@ export default class RequestDetails extends Component {
             .then(res => this.setState(
                 {
                     technicians: res
-                }, function () {
-                    console.log(this.state)
                 }))
     }
 
@@ -107,6 +110,7 @@ export default class RequestDetails extends Component {
     }
 
     setCategory = (event) => {
+        debugger;
         let value = event.target.value;
         this.setState({
             category: value
@@ -125,7 +129,7 @@ export default class RequestDetails extends Component {
             data['categoryId'] = this.state.category
         }
         if (this.state.technician !== undefined) {
-            data['assignedToId'] = this.state.technician
+            data['assignToId'] = this.state.technician
         }
 
         requestService.updateRequest(data)
@@ -149,66 +153,10 @@ export default class RequestDetails extends Component {
         return (
             <div>
                 <AddNoteModal requestId={request.id} />
-                {request.notes != undefined && request.notes.length > 0 ? <div className="modal" id={'notes_' + request.id} tabIndex="-1" role="dialog">
-                    <div className="modal-dialog modal-dialog-scrollable" role="document">
-                        <div className="modal-content" style={{ overflow: 'inherit' }}>
-                            <div className="modal-body modal-wide">
-                                <div className="panel-group">
-                                    {request.notes.map(n =>
-                                        <div>
-                                            <div className="panel-heading clearfix">
-                                                <div className="pull-left"><strong>Author:</strong> {n.author}</div>
-                                                <div className="pull-right"><strong>Created On:</strong> {new Date(n.creationTime).toLocaleDateString()}</div>
-                                            </div>
-                                            <div className="panel-body">
-                                                <strong>Description</strong>
-                                                <p>{n.description}</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => { hideNotes(request.id) }}>Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> : null}
+                <NoteViewingModal notes={request.notes} requestId={request.id} hideNotes={hideNotes} />
+                <Menu notes={request.notes} approvals={request.approvals} resolution={request.resolution} showNotes={showNotes}
+                    requestId={request.id} showModal={this.showModal} />
 
-
-                <div className="btn-group btn-group-toggle" data-toggle="buttons">
-                    <button className="btn disabled" style={{ display: 'table', 'backgroundColor': '#00611C', color: 'white' }}>Request ID: {request.id}</button>
-                    <button id="btn_desc" className="btn btn btn-danger" onClick={showDetails}>Request</button>
-                    <button id="btn_res" className="btn btn" onClick={showResolution}>Resolution</button>
-                    <button id="btn_hist" className="btn btn" onClick={showHistory}>History</button>
-                    {request.approvals ? <button id="btn_appr" className="btn btn">Approvals</button> : null}
-                </div>
-                <div className="panel-group" id="resolution" style={{ display: 'none' }}>
-                    <div className="panel">
-                        <div className="panel-heading clearfix">
-                            <div className="pull-left"><strong>Resolution</strong></div>
-                        </div>
-                        <div className="panel-body">
-                            {request.resolution}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="btn-group btn-group-toggle pull-right" data-toggle="buttons">
-                    <button className="btn btn-info" data-toggle="modal" data-target="#approvalModal">Submit for Approval</button>
-                    <button className="btn btn-info" data-toggle="modal" onClick={this.showModal}>Add Note</button>
-                    {request.notes != undefined && request.notes.length > 0 ? <button className="btn btn-info" data-toggle="modal" onClick={() => showNotes(request.id)} > View Notes</button> : null}
-
-                    <button className="btn btn-info pull-right" id="mergeButton">Merge Request</button>
-                </div>
-                <div className="panel-group" id="history" style={{ display: 'none' }}>
-                    <div className="panel">
-                        <div className="panel-heading clearfix">
-                            <div className="pull-left"><strong>History</strong></div>
-                        </div>
-                        <div className="panel-body"><p>Model.History</p></div>
-                    </div>
-                </div>
                 <div className="panel-group" id="request">
                     <div className="panel">
                         <div className="panel-heading clearfix">
@@ -223,72 +171,13 @@ export default class RequestDetails extends Component {
 
                         <div className="panel-footer clearfix">
                             {this.state.currentUser !== null && this.state.currentUser.role === "Admin" ?
-                                <div className="col-sm-3 pull-left">>
-                                    <label className="control-label pull-left col-sm-1" asp-for="bindingModel.CategoryId">Status: </label>
-
-                                    <select className="form-control" onChange={this.setStatus}>
-                                        {
-                                            statuses !== null && statuses !== undefined && statuses.length > 0 ?
-                                                statuses.map((s, index) =>
-                                                    s.name === request.status ?
-                                                        <option selected="selected" key={index} value={s.id}>{s.name}</option> :
-                                                        <option key={index} value={s.id}>{s.name}</option>
-                                                ) : null
-                                        }
-                                    </select>
-                                </div> : <div className="pull-left"><strong>Status:</strong> {request.status}</div>
+                                <TechnicianPanel request={request} statuses={statuses} technicians={technicians} categories={categories}
+                                    setCategory={this.setCategory} setStatus={this.setStatus} setTechnician={this.setTechnician} /> :
+                                <UserPanel request={request}/>
 
                             }
-                            {
-                                this.state.currentUser !== null && this.state.currentUser.role === "Admin" ?
-                                    <div className="pull-right">
-                                        <label className="control-label pull-left col-sm-1">Technician: </label>
-                                        <select className="form-control" onChange={this.setTechnician} >
-                                            {
-                                                technicians !== null && technicians !== undefined && technicians.length > 0 ?
-                                                    technicians.map((u, index) =>
-                                                        <option key={index} value={u.id}>{u.fullName}</option>
-                                                    ) : null
-                                            }
-                                        </select>
-                                    </div> : request.assignedTo ?
-
-                                        <div className="pull-right"><strong>Technician:</strong><a data-toggle="modal" data-target="#@Model.Technician.Id">{request.assignedTo}</a>
-                                        </div> :
-                                        <div className="pull-right"><strong>Technician: </strong><span className="text-danger"><strong>Unassigned</strong></span></div>
-
-                            }
-                            {this.state.currentUser !== null && this.state.currentUser.role === "Admin" ?
-                                <div className="pull-left">
-                                    <label className="control-label pull-left col-sm-1">Category: </label>
-                                    <select className="form-control" onChange={this.setCategory} >
-                                        {
-                                            categories !== null && categories !== undefined && categories.length > 0 ?
-                                                categories.map((c, index) =>
-                                                    c.name === request.category ?
-                                                        <option selected="selected" key={index} value={c.id}>{c.name}</option> :
-                                                        <option key={index} value={c.id}>{c.name}</option>
-                                                ) : null
-                                        }
-                                    </select>
-                                </div> : <div className="pull-left"><strong>Category:</strong> {request.category}</div>
-                            }
-
-                            {request.attachments !== undefined && request.attachments.length > 0 ?
-                                <div className="text-center">
-                                    <br />
-                                    <label className="text-center">Attachments: </label>
-                                    <hr />
-                                    {request.attachments.map((a, index) =>
-                                        <div key={index}>
-                                            <a onClick={() => this.getFile(a.fileName, a.pathToFile, a.id)}>
-                                                {a.fileName}
-                                            </a>
-                                            <br />
-                                        </div>
-                                    )}
-                                </div>
-                                : null}
+                            <AttachmentsSection attachments={request.attachments} getFile={this.getFile} />
+              
                             <br />
                             <div className="panel-footer clearfix">
                                 <div className="col-md-offset-6">
