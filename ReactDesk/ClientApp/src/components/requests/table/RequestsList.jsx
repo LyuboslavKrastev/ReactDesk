@@ -9,9 +9,9 @@ export default class RequestsList extends Component{
 
         let requestsList = this.props.requests.map(function(request, index){
             let assignedTo;
-            if (request.assignedto)
+            if (request.assignedTo)
             {
-                assignedTo = <a key={index} className="text-success"><strong>{request.assignedto}</strong></a>
+                assignedTo = <a key={index} className="text-success"><strong>{request.assignedTo}</strong></a>
             }
             else
             {
@@ -27,6 +27,10 @@ export default class RequestsList extends Component{
             }
 
             let startDate = new Date(request.startTime).toLocaleDateString();
+            let endDate = '';
+            if (request.endtime) {
+                endDate = new Date(request.endtime).toLocaleDateString()
+            }
 
             return (   
                
@@ -49,7 +53,7 @@ export default class RequestsList extends Component{
                         {startDate}
                     </td>
                     <td>
-                        {request.endtime}
+                        {endDate}
                     </td>
                     <td>
                         {request.status}

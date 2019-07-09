@@ -1,25 +1,62 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
+import MyRequestsReport from '../reports/MyRequestsReport'
+import { reportsService } from '../../services/reports.service'
 
-const AuthenticatedHome = (props) => {
-    return (
-       <div>
-           <div class="box-body clearfix row">
-        <div class="col-md-6">
-            <h4 class="text-center">Your Requests</h4>
-            <div class="chart-container">
-                <canvas id="chart" style={{'height':'400px'}}></canvas>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <h4 class="text-center">Actions</h4>
-            <Link to='/requests/create' className="btn btn-success btn-block">
-                Create Request <i class="glyphicon-plus"></i>
-            </Link>
-            <Link to='/requests' className="btn btn-warning btn-block">View All Requests</Link>
-        </div>
-        </div>
-        </div>)}
+export default class AuthenticatedHome extends Component {
+    constructor() {
+        super()
+        this.state = {
+            labels: [],
+            data: [],
+        }
+    }
+    componentDidMount = () => {
+        reportsService.getMyRequests()
+            .then(res =>
+            {
+                let labels = [];
+                let data = [];
+
+                for (var index in res) {
+                    labels.push(res[index].dimensionOne);
+                    data.push(res[index].quantity);
+                }
+                debugger;
+
+                this.setState({
+                    labels: labels,
+                    data: data
+                })
+            }
+            );
+    }
+
+    render() {
+        debugger
+        let labels = this.state.labels;
+        let data = this.state.data
+
+
+        return (
+            <div>
+                <div class="box-body clearfix row">
+                    <div class="col-md-6">
+                        <h4 class="text-center">Your Requests</h4>
+                        <hr />
+                        <MyRequestsReport data={data} labels={labels} />
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="text-center">Actions</h4>
+                        <hr />
+                        <Link to='/requests/create' className="btn btn-success btn-block">
+                            Create Request <i class="glyphicon-plus"></i>
+                        </Link>
+                        <Link to='/requests' className="btn btn-warning btn-block">View All Requests</Link>
+                    </div>
+                </div>
+            </div>)
+    }
             /*{ @if (Model.Model.SubmittedApprovals.Any() || Model.Model.ApprovalsToApprove.Any())
             {
                 <h4 class="text-center">Approvals</h4>
@@ -68,4 +105,4 @@ const AuthenticatedHome = (props) => {
     )
 } }*/
 
-export default AuthenticatedHome
+} 
