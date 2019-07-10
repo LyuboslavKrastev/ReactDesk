@@ -8,6 +8,8 @@ using BasicDesk.App.Models.Common.ViewModels.Requests;
 using BasicDesk.App.Models.Management.BindingModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BasicDesk.App.Models.Common.ViewModels.Solutions;
+using System.Linq;
+using BasicDesk.Common.Constants;
 
 namespace BasicDesk.Mapping
 {
@@ -27,7 +29,9 @@ namespace BasicDesk.Mapping
             Mapper.Initialize(configuration =>
             {
                 configuration.CreateMap<UserRegisteringModel, User>();
-                configuration.CreateMap<User, UserConciseViewModel>();
+                configuration.CreateMap<User, UserConciseViewModel>()
+                    .ForMember(u => u.IsAdmin, opt => opt.MapFrom(ur => ur.Roles.Any(r => r.RoleId == WebConstants.AdminRoleId)))
+                    .ForMember(u => u.IsHelpdeskAgent, opt => opt.MapFrom(ur => ur.Roles.Any(r => r.RoleId == WebConstants.HelpdeskRoleId)));
 
                 //configuration.CreateMap<Request, RequestMergeListingViewModel>()
                 //    .ForMember(r => r.Requester, opt => opt.MapFrom(req => req.Requester.FullName))
@@ -84,14 +88,14 @@ namespace BasicDesk.Mapping
                     .ForMember(r => r.Replies, opt => opt.MapFrom(req => req.Repiles));
 
                 configuration.CreateMap<Request, RequestManagingModel>()
-                .ForMember(r => r.CreatedOn, opt => opt.MapFrom(req => req.StartTime.ToString()))
-                .ForMember(r => r.Author, opt => opt.MapFrom(req => req.Requester))
-                .ForMember(r => r.Attachments, opt => opt.MapFrom(req => req.Attachments))
-                .ForMember(r => r.Category, opt => opt.MapFrom(req => req.Category.Name))
-                .ForMember(r => r.Status, opt => opt.MapFrom(req => req.Status.Name))
-                .ForMember(r => r.Notes, opt => opt.MapFrom(req => req.Notes))
-                .ForMember(r => r.Technician, opt => opt.MapFrom(req => req.AssignedTo))
-                .ForMember(r => r.Replies, opt => opt.MapFrom(req => req.Repiles)); ;
+                    .ForMember(r => r.CreatedOn, opt => opt.MapFrom(req => req.StartTime.ToString()))
+                    .ForMember(r => r.Author, opt => opt.MapFrom(req => req.Requester))
+                    .ForMember(r => r.Attachments, opt => opt.MapFrom(req => req.Attachments))
+                    .ForMember(r => r.Category, opt => opt.MapFrom(req => req.Category.Name))
+                    .ForMember(r => r.Status, opt => opt.MapFrom(req => req.Status.Name))
+                    .ForMember(r => r.Notes, opt => opt.MapFrom(req => req.Notes))
+                    .ForMember(r => r.Technician, opt => opt.MapFrom(req => req.AssignedTo))
+                    .ForMember(r => r.Replies, opt => opt.MapFrom(req => req.Repiles)); ;
 
                 configuration.CreateMap<RequestNote, RequestNoteViewModel>()
                     .ForMember(rn => rn.Author, opt => opt.MapFrom(r => r.Author))
@@ -103,7 +107,7 @@ namespace BasicDesk.Mapping
                 configuration.CreateMap<Solution, SolutionDetailsViewModel>()
                     .ForMember(s => s.Author, opt => opt.MapFrom(sol => sol.Author.FullName))
                     .ForMember(s => s.Attachments, opt => opt.MapFrom(sol => sol.Attachments))
-     .ForMember(s => s.CreatedOn, opt => opt.MapFrom(sol => sol.CreationTime.ToString()));
+                    .ForMember(s => s.CreatedOn, opt => opt.MapFrom(sol => sol.CreationTime.ToString()));
             });
             //Mapper.Configuration.AssertConfigurationIsValid();
         }

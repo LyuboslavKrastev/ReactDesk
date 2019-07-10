@@ -15,6 +15,7 @@ using BasicDesk.Services.Interfaces;
 using BasicDesk.App.Models.Common.BindingModels;
 using BasicDesk.App.Models.Management.ViewModels;
 using BasicDesk.Common.Constants;
+using System.Linq;
 
 namespace ReactDesk.Controllers
 {
@@ -105,17 +106,17 @@ namespace ReactDesk.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             User user = _userService.GetById(userId);
-
             Role role = userRoleService.GetRoleByUserId(user.Id);
 
-            if (role.Id != WebConstants.AdminRoleId || role.Id != WebConstants.HelpdeskRoleId)
+            if (role.Id != WebConstants.AdminRoleId && role.Id != WebConstants.HelpdeskRoleId)
             {
                 return Unauthorized();
             }
 
-            var users = _userService.GetAll();
-            var userDtos = Mapper.Map<IList<UserConciseViewModel>>(users);
-            return Ok(userDtos);
+            IEnumerable<User> users = _userService.GetAll();
+            IEnumerable<UserConciseViewModel> result = Mapper.Map<IEnumerable<UserConciseViewModel>>(users);
+
+            return Ok(result);
         }
 
         [HttpGet("[action]")]

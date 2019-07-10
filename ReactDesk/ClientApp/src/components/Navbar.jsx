@@ -1,21 +1,20 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
- import { authenticationService } from '../services/authentication.service'
+import { authenticationService } from '../services/authentication.service'
 
 import { history } from '../helpers/history';
 
-const nStyle= {
+const nStyle = {
     background: '#36648B',
 }
 
-export default class Navbar extends Component{
-    constructor(props){
+export default class Navbar extends Component {
+    constructor(props) {
         super(props)
 
         this.state = {
             currentUser: null,
-            isAdmin: false
-        };      
+        };
     }
 
     componentDidMount() {
@@ -41,56 +40,53 @@ export default class Navbar extends Component{
 
         return (
             <div>
-            <nav className="navbar-inverse navbar-fixed-top" style={nStyle}>
-     <div className="container-fluid">
-         
-         <ul className="nav navbar-nav">
-         
-             <Link to="/"  className="navbar-brand">ReactDesk</Link>
-        
-                     <li><Link to="/"><span className="glyphicon glyphicon-home"></span></Link></li>
-                     <li><Link to="/Requests">Requests</Link></li>
-                     <li><Link to="/Solutions">Solutions</Link></li>
-                    
-                     
-             {/* if (User.IsInRole(WebConstants.AdminRole))
-{
-                 <li className="dropdown">
-                     <a className="dropdown-toggle" data-toggle="dropdown" href="#">
-                         Admin Panel
-                         <span className="caret"></span>
-                     </a>
-                     <ul className="dropdown-menu">
-                         <li><a asp-area="Management" asp-controller="Users" asp-action="Index">Users</a></li>
-                         <li><a asp-area="Management" asp-controller="Categories" asp-action="Index">Categories</a></li>
-                         <li><a asp-area="Management" asp-controller="Statuses" asp-action="Create">Create Request Status</a></li>
-                         <li><a href="/Management/Reports">Reports</a></li>
-             
-                     </ul>
-                 </li>
-             } */}
-                 <li >
-                             <Link to="/Requests/Create">
-                                 Create Request <i className="glyphicon-plus"></i>
-                             </Link>
-                 </li>
-                 <li >
-                             <Link to="/Solutions/Create">
-                                 Create Solution <i className="glyphicon-plus"></i>
-                             </Link>
-                 </li>
-                 <li><Link to="/Reports">Reports</Link></li>
-                 <li><Link to="/Chat">Chat</Link></li>
-                
-                              
-    </ul>
-    <ul className="nav navbar-nav float-xs-right">
-    <li>{button}</li>
-    </ul>
-     </div>
-</nav>  
-<br />
-</div>
+                <nav className="navbar-inverse navbar-fixed-top" style={nStyle}>
+                    <div className="container-fluid">
+
+                        <ul className="nav navbar-nav">
+                            <Link to="/" className="navbar-brand">ReactDesk</Link>
+                            <li><Link to="/"><span className="glyphicon glyphicon-home"></span></Link></li>
+                        </ul>
+
+                        {this.state.currentUser ? // display these buttons, only if there is an authenticated user
+                            <ul className="nav navbar-nav">
+                                <li><Link to="/Requests">Requests</Link></li>
+                                <li><Link to="/Solutions">Solutions</Link></li>
+
+                                <li >
+                                    <Link to="/Requests/Create">
+                                        Create Request <i className="glyphicon-plus"></i>
+                                    </Link>
+                                </li>
+                                {this.state.currentUser && this.state.currentUser.role === 'Admin' ? <li >
+                                    <Link to="/Solutions/Create">
+                                        Create Solution <i className="glyphicon-plus"></i>
+                                    </Link>
+                                </li> : null}
+                                {this.state.currentUser && this.state.currentUser.role === 'Admin' ? <li >
+                                    <Link to="/Admin/Users">
+                                        Manage Users
+                                </Link>
+                                </li> : null}
+
+
+                                <li><Link to="/Reports">Reports</Link></li>
+                                <li><Link to="/Chat">Chat</Link></li></ul> : null
+                        }
+
+
+
+
+                        <ul className="nav navbar-nav pull-right">
+                            {!this.state.currentUser ? // display the Register button, only if there is no authenticated user
+                                <li><Link to="/Register">Register</Link></li> : null}
+                            <li>{button}</li> 
+                          
+                        </ul>
+                    </div>
+                </nav>
+                <br />
+            </div>
         )
     }
 }

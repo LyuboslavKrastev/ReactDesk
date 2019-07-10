@@ -68,8 +68,11 @@ export default class RequestsTable extends Component {
                 this.setState({
                     requests: res.requests,
                     pageCount: Math.ceil(res.total / this.state.perPage)
-                })
-            }).then(NotificationManager.success("Requests loaded!"))
+                }, function ()
+                {
+                    NotificationManager.success("Requests loaded!")
+                    })
+            })
     }
 
     // filters the requests by status type (open, closed, rejected, etc.)

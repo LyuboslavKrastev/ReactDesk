@@ -39,7 +39,7 @@ namespace BasicDesk.Services
 
         public IEnumerable<User> GetAll()
         {
-            return _context.Users;
+            return _context.Users.Include(u => u.Roles);
         }
 
         public IEnumerable<User> GetAllTechnicians()
@@ -61,10 +61,14 @@ namespace BasicDesk.Services
         {
             // validation
             if (string.IsNullOrWhiteSpace(password))
+            {
                 throw new ArgumentException("Password is required");
+            }
 
             if (_context.Users.Any(x => x.Username == user.Username))
+            {
                 throw new ArgumentException("Username \"" + user.Username + "\" is already taken");
+            }
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
