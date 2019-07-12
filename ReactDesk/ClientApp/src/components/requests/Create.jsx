@@ -42,7 +42,7 @@ export default class CreateRequest extends Component {
                 if (res) {
                     debugger;   
                     console.log(res)
-                    NotificationManager.success('Successfully created request ' + res.Subject)
+                    NotificationManager.success('Successfully created request ' + res.subject)
                     return this.props.history.push('/requests')
 
                 }

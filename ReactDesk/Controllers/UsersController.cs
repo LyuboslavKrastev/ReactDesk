@@ -9,13 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ReactDesk.Exceptions;
 using ReactDesk.Helpers;
 using BasicDesk.Services.Interfaces;
 using BasicDesk.App.Models.Common.BindingModels;
 using BasicDesk.App.Models.Management.ViewModels;
 using BasicDesk.Common.Constants;
-using System.Linq;
 
 namespace ReactDesk.Controllers
 {
@@ -49,7 +47,11 @@ namespace ReactDesk.Controllers
             if (user == null)
             {
                 return BadRequest(new { message = "Username or password is incorrect" });
-            }              
+            }
+            if (user.IsBanned)
+            {
+                return Forbid();
+            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -159,10 +161,40 @@ namespace ReactDesk.Controllers
         //    }
         //}
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpPut("[action]")]
+        public IActionResult Ban([FromBody]string userId)
         {
-            _userService.Delete(id);
+            string currentUserId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
+            User user = _userService.GetById(currentUserId);
+
+            if (user.RoleId != WebConstants.AdminRoleId && user.RoleId != WebConstants.HelpdeskRoleId)
+            {
+                return Unauthorized();
+            }
+
+            _userService.Ban(userId);
+            return Ok(new { message = "User has been banned"});
+        }
+
+        [HttpPut("[action]")]
+        public IActionResult Unban([FromBody]string userId)
+        {
+            string currentUserId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
+            User user = _userService.GetById(currentUserId);
+
+            if (user.RoleId != WebConstants.AdminRoleId && user.RoleId != WebConstants.HelpdeskRoleId)
+            {
+                return Unauthorized();
+            }
+            
+            _userService.Unban(userId);
+            return Ok(new { message = "User has been unbanned" });
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string userId)
+        {
+            _userService.Delete(userId);
             return Ok();
         }
     }

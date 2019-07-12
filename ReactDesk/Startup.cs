@@ -71,6 +71,8 @@ namespace ReactDesk
             services.AddScoped(typeof(AttachmentService<>));
             services.AddScoped<IFileUploader, FileUploader>();
             services.AddScoped<ReportsService, ReportsService>();
+            services.AddScoped<IUserIdentifier, UserIdentifier>();
+
 
 
 

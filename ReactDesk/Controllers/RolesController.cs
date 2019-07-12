@@ -58,11 +58,11 @@ namespace ReactDesk.Controllers
             try
             {
                 this.userService.AddToRoleAsync(model.UserId, roleId);
-                return Ok(new { message = "User roles updated successfully'." });
+                return Ok(new { message = $"Role updated to {model.RoleName} successfully"});
             }
             catch(Exception ex)
             {
-                return BadRequest(new { message = "User roles could not be updated." });
+                return BadRequest(new { message = $"Role could not be updated to {model.RoleName}." });
             }
 
 

@@ -52,7 +52,7 @@ export default class AddNoteModal extends Component{
             .then(res => {
                 if (res) {
                     NotificationManager.success('Successfully added note.');
-                    setTimeout(window.location.reload(), 4000);
+                    this.props.reload();
                     
                     return this.hideModal();
 

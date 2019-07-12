@@ -17,6 +17,8 @@ using ReactDesk.Helpers;
 using BasicDesk.App.Models.Common;
 using System;
 using BasicDesk.App.Models.Management.BindingModels;
+using BasicDesk.Common.Constants;
+using BasicDesk.Data.Models;
 
 namespace ReactDesk.Controllers
 {
@@ -25,24 +27,26 @@ namespace ReactDesk.Controllers
     [Route("api/[controller]")]
     public class RequestsController : ControllerBaseWithDownloads<RequestAttachment>
     {
-        private readonly IUserService userService;
         private readonly IRequestService requestService;
         private readonly IFileUploader fileUploader;
+        private readonly IUserIdentifier userIdentifier;
 
-        public RequestsController(IUserService userService, IRequestService requestService,IFileUploader fileUploader, 
-            AttachmentService<RequestAttachment> attachmentService) : base(attachmentService)
+        public RequestsController(IUserService userService, IRequestService requestService, IFileUploader fileUploader,
+            AttachmentService<RequestAttachment> attachmentService, IUserIdentifier userIdentifier) : base(attachmentService)
         {
-
-                this.userService = userService;
-                this.requestService = requestService;
-                this.fileUploader = fileUploader;
+            this.requestService = requestService;
+            this.fileUploader = fileUploader;
+            this.userIdentifier = userIdentifier;
         }
 
         [HttpGet("[action]")]
         public IActionResult GetAll([FromQuery]TableFilteringModel model)
-       {
+        {
+            User currentUser = userIdentifier.Identify(User);
+            bool isTechnician = userIdentifier.IsTechnician(currentUser.RoleId);
+
             // Filter the requests, depending on the criteria in the model
-            var requestQueryable = this.requestService.GetAll()
+            var requestQueryable = this.requestService.GetAll(currentUser.Id, isTechnician)
                 .Where(r => model.HasStatusIdFilter() ?
                     r.StatusId == model.StatusId : true)
                 .Where(r => model.HasIdFilter() ?
@@ -63,38 +67,33 @@ namespace ReactDesk.Controllers
             // Needed for the calculation of the number of pages to be displayed
             int total = requestQueryable.Count();
 
-            var requests = requestQueryable
+            IEnumerable<RequestListingViewModel> requests = requestQueryable
                 .Skip(model.Offset)
                 .Take(model.PerPage) // The default value is 50
                 .ToArray();
 
-            return Ok(new { requests, total});
+            return Ok(new { requests, total });
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-           string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
-            var request = this.requestService.GetRequestDetails(id, userId).FirstOrDefault();
-            if (request == null)
-            {
-                return NotFound();
-            }
+            User user = userIdentifier.Identify(User);
+            RequestDetailsViewModel request = this.requestService.GetRequestDetails(id, user.Id).FirstOrDefault();
             return Ok(request);
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromForm]RequestCreationBindingModel model)
         {
-            string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
-            var user = userService.GetById(userId);
+            User user = userIdentifier.Identify(User);
 
             if (user == null)
             {
                 return BadRequest();
             }
 
-            var request = Mapper.Map<Request>(model);     
+            var request = Mapper.Map<Request>(model);
 
             request.RequesterId = user.Id;
 
@@ -122,7 +121,7 @@ namespace ReactDesk.Controllers
 
             await this.requestService.SaveChangesAsync();
 
-            return this.Ok(request);
+            return this.Ok(new { id = request.Id, subject = request.Subject });
         }
 
         [HttpPost("[action]")]
@@ -146,6 +145,13 @@ namespace ReactDesk.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromForm]RequestEditingBindingModel model)
         {
+            User currentUser = userIdentifier.Identify(User);
+            bool isTechnician = userIdentifier.IsTechnician(currentUser.RoleId);
+            if (!isTechnician)
+            {
+                return Unauthorized();
+            }
+
             try
             {
                 await requestService.UpdateRequestAsync(model);
@@ -158,7 +164,7 @@ namespace ReactDesk.Controllers
                 string message = $"Failed to update request";
                 return BadRequest(new { message = message });
             }
-         
+
         }
 
         [HttpDelete]

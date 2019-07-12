@@ -129,7 +129,7 @@ namespace BasicDesk.Services
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             var user = _context.Users.Find(id);
             if (user != null)
@@ -137,6 +137,20 @@ namespace BasicDesk.Services
                 _context.Users.Remove(user);
                 _context.SaveChanges();
             }
+        }
+
+        public void Ban(string id)
+        {
+            User user = _context.Users.FirstOrDefault(u => u.Id == id);
+            user.IsBanned = true;
+            _context.SaveChanges();
+        }
+
+        public void Unban(string id)
+        {
+            User user = _context.Users.FirstOrDefault(u => u.Id == id);
+            user.IsBanned = false;
+            _context.SaveChanges();
         }
 
         public void AddToRoleAsync(string userId, int roleId)

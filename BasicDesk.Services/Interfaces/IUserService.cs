@@ -1,6 +1,5 @@
 ﻿using BasicDesk.Data.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BasicDesk.Services.Interfaces
 {
@@ -12,7 +11,10 @@ namespace BasicDesk.Services.Interfaces
         User GetById(string id);
         User Create(User user, string password);
         void Update(User user, string password = null);
-        void Delete(int id);
-        void  AddToRoleAsync(string userId, int roleId);
+        void Delete(string id);
+        void AddToRoleAsync(string userId, int roleId);
+        void Ban(string userId);
+        void Unban(string userId);
+
     }
 }

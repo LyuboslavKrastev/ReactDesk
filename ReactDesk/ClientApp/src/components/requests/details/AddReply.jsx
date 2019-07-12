@@ -45,8 +45,8 @@ export default class AddReply extends Component {
             .then(res => {
                 if (res) {
                     NotificationManager.success('Successfully added reply.');
-                    setTimeout(window.location.reload(), 4000);
 
+                    this.props.loadRequest();
                     return this.hideModal();
 
                 }

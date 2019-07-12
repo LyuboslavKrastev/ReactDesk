@@ -39,6 +39,8 @@ namespace BasicDesk.Data.Models
         [Required]
         public byte[] PasswordSalt { get; set; }
 
+        public bool IsBanned { get; set; } = false;
+
         public int RoleId { get; set; }
         public Role Role { get; set; }
 

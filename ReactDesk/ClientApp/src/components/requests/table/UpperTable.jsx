@@ -63,7 +63,7 @@ export default class UpperTable extends Component {
 
                 } else {
                     NotificationManager.success(r.message)
-                    setTimeout(window.location.reload(), 3000)          
+                    this.props.loadRequests();
                 }
             });
     }
@@ -83,7 +83,7 @@ export default class UpperTable extends Component {
 
                 } else {
                     NotificationManager.success(r.message)
-                    setTimeout(window.location.reload(), 3000)
+                    this.props.loadRequests();
                 }
             });
     }
@@ -92,7 +92,7 @@ export default class UpperTable extends Component {
     render() {
         return (
             <div>
-                <AddNoteModal />
+                <AddNoteModal reload={this.props.loadRequests} />
 
                 <table className="table table-hover table-bordered">
                     <thead>

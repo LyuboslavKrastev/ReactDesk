@@ -341,6 +341,8 @@ namespace BasicDesk.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(150);
 
+                    b.Property<bool>("IsBanned");
+
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired();
 

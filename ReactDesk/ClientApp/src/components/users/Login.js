@@ -50,7 +50,7 @@ export class Login extends Component {
                     this.setState({
                         Loading: false
                     })
-                    NotificationManager.error(`Invalid credentials`)        
+                    NotificationManager.error(`This account has been banned.`)        
                 }
             })
    

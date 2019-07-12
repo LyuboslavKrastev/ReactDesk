@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react'
-import { showHistory, showDetails, showResolution } from './DetailsButtons'
 import { requestService } from '../../../services/requests.service'
 import AddNoteModal from '../modals/AddNoteModal'
 import { showNotes, hideNotes } from '../modals/note-view-modal-controls'
@@ -36,8 +35,8 @@ export default class RequestDetails extends Component {
             currentUser: x
         }, function () {
             this.loadRequest();
-
-            if (this.state.currentUser.role === 'Admin') {
+            let role = this.state.currentUser.role;
+            if (role === 'Admin' || role === 'Helpdesk') {
                 this.loadStatuses();
                 this.loadCategories();
                 this.loadTechnicians();
@@ -152,7 +151,7 @@ export default class RequestDetails extends Component {
 
         return (
             <div>
-                <AddNoteModal requestId={request.id} />
+                <AddNoteModal requestId={request.id} reload={this.loadRequest} />
                 <NoteViewingModal notes={request.notes} requestId={request.id} hideNotes={hideNotes} />
                 <Menu notes={request.notes} approvals={request.approvals} resolution={request.resolution} showNotes={showNotes}
                     requestId={request.id} showModal={this.showModal} />
@@ -170,7 +169,7 @@ export default class RequestDetails extends Component {
                         </div>
 
                         <div className="panel-footer clearfix">
-                            {this.state.currentUser !== null && this.state.currentUser.role === "Admin" ?
+                            {this.state.currentUser !== null && (this.state.currentUser.role === "Admin" || this.state.currentUser.role == "Helpdesk") ?
                                 <TechnicianPanel request={request} statuses={statuses} technicians={technicians} categories={categories}
                                     setCategory={this.setCategory} setStatus={this.setStatus} setTechnician={this.setTechnician} /> :
                                 <UserPanel request={request}/>
@@ -212,7 +211,7 @@ export default class RequestDetails extends Component {
                 <div className='text-center'>
                     <button className="btn btn-success" onClick={this.showAddReplyModal}>Reply</button>
                 </div>
-                <AddReply requestId={request.id} />
+                <AddReply requestId={request.id} loadRequest={this.loadRequest} />
 
             </div>
         )

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router';
-import { Home } from './components/Home/Home';
+import { Home } from './components/home/Home';
 import { Register } from './components/users/Register';
 import { Login } from './components/users/Login';
 import { history } from './helpers/history';
@@ -67,7 +67,7 @@ export default class App extends Component {
                                 <PrivateRoute path="/admin/users" roles={[Role.Admin]} component={UsersTable} />                        
                                 <PrivateRoute exact path="/requests" component={RequestsTable} /> 
                                 <PrivateRoute exact path="/solutions" component={SolutionsIndex} />
-                                <PrivateRoute path="/solutions/create" component={CreateSolution} />
+                                <PrivateRoute path="/solutions/create" roles={[Role.Admin, Role.Helpdesk]} component={CreateSolution} />
                                 <PrivateRoute path="/requests/details/:id" component={RequestDetails} />
                                 <PrivateRoute path="/solutions/details/:id" component={SolutionDetails} />                            
                                 <PrivateRoute exact path="/reports" component={ReportsIndex} />

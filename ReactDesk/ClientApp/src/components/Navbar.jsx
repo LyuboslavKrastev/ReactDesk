@@ -58,7 +58,7 @@ export default class Navbar extends Component {
                                         Create Request <i className="glyphicon-plus"></i>
                                     </Link>
                                 </li>
-                                {this.state.currentUser && this.state.currentUser.role === 'Admin' ? <li >
+                                {this.state.currentUser && (this.state.currentUser.role === 'Admin' || this.state.currentUser.role == 'Helpdesk') ? <li >
                                     <Link to="/Solutions/Create">
                                         Create Solution <i className="glyphicon-plus"></i>
                                     </Link>
@@ -80,6 +80,7 @@ export default class Navbar extends Component {
                         <ul className="nav navbar-nav pull-right">
                             {!this.state.currentUser ? // display the Register button, only if there is no authenticated user
                                 <li><Link to="/Register">Register</Link></li> : null}
+                            {this.state.currentUser ? <li><Link to={`/user/profile?id=` + this.state.currentUser.id}>Greetings, {this.state.currentUser.fullName}!</Link></li> : null}
                             <li>{button}</li> 
                           
                         </ul>
