@@ -14,13 +14,11 @@ namespace ReactDesk.Controllers
     {
         private readonly IUserService userService;
         private readonly IRequestService requestService;
-        private readonly IUserRoleService userRoleService;
 
-        public RepliesController(IUserService userService, IRequestService requestService, IUserRoleService userRoleService)
+        public RepliesController(IUserService userService, IRequestService requestService)
         {
             this.userService = userService;
             this.requestService = requestService;
-            this.userRoleService = userRoleService;
         }
 
         [HttpPost]
@@ -28,7 +26,7 @@ namespace ReactDesk.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             var user = this.userService.GetById(userId);
-            bool isTechnician = User.IsInRole(WebConstants.AdminRoleName) || User.IsInRole(WebConstants.HelpdeskRoleName);
+            bool isTechnician = user.RoleId == WebConstants.AdminRoleId || user.RoleId == WebConstants.HelpdeskRoleId;
 
             await this.requestService.AddReply(model.RequestId, userId, isTechnician, model.Description);
 

@@ -6,16 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BasicDesk.Services
 {
     public class UserService : IUserService
     {
         private BasicDeskDbContext _context;
+        private readonly IRoleService roleService;
 
-        public UserService(BasicDeskDbContext context)
+        public UserService(BasicDeskDbContext context, IRoleService roleService)
         {
             _context = context;
+            this.roleService = roleService;
         }
 
         public User Authenticate(string username, string password)
@@ -23,7 +26,7 @@ namespace BasicDesk.Services
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.Users.SingleOrDefault(x => x.Username == username);
+            var user = _context.Users.Include(u => u.Role).SingleOrDefault(u => u.Username == username);
 
             // check if username exists
             if (user == null)
@@ -39,22 +42,20 @@ namespace BasicDesk.Services
 
         public IEnumerable<User> GetAll()
         {
-            return _context.Users.Include(u => u.Roles);
+            return _context.Users.Include(u => u.Role);
         }
 
         public IEnumerable<User> GetAllTechnicians()
         {
-            var userIds = _context.UserRoles
-                .Where(r => r.RoleId == WebConstants.HelpdeskRoleId || r.RoleId == WebConstants.AdminRoleId)
-                .Select(u => u.UserId);
+            var users = _context.Users
+                .Where(r => r.RoleId == WebConstants.HelpdeskRoleId || r.RoleId == WebConstants.AdminRoleId);
 
-            var users = _context.Users.Where(u => userIds.Contains(u.Id));
             return users;
         }
 
         public User GetById(string id)
         {
-            return _context.Users.Find(id);
+            return _context.Users.Include(u => u.Role).FirstOrDefault(u => u.Id == id);
         }
 
         public User Create(User user, string password)
@@ -76,27 +77,18 @@ namespace BasicDesk.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            _context.Users.Add(user);
-
-            UserRole userRole;
-            if (!_context.UserRoles.Any())
+            if (!_context.Users.Any())
             {
-                userRole = new UserRole
-                {
-                    RoleId = _context.Roles.FirstOrDefault(r => r.Name == "Admin").Id,
-                    UserId = user.Id
-                };
+                // the first registered user shall be an admin
+                user.RoleId = WebConstants.AdminRoleId;
             }
             else
             {
-                userRole = new UserRole
-                {
-                    RoleId = _context.Roles.FirstOrDefault(r => r.Name == "User").Id,
-                    UserId = user.Id
-                };
-                
+                // all others shall be users
+                user.RoleId = WebConstants.UserRoleId;
             }
-            user.Roles.Add(userRole);
+
+            _context.Users.Add(user);
             _context.SaveChanges();
 
             return user;
@@ -107,7 +99,10 @@ namespace BasicDesk.Services
             var user = _context.Users.Find(userParam.Id);
 
             if (user == null)
+            {
                 throw new ArgumentException("User not found");
+            }
+               
 
             if (userParam.Username != user.Username)
             {
@@ -142,6 +137,24 @@ namespace BasicDesk.Services
                 _context.Users.Remove(user);
                 _context.SaveChanges();
             }
+        }
+
+        public void AddToRoleAsync(string userId, int roleId)
+        {
+            Role role = this.roleService.GetById(roleId);
+            User user = this.GetById(userId);
+
+            if(user == null)
+            {
+                throw new ArgumentException("User not found");
+            }
+            if(role == null)
+            {
+                throw new ArgumentException("Role not found");
+            }
+
+            user.RoleId = role.Id;
+            _context.SaveChanges();
         }
 
         // private helper methods

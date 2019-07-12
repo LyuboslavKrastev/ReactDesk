@@ -68,11 +68,9 @@ export default class RequestsTable extends Component {
                 this.setState({
                     requests: res.requests,
                     pageCount: Math.ceil(res.total / this.state.perPage)
-                }, function ()
-                {
-                    NotificationManager.success("Requests loaded!")
-                    })
-            })
+                }, function () {
+                        NotificationManager.success("Requests loaded!")
+                    })})
     }
 
     // filters the requests by status type (open, closed, rejected, etc.)
@@ -215,33 +213,33 @@ export default class RequestsTable extends Component {
                 <table className="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
-                        <th className="text-center"><input onClick={toggle} type="checkbox" className="checkbox-inline" id="checkAll" /></th>
-                        <th className="text-center">Notes</th>
-                        <th>
-                            <a onClick={this.orderRequests}>Id</a>
-                        </th>
-                        <th>
-                            <a onClick={this.orderRequests}>
-                                Subject
+                            <th className="text-center"><input onClick={toggle} type="checkbox" className="checkbox-inline" id="checkAll" /></th>
+                            <th className="text-center">Notes</th>
+                            <th>
+                                <a onClick={this.orderRequests}>Id</a>
+                            </th>
+                            <th>
+                                <a onClick={this.orderRequests}>
+                                    Subject
         </a>
-                        </th>
-                        <th>
-                            <a onClick={this.orderRequests}>Requester</a>
-                        </th>
-                        <th>
-                            <a onClick={this.orderRequests}>Assigned To</a>
-                        </th>
-                        <th>
-                            <a onClick={this.orderRequests}>Start Time</a>
-                        </th>
-                        <th>
-                            <a onClick={this.orderRequests}>
-                                End Time
+                            </th>
+                            <th>
+                                <a onClick={this.orderRequests}>Requester</a>
+                            </th>
+                            <th>
+                                <a onClick={this.orderRequests}>Assigned To</a>
+                            </th>
+                            <th>
+                                <a onClick={this.orderRequests}>Start Time</a>
+                            </th>
+                            <th>
+                                <a onClick={this.orderRequests}>
+                                    End Time
         </a>
-                        </th>
-                        <th>
-                            <a onClick={this.orderRequests}>Status</a>
-                            <a id="searchIcon"><i className="glyphicon glyphicon-zoom-in pull-right" onClick={this.showSearchBar}></i></a>
+                            </th>
+                            <th>
+                                <a onClick={this.orderRequests}>Status</a>
+                                <a id="searchIcon"><i className="glyphicon glyphicon-zoom-in pull-right" onClick={this.showSearchBar}></i></a>
                             </th>
                         </tr>
                     </thead>

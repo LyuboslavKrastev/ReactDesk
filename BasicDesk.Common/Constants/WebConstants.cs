@@ -25,6 +25,6 @@
         public const string AdminRoleName = "Admin";
 
 
-        public const string ManagementRoles = "Admin, HelpdeskAgent";
+        public const string ManagementRoles = "Admin, Helpdesk";
     }
 }

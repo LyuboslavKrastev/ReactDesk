@@ -3,9 +3,7 @@ using BasicDesk.Data.Models;
 using BasicDesk.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -17,15 +15,12 @@ namespace ReactDesk.Controllers
     {
         private readonly IRequestService requestService;
         private readonly IUserService userService;
-        private readonly IUserRoleService userRoleService;
 
-        public NotesController(IRequestService requestService, IUserService userService, IUserRoleService userRoleService)
+        public NotesController(IRequestService requestService, IUserService userService)
         {
             this.requestService = requestService;
             this.userService = userService;
-            this.userRoleService = userRoleService;
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]JObject data)
@@ -41,8 +36,7 @@ namespace ReactDesk.Controllers
                 return BadRequest();
             }
 
-            Role role = this.userRoleService.GetRoleByUserId(user.Id);
-            bool isTechnician = role.Name == WebConstants.AdminRoleName || role.Name == WebConstants.HelpdeskRoleName;
+            bool isTechnician = user.RoleId == WebConstants.AdminRoleId || user.RoleId == WebConstants.HelpdeskRoleId;
 
             await this.requestService.AddNote(ids, userId, user.Username, isTechnician, description);
 

@@ -16,8 +16,6 @@ namespace BasicDesk.Data
 
         public DbSet<Role> Roles { get; set; }
 
-        public DbSet<UserRole> UserRoles { get; set; }
-
         public DbSet<Request> Requests { get; set; }
 
         public DbSet<RequestReply> RequestReplies { get; set; }
@@ -56,11 +54,7 @@ namespace BasicDesk.Data
                 .WithOne(a => a.Solution)
                 .HasForeignKey(a => a.SolutionId);
 
-            builder.Entity<UserRole>()
-                .HasKey(ur => new { ur.RoleId, ur.UserId });
-
             //seed approval statuses
-
             builder.Entity<ApprovalStatus>().HasData(
                 new ApprovalStatus { Id = 1, Name = "Pending" },
                 new ApprovalStatus { Id = 2, Name = "Approved" },

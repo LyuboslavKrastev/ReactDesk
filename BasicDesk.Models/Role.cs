@@ -10,6 +10,6 @@ namespace BasicDesk.Data.Models
 
         public string Name { get; set; }
 
-        public IEnumerable<UserRole> Users { get; set; }
+        public IEnumerable<User> Users { get; set; }
     }
 }

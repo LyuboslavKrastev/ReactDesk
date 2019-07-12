@@ -60,7 +60,6 @@ namespace ReactDesk
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped(typeof(DbRepository<>), typeof(DbRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
             services.AddScoped<ISolutionService, SolutionService>();

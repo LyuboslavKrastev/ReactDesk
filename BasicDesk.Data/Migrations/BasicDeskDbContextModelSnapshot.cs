@@ -347,26 +347,17 @@ namespace BasicDesk.Data.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired();
 
+                    b.Property<int>("RoleId");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50);
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("BasicDesk.Data.Models.UserRole", b =>
-                {
-                    b.Property<int>("RoleId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("RoleId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("BasicDesk.Data.Models.Requests.ReplyAttachment", b =>
@@ -462,16 +453,11 @@ namespace BasicDesk.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("BasicDesk.Data.Models.UserRole", b =>
+            modelBuilder.Entity("BasicDesk.Data.Models.User", b =>
                 {
-                    b.HasOne("BasicDesk.Data.Models.Role")
+                    b.HasOne("BasicDesk.Data.Models.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("BasicDesk.Data.Models.User")
-                        .WithMany("Roles")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

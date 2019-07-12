@@ -30,8 +30,8 @@ namespace BasicDesk.Mapping
             {
                 configuration.CreateMap<UserRegisteringModel, User>();
                 configuration.CreateMap<User, UserConciseViewModel>()
-                    .ForMember(u => u.IsAdmin, opt => opt.MapFrom(ur => ur.Roles.Any(r => r.RoleId == WebConstants.AdminRoleId)))
-                    .ForMember(u => u.IsHelpdeskAgent, opt => opt.MapFrom(ur => ur.Roles.Any(r => r.RoleId == WebConstants.HelpdeskRoleId)));
+                    .ForMember(u => u.IsAdmin, opt => opt.MapFrom(ur => ur.Role.Id == WebConstants.AdminRoleId))
+                    .ForMember(u => u.IsHelpdeskAgent, opt => opt.MapFrom(ur => ur.Role.Id == WebConstants.HelpdeskRoleId));
 
                 //configuration.CreateMap<Request, RequestMergeListingViewModel>()
                 //    .ForMember(r => r.Requester, opt => opt.MapFrom(req => req.Requester.FullName))

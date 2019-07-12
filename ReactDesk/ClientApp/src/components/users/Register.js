@@ -61,7 +61,7 @@ export class Register extends Component {
             .then(res => {
                 if (res.status !== 400) {
                     console.log(res)
-                    NotificationManager.success(`Welcome, ${res.username}`);
+                    NotificationManager.success(res.message);
                 }
                 else {
                     res.json().then(r => {

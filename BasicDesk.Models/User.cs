@@ -39,8 +39,9 @@ namespace BasicDesk.Data.Models
         [Required]
         public byte[] PasswordSalt { get; set; }
 
-        public ICollection<Request> Requests { get; set; } = new List<Request>();
+        public int RoleId { get; set; }
+        public Role Role { get; set; }
 
-        public ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
+        public ICollection<Request> Requests { get; set; } = new List<Request>();
     }
 }

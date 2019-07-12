@@ -30,29 +30,26 @@ namespace ReactDesk.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
-        private readonly IUserRoleService userRoleService;
         private readonly AppSettings _appSettings;
 
         public UsersController(
-            IUserService userService, IUserRoleService userRoleService,
+            IUserService userService,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
-            this.userRoleService = userRoleService;
             _appSettings = appSettings.Value;
         }
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public IActionResult Login(UserLoggingInModel userDto)
+        public IActionResult Login(UserLoggingInModel model)
         {
-            var user = _userService.Authenticate(userDto.Username, userDto.Password);
+            var user = _userService.Authenticate(model.Username, model.Password);
 
             if (user == null)
             {
                 return BadRequest(new { message = "Username or password is incorrect" });
-            }
-              
+            }              
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -68,7 +65,7 @@ namespace ReactDesk.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            var role = userRoleService.GetRoleByUserId(user.Id);
+            var role = user.Role; /*userRoleService.GetRoleByUserId(user.Id);*/
 
             // return basic user info (without password) and token to store client side
             return Ok(new
@@ -92,7 +89,7 @@ namespace ReactDesk.Controllers
             {
                 // save 
                 _userService.Create(user, userDto.Password);
-                return Ok("Successfully registered user");
+                return Ok(new { message = "Successfully registered user" });
             }
             catch (Exception ex)
             {
@@ -106,9 +103,8 @@ namespace ReactDesk.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             User user = _userService.GetById(userId);
-            Role role = userRoleService.GetRoleByUserId(user.Id);
 
-            if (role.Id != WebConstants.AdminRoleId && role.Id != WebConstants.HelpdeskRoleId)
+            if (user.RoleId!= WebConstants.AdminRoleId && user.RoleId != WebConstants.HelpdeskRoleId)
             {
                 return Unauthorized();
             }
@@ -125,9 +121,7 @@ namespace ReactDesk.Controllers
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
             User user = _userService.GetById(userId);
 
-            Role role = userRoleService.GetRoleByUserId(user.Id);
-
-            if (role.Id != WebConstants.AdminRoleId && role.Id != WebConstants.HelpdeskRoleId)
+            if (user.RoleId != WebConstants.AdminRoleId && user.RoleId!= WebConstants.HelpdeskRoleId)
             {
                 return Unauthorized();
             }
