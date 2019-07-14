@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ReactDesk.Helpers;
 using ReactDesk.Helpers.Interfaces;
+using ReactDesk.Hubs;
 using System.Text;
 
 namespace ReactDesk
@@ -74,8 +75,22 @@ namespace ReactDesk
             services.AddScoped<IUserIdentifier, UserIdentifier>();
 
 
+            // Since we will be serving the Angular application on a separate port, 
+            // for it to be able to access the SignalR server we will need to enable CORS on the Server.
+            // Add the following inside of ConfigureServices, just before the code that adds SignalR to DI container.
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+            builder =>
+            {
+                builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .WithOrigins("http://localhost:50811/");
+
+            }));
 
 
+            services.AddSignalR();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -115,6 +130,14 @@ namespace ReactDesk
                     template: "{controller}/{action=Index}/{id?}");
             });
 
+            // We also have to tell the middleware to use this CORS policy. 
+            app.UseCors("CorsPolicy");
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chatHub");
+            });
+
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
@@ -124,6 +147,8 @@ namespace ReactDesk
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+           
 
         }
     }
