@@ -77,64 +77,30 @@ namespace BasicDesk.Services
             await this.SaveChangesAsync();
         }
 
-        public IQueryable<Request> GetAll(string userId, bool isTechnician)
+        public IQueryable<Request> GetAll(string currentUserId, bool isTechnician, TableFilteringModel model)
         {
-            if (!isTechnician)
-            {
-                return this.repository.All().Where(r => r.RequesterId == userId)
-                    .Include(r => r.Requester)
-                    .Include(r => r.AssignedTo);
-            }
-            return this.repository.All()
-                .Include(r => r.Requester)
-                .Include(r => r.AssignedTo);
-        }
+            // Filter the requests, depending on the criteria in the model
+            IQueryable<Request> result = this.repository.All()
+                .Where(r => isTechnician ? true : r.RequesterId == currentUserId)
+                .Where(r => model.HasStatusIdFilter() ?
+                    r.StatusId == model.StatusId : true)
+                .Where(r => model.HasIdFilter() ?
+                    r.Id == model.IdSearch : true)
+                .Where(r => model.HasSubjectFilter() ?
+                    r.Subject.Contains(model.SubjectSearch) : true)
+                .Where(r => model.HasRequesterFilter() ?
+                    r.Requester.FullName.Contains(model.RequesterSearch) : true)
+                .Where(r => model.HasAssignedToFilter() ?
+                    r.AssignedTo.FullName == model.AssignedToSearch : true)
+                .Where(r => model.HasValidStartTimeFilter() ?
+                    r.StartTime.Date.CompareTo(model.GetStartTimeAsDateTime()) == 0 : true)
+                .Where(r => model.HasValidEndTimeFilter() && r.EndTime.HasValue ?
+                    r.EndTime.Value.Date.CompareTo(model.GetEndTimeAsDateTime()) == 0 : true)
+                .OrderByDescending(r => r.Id)
+                .Skip(model.Offset)
+                .Take(model.PerPage); // The default value is 50;
 
-        public IQueryable<Request> GetBySearch(string userId, bool isTechnician, TableFilteringModel searchModel, IQueryable<Request> requests)
-        {
-            if (!requests.Any())
-            {
-                requests = GetAll(userId, isTechnician);
-            }
-
-            if (searchModel.IdSearch != null)
-            {
-                requests = requests.Where(r => r.Id == searchModel.IdSearch);
-            }
-            if (searchModel.RequesterSearch != null)
-            {
-                requests = requests.Where(r => r.Requester.FullName.Contains(searchModel.RequesterSearch));
-            }
-            if (searchModel.AssignedToSearch != null)
-            {
-                requests = requests.Where(r => r.AssignedTo.FullName.Contains(searchModel.AssignedToSearch));
-            }
-            if (searchModel.SubjectSearch != null)
-            {
-                requests = requests.Where(r => r.Subject.Contains(searchModel.SubjectSearch));
-            }
-            if (DateTime.TryParse(searchModel.StartTimeSearch, out DateTime creationDateTime))
-            {
-                requests = requests.Where(r => r.StartTime.Date == creationDateTime.Date);
-            }
-            if (DateTime.TryParse(searchModel.EndTimeSearch, out DateTime closingDateTime))
-            {
-
-                requests = requests.Where(r => r.EndTime.Value.Date == closingDateTime.Date);
-            }
-            return requests.AsNoTracking();
-        }
-
-        public IQueryable<Request> GetByFilter(string userId, bool isTechnician, string currentFilter)
-        {
-            bool isInt = int.TryParse(currentFilter, out int statusId);
-            IQueryable<Request> requests = GetAll(userId, isTechnician);
-
-            if (isInt)
-            {
-                return requests.Where(r => r.Status.Id == statusId).AsNoTracking();
-            }
-            return requests;
+            return result;
         }
 
 

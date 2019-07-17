@@ -11,14 +11,12 @@ namespace BasicDesk.Services.Interfaces
 {
     public interface IRequestService : IDbService<Request>
     {
-        IQueryable<Request> GetAll(string userId, bool isTechnician);
+        IQueryable<Request> GetAll(string currentUserId, bool isTechnician, TableFilteringModel model);
         Task AddAproval(int requestId, string userId, bool isTechnician, string approverId, string subject, string description);
         Task AddNote(IEnumerable<int> requestIds, string userId, string userName, bool isTechnician, string noteDescription);
         Task AddNote(int requestId, string userId, string userName, bool isTechnician, string noteDescription);
         Task AddReply(int requestId, string userId, bool isTechnician, string noteDescription);
         IQueryable<RequestStatus> GetAllStatuses();
-        IQueryable<Request> GetByFilter(string userId, bool isTechnician, string currentFilter);
-        IQueryable<Request> GetBySearch(string userId, bool isTechnician, TableFilteringModel searchModel, IQueryable<Request> requests);
         IQueryable<RequestDetailsViewModel> GetRequestDetails(int id, string userId);
         IQueryable<RequestManagingModel> GetRequestManagingDetails(int id);
         Task Merge(IEnumerable<int> requestIds);

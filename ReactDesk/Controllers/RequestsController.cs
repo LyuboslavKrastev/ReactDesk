@@ -46,30 +46,13 @@ namespace ReactDesk.Controllers
             bool isTechnician = userIdentifier.IsTechnician(currentUser.RoleId);
 
             // Filter the requests, depending on the criteria in the model
-            var requestQueryable = this.requestService.GetAll(currentUser.Id, isTechnician)
-                .Where(r => model.HasStatusIdFilter() ?
-                    r.StatusId == model.StatusId : true)
-                .Where(r => model.HasIdFilter() ?
-                    r.Id == model.IdSearch : true)
-                .Where(r => model.HasSubjectFilter() ?
-                    r.Subject.Contains(model.SubjectSearch) : true)
-                .Where(r => model.HasRequesterFilter() ?
-                    r.Requester.FullName.Contains(model.RequesterSearch) : true)
-                .Where(r => model.HasAssignedToFilter() ?
-                    r.AssignedTo.FullName == model.AssignedToSearch : true)
-                .Where(r => model.HasValidStartTimeFilter() ?
-                    r.StartTime.Date.CompareTo(model.GetStartTimeAsDateTime()) == 0 : true)
-                .Where(r => model.HasValidEndTimeFilter() && r.EndTime.HasValue ?
-                    r.EndTime.Value.Date.CompareTo(model.GetEndTimeAsDateTime()) == 0 : true)
-                .ProjectTo<RequestListingViewModel>()
-                .OrderByDescending(r => r.Id);
+            var requestQueryable = this.requestService.GetAll(currentUser.Id, isTechnician, model);
 
             // Needed for the calculation of the number of pages to be displayed
             int total = requestQueryable.Count();
 
             IEnumerable<RequestListingViewModel> requests = requestQueryable
-                .Skip(model.Offset)
-                .Take(model.PerPage) // The default value is 50
+                .ProjectTo<RequestListingViewModel>()
                 .ToArray();
 
             return Ok(new { requests, total });

@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicDesk.Data", "BasicDesk
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicDesk.App.Models", "BasicDesk.App.Models\BasicDesk.App.Models.csproj", "{088AF2AA-FE26-41EF-901D-E8AB7E599630}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4315F298-4BB2-4030-8B74-C04759F0D088}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{088AF2AA-FE26-41EF-901D-E8AB7E599630}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{088AF2AA-FE26-41EF-901D-E8AB7E599630}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{088AF2AA-FE26-41EF-901D-E8AB7E599630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4315F298-4BB2-4030-8B74-C04759F0D088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4315F298-4BB2-4030-8B74-C04759F0D088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4315F298-4BB2-4030-8B74-C04759F0D088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4315F298-4BB2-4030-8B74-C04759F0D088}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

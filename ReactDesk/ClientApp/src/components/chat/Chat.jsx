@@ -76,12 +76,12 @@ class Chat extends Component {
                 </div>
 
                 <hr />
-                {this.state.messages.length > 0 ? 
+                {this.state.messages.length > 0 ?
                     <div className="alert alert-info" style={{ wordBreak: "break-all" }}>
                         {this.state.messages.map((message, index) => (
                             <div className="row" key={index}>
                                 <div><strong>{message}</strong> </div>
-                                <hr/>
+                                <hr />
                             </div>
                         ))}
                     </div>
