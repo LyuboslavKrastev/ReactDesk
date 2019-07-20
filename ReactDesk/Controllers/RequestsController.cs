@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +12,10 @@ using AutoMapper.QueryableExtensions;
 using ReactDesk.Helpers.Interfaces;
 using System.IO;
 using BasicDesk.Services;
-using ReactDesk.Helpers;
 using BasicDesk.App.Models.Common;
-using System;
 using BasicDesk.App.Models.Management.BindingModels;
-using BasicDesk.Common.Constants;
 using BasicDesk.Data.Models;
+using System;
 
 namespace ReactDesk.Controllers
 {
@@ -60,10 +57,31 @@ namespace ReactDesk.Controllers
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
-        {
-            User user = userIdentifier.Identify(User);
-            RequestDetailsViewModel request = this.requestService.GetRequestDetails(id, user.Id).FirstOrDefault();
-            return Ok(request);
+        {          
+            try
+            {
+                User user = userIdentifier.Identify(User);
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+                bool isTechnician = userIdentifier.IsTechnician(user.RoleId);
+                
+                RequestDetailsViewModel request = this.requestService
+                    .GetRequestDetails(id, user.Id, isTechnician)
+                    .ProjectTo<RequestDetailsViewModel>()
+                    .FirstOrDefault();
+
+                return Ok(request);
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
@@ -115,11 +133,10 @@ namespace ReactDesk.Controllers
                 return BadRequest(new { error = "Please select request[s] for merging" });
             }
 
-            //ids are merged from highest to lowest
+            // requests are merged to the lowest provided id
             IEnumerable<int> requestIds = ids.OrderByDescending(i => i);
-
             await this.requestService.Merge(requestIds);
-            await this.requestService.DeleteRange(requestIds.SkipLast(1));
+
             string message = $"Successfully merged request[s] {string.Join(", ", ids)}";
 
             return this.Ok(new { message = message });

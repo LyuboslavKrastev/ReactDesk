@@ -22,7 +22,7 @@ namespace Tests.Services.RequestsService
         public GetAll()
         {
             var options = new DbContextOptionsBuilder<BasicDeskDbContext>()
-                  .UseInMemoryDatabase(databaseName: "InMemory_Database").Options;
+                  .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options;
             context = new BasicDeskDbContext(options);
             var repository = new DbRepository<Request>(context);
             this.service = new RequestService(repository, null, null, null, null);
@@ -30,8 +30,9 @@ namespace Tests.Services.RequestsService
 
         public void Dispose()
         {
-            // clears the in-memory database after a test
-            context.Database.EnsureDeleted();
+			// clears the in-memory database after each test
+            this.context.Database.EnsureDeleted();
+            this.context.Dispose();
         }
 
         #region GetAll_Tests
@@ -319,7 +320,6 @@ namespace Tests.Services.RequestsService
             Assert.Equal(expectedIds, actualIds);
         }
 
-
         [Fact]
         public async Task ShouldReturnCorrectRequests_WhenSearchingByStartTime()
         {
@@ -569,7 +569,6 @@ namespace Tests.Services.RequestsService
             Assert.Equal(expectedCount, actualIds.Length);
             Assert.Equal(expectedIds, actualIds);
         }
-
 
         [Fact]
         public async Task ShouldReturnCorrectRequests_WhenSearchingBySubjectAndRequesterAndStartTime()

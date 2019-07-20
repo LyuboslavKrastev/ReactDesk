@@ -87,16 +87,6 @@ namespace BasicDesk.Mapping
                     .ForMember(r => r.Technician, opt => opt.MapFrom(req => req.AssignedTo))
                     .ForMember(r => r.Replies, opt => opt.MapFrom(req => req.Repiles));
 
-                configuration.CreateMap<Request, RequestManagingModel>()
-                    .ForMember(r => r.CreatedOn, opt => opt.MapFrom(req => req.StartTime.ToString()))
-                    .ForMember(r => r.Author, opt => opt.MapFrom(req => req.Requester))
-                    .ForMember(r => r.Attachments, opt => opt.MapFrom(req => req.Attachments))
-                    .ForMember(r => r.Category, opt => opt.MapFrom(req => req.Category.Name))
-                    .ForMember(r => r.Status, opt => opt.MapFrom(req => req.Status.Name))
-                    .ForMember(r => r.Notes, opt => opt.MapFrom(req => req.Notes))
-                    .ForMember(r => r.Technician, opt => opt.MapFrom(req => req.AssignedTo))
-                    .ForMember(r => r.Replies, opt => opt.MapFrom(req => req.Repiles)); ;
-
                 configuration.CreateMap<RequestNote, RequestNoteViewModel>()
                     .ForMember(rn => rn.Author, opt => opt.MapFrom(r => r.Author))
                     .ForMember(rn => rn.RequestId, opt => opt.MapFrom(r => r.RequestId));

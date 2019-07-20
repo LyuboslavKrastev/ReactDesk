@@ -34,25 +34,31 @@ namespace BasicDesk.Services
         public async Task Merge(IEnumerable<int> requestIds)
         {
             //Requests shall be merged to the lowest possible Id in the collection
-            ICollection<int> ids = requestIds.SkipLast(1).ToList();
+            if (requestIds.Count() < 2)
+            {
+                throw new InvalidOperationException("At least two ids are needed in order to merge.");
+            }
+            //if (requestIds.Distinct() != requestIds)
+            //{
+            //    throw new InvalidOperationException("Cannot merge requests to themselves.");
+            //}
+            // if the database does not contain one of the provied ids, throw exception
+            if (requestIds.Any(r => !this.repository.All().Select(req => req.Id).Contains(r)))
+            {
+                throw new ArgumentException("Invalid request id has been provided.");
+            }
+
+
+            IEnumerable<int> ids = requestIds.SkipLast(1).ToList();
             int lastId = requestIds.Last();
 
             Request requestToMergeTo = await this.repository.All().FirstOrDefaultAsync(r => r.Id == lastId);
 
-            if (requestToMergeTo == null)
-            {
-                return;
-            }
-
             foreach (var id in ids)
             {
-                Request request = await this.repository.All().Include(r => r.Attachments).FirstOrDefaultAsync(r => r.Id == id);
-
-                if (request == null)
-                {
-                    ids.Remove(id);
-                    continue;
-                }
+                Request request = await this.repository.All()
+                    .Include(r => r.Attachments)
+                    .FirstOrDefaultAsync(r => r.Id == id);
 
                 RequestReply reply = new RequestReply
                 {
@@ -73,6 +79,8 @@ namespace BasicDesk.Services
 
                 requestToMergeTo.Repiles.Add(reply);
             }
+
+            await this.DeleteRange(ids);
 
             await this.SaveChangesAsync();
         }
@@ -103,25 +111,14 @@ namespace BasicDesk.Services
             return result;
         }
 
-
-        public IQueryable<RequestDetailsViewModel> GetRequestDetails(int id, string userId)
+        public IQueryable<Request> GetRequestDetails(int id, string userId, bool isTechnician)
         {
-            var reqq = this.repository.ById(id).Include(r => r.Repiles).FirstOrDefault();
-            IQueryable<RequestDetailsViewModel> request = this.repository.All()
-                .Where(r => r.Id == id)
-                //.Where(r => r.RequesterId == userId)
-                .ProjectTo<RequestDetailsViewModel>();
+            if (!isTechnician)
+            {
+                return this.repository.ById(id).Where(r => r.RequesterId == userId);
+            }         
 
-            return request.AsNoTracking();
-        }
-
-        public IQueryable<RequestManagingModel> GetRequestManagingDetails(int id)
-        {
-            IQueryable<RequestManagingModel> request = this.repository.All()
-                .Where(r => r.Id == id)
-                .ProjectTo<RequestManagingModel>();
-
-            return request.AsNoTracking();
+            return this.repository.ById(id);
         }
 
         public async Task UpdateRequestAsync(RequestEditingBindingModel model)
