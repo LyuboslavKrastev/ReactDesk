@@ -39,10 +39,12 @@ namespace Tests.Services.RequestsService
         {
             // Arrange
             var ids = new List<int> { 1 };
+            var userId = "SomeGuidForFirstUser";
+            var isTechnician = true;
             var expectedMessage = "At least two ids are needed in order to merge.";
 
             // Act
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await this.service.Merge(ids));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await this.service.Merge(ids, userId, isTechnician));
             var actualMessage = exception.Message;
 
             // Assert (expected, actual)
@@ -54,6 +56,8 @@ namespace Tests.Services.RequestsService
         {
             // Arrange
             var firstIds = new List<int> { 1, 6, 2};
+            var userId = "SomeGuidForFirstUser";
+            var isTechnician = true;
 
             var requests = new List<Request>
             {
@@ -81,7 +85,7 @@ namespace Tests.Services.RequestsService
             var expectedMessage = "Invalid request id has been provided.";
 
             // Act
-            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await this.service.Merge(firstIds));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await this.service.Merge(firstIds, userId, isTechnician));
             var actualMessage = exception.Message;
 
             // Assert (expected, actual)
@@ -93,6 +97,8 @@ namespace Tests.Services.RequestsService
         {
             // Arrange
             var ids = new List<int> { 1, 2 };
+            var userId = "SomeGuidForFirstUser";
+            var isTechnician = true;
 
             var requests = new List<Request>
             {
@@ -118,7 +124,7 @@ namespace Tests.Services.RequestsService
             await this.service.SaveChangesAsync();
 
             // Act
-            await this.service.Merge(ids);
+            await this.service.Merge(ids, userId, isTechnician);
         }
 
         [Fact]
@@ -126,6 +132,8 @@ namespace Tests.Services.RequestsService
         {
             // Arrange
             var ids = new List<int> { 1, 2, 3 };
+            var userId = "SomeGuidForFirstUser";
+            var isTechnician = true;
 
             var requests = new List<Request>
             {
@@ -159,7 +167,7 @@ namespace Tests.Services.RequestsService
             await this.service.SaveChangesAsync();
 
             // Act
-            await this.service.Merge(ids);
+            await this.service.Merge(ids, userId, isTechnician);
 
             // Assert
 
@@ -170,6 +178,54 @@ namespace Tests.Services.RequestsService
             var actualRequestIds = this.service.GetAll().Select(r => r.Id).ToArray();
 
             Assert.Equal(expectedRequestIds, actualRequestIds);
+        }
+
+        [Fact]
+        public async Task ShouldThrow_IfUserIsNotTechnician_AndIsNotAuthorOfOneOfTheRequests()
+        {
+            // Arrange
+            var ids = new List<int> { 1, 2, 3 };
+            var userId = "SomeGuidForFirstUser";
+            var isTechnician = false;
+            var expectedMessage = "A user can only merge his own requests!";
+
+            var requests = new List<Request>
+            {
+                new Request
+                {
+                    Id = 1,
+                    Subject = "First",
+                    Description = "I am the first",
+                    CategoryId = 1,
+                    RequesterId = "SomeGuidForFirstUser"
+                },
+                  new Request
+                {
+                    Id = 2,
+                    Subject = "Second",
+                    Description = "I am the second",
+                    CategoryId = 2,
+                    RequesterId = "SomeGuidForSecondUser"
+                },
+                     new Request
+                {
+                    Id = 3,
+                    Subject = "Third",
+                    Description = "I am the third",
+                    CategoryId = 2,
+                    RequesterId = "SomeGuidForSecondUser"
+                },
+            };
+
+            await this.service.AddRangeAsync(requests);
+            await this.service.SaveChangesAsync();
+
+            // Act
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await this.service.Merge(ids, userId, isTechnician));
+            var actualMessage = exception.Message;
+
+            // Assert (expected, actual)
+            Assert.Equal(expectedMessage, actualMessage);
         }
     }
 }

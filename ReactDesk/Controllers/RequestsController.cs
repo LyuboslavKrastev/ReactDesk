@@ -133,13 +133,33 @@ namespace ReactDesk.Controllers
                 return BadRequest(new { error = "Please select request[s] for merging" });
             }
 
-            // requests are merged to the lowest provided id
-            IEnumerable<int> requestIds = ids.OrderByDescending(i => i);
-            await this.requestService.Merge(requestIds);
+            try
+            {
+                // requests are merged to the lowest provided id
+                User currentUser = userIdentifier.Identify(User);
+                bool isTechnician = userIdentifier.IsTechnician(currentUser.RoleId);
+                IEnumerable<int> requestIds = ids.OrderByDescending(i => i);
+                await this.requestService.Merge(requestIds, currentUser.Id, isTechnician);
 
-            string message = $"Successfully merged request[s] {string.Join(", ", ids)}";
+                string message = $"Successfully merged request[s] {string.Join(", ", ids)}";
 
-            return this.Ok(new { message = message });
+                return this.Ok(new { message = message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch
+            {
+                // TODO: log information about the exception
+
+                return BadRequest();
+            }
+
         }
 
         [HttpPut]

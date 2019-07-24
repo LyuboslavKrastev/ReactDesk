@@ -65,7 +65,6 @@ class Chat extends Component {
         return (
             <div>
                 <h2 className="text-center">Chat</h2>
-                <hr />
                 <div className="row">
                     <input className="form-control text-center" type="text" id="username" value={this.state.nick} style={{ backgroundColor: '#36648B', 'color': 'white' }} disabled />
                     <textarea className="form-control" id="chatTextArea" placeholder="What is on your mind?" rows="5" onChange={e => this.setState({ message: e.target.value })}></textarea>
@@ -75,7 +74,6 @@ class Chat extends Component {
                     </div>
                 </div>
 
-                <hr />
                 {this.state.messages.length > 0 ?
                     <div className="alert alert-info" style={{ wordBreak: "break-all" }}>
                         {this.state.messages.map((message, index) => (

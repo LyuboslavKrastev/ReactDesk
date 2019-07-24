@@ -3,6 +3,7 @@ using BasicDesk.App.Models.Common;
 using BasicDesk.App.Models.Common.ViewModels.Requests;
 using BasicDesk.App.Models.Management.BindingModels;
 using BasicDesk.App.Models.Management.ViewModels;
+using BasicDesk.Common.Constants;
 using BasicDesk.Data.Models;
 using BasicDesk.Data.Models.Requests;
 using BasicDesk.Services.Interfaces;
@@ -22,7 +23,7 @@ namespace BasicDesk.Services
         private readonly IUserService userService;
         private readonly DbRepository<ApprovalStatus> approvalStatusRepository;
 
-        public RequestService(IRepository<Request> repository, IUserService userService, ICategoriesService categoriesService, 
+        public RequestService(IRepository<Request> repository, IUserService userService, ICategoriesService categoriesService,
             DbRepository<RequestStatus> statusRepository, DbRepository<ApprovalStatus> approvalStatusRepository) : base(repository)
         {
             this.categoriesService = categoriesService;
@@ -31,34 +32,39 @@ namespace BasicDesk.Services
             this.approvalStatusRepository = approvalStatusRepository;
         }
 
-        public async Task Merge(IEnumerable<int> requestIds)
+        public async Task Merge(IEnumerable<int> requestIds, string userId, bool isTechnian)
         {
             //Requests shall be merged to the lowest possible Id in the collection
             if (requestIds.Count() < 2)
             {
                 throw new InvalidOperationException("At least two ids are needed in order to merge.");
             }
-            //if (requestIds.Distinct() != requestIds)
-            //{
-            //    throw new InvalidOperationException("Cannot merge requests to themselves.");
-            //}
+
             // if the database does not contain one of the provied ids, throw exception
             if (requestIds.Any(r => !this.repository.All().Select(req => req.Id).Contains(r)))
             {
                 throw new ArgumentException("Invalid request id has been provided.");
             }
 
-
             IEnumerable<int> ids = requestIds.SkipLast(1).ToList();
             int lastId = requestIds.Last();
 
             Request requestToMergeTo = await this.repository.All().FirstOrDefaultAsync(r => r.Id == lastId);
+            if (!isTechnian && requestToMergeTo.RequesterId != userId)
+            {
+                throw new InvalidOperationException("A user can only merge his own requests!");
+            }
 
             foreach (var id in ids)
             {
                 Request request = await this.repository.All()
                     .Include(r => r.Attachments)
                     .FirstOrDefaultAsync(r => r.Id == id);
+
+                if (!isTechnian && request.RequesterId != userId)
+                {
+                    throw new InvalidOperationException("A user can only merge his own requests!");
+                }
 
                 RequestReply reply = new RequestReply
                 {
@@ -116,23 +122,35 @@ namespace BasicDesk.Services
             if (!isTechnician)
             {
                 return this.repository.ById(id).Where(r => r.RequesterId == userId);
-            }         
+            }
 
             return this.repository.ById(id);
         }
 
         public async Task UpdateRequestAsync(RequestEditingBindingModel model)
         {
-            Request request = await this.repository.All().FirstOrDefaultAsync(r => r.Id == model.Id);
+            Request request = await this.repository
+                .All()
+                .FirstOrDefaultAsync(r => r.Id == model.Id);
+
+            if (request == null)
+            {
+                throw new ArgumentException("Invalid request!");
+            }
 
             if (model.StatusId != null && model.StatusId != request.StatusId)
             {
-                RequestStatus status = await this.GetAllStatuses().FirstOrDefaultAsync(s => s.Id == model.StatusId);
-                if (status != null)
+                RequestStatus status = await this.GetAllStatuses()
+                    .FirstOrDefaultAsync(s => s.Id == model.StatusId);
+
+                if (status == null)
                 {
-                    request.StatusId = status.Id;
+                    throw new ArgumentException("Invalid status!");
                 }
-                if (status.Name.ToLower() == "closed" || status.Name.ToLower() == "rejected")
+
+                request.StatusId = status.Id;
+
+                if (status.Id == WebConstants.ClosedStatusId || status.Id == WebConstants.RejectedStatusId)
                 {
                     request.EndTime = DateTime.UtcNow;
                 }
@@ -140,20 +158,25 @@ namespace BasicDesk.Services
 
             if (model.CategoryId != null && model.CategoryId != request.CategoryId)
             {
-                RequestCategory category = await this.categoriesService.ById(Convert.ToInt32(model.CategoryId)).FirstAsync();
-                if (category != null)
+                RequestCategory category = await this.categoriesService.ById(Convert.ToInt32(model.CategoryId)).FirstOrDefaultAsync();
+
+                if (category == null)
                 {
-                    request.CategoryId = category.Id;
+                    throw new ArgumentException("Invalid category!");
                 }
+
+                request.CategoryId = category.Id;
             }
 
             if (model.AssignToId != null && model.AssignToId != request.AssignedToId)
             {
                 User technician = this.userService.GetById(model.AssignToId);
-                if (technician != null)
+                if (technician == null || technician.RoleId == WebConstants.UserRoleId)
                 {
-                    request.AssignedToId = technician.Id;
+                    throw new ArgumentException("Invalid technician!");
                 }
+
+                 request.AssignedToId = technician.Id;
             }
             await this.SaveChangesAsync();
         }
@@ -240,11 +263,6 @@ namespace BasicDesk.Services
         {
             foreach (var id in requestIds)
             {
-                //bool isInt = int.TryParse(id, out int requestId);
-                //if (!isInt)
-                //{
-                //    continue;
-                //}
                 Request request = await this.repository.All().FirstOrDefaultAsync(r => r.Id == id);
 
                 if (isTechnician || userId == request.RequesterId)

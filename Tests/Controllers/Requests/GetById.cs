@@ -1,23 +1,14 @@
-﻿using AutoMapper;
-using BasicDesk.App.Models.Common.ViewModels.Requests;
+﻿
 using BasicDesk.Data.Models;
 using BasicDesk.Data.Models.Requests;
 using BasicDesk.Mapping;
-using BasicDesk.Services;
 using BasicDesk.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Moq;
 using ReactDesk.Controllers;
-using ReactDesk.Helpers;
 using ReactDesk.Helpers.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using Xunit;
 
 namespace Tests.Controllers.Requests

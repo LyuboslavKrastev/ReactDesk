@@ -16,7 +16,7 @@ namespace BasicDesk.Services.Interfaces
         Task AddReply(int requestId, string userId, bool isTechnician, string noteDescription);
         IQueryable<RequestStatus> GetAllStatuses();
         IQueryable<Request> GetRequestDetails(int id, string userId, bool isTechnician);
-        Task Merge(IEnumerable<int> requestIds);
+        Task Merge(IEnumerable<int> requestIds, string userId, bool isTechnician );
         Task SaveResolutionAsync(int id, string resolution);
         Task UpdateRequestAsync(RequestEditingBindingModel model);
     }

@@ -13,11 +13,6 @@ namespace BasicDesk.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
-        public static string FindFirst(string name)
-        {
-            throw new NotImplementedException();
-        }
-
         [Required]
         [MinLength(UserConstants.FullNameMinLength)]
         [MaxLength(UserConstants.FullNameMaxLength)]

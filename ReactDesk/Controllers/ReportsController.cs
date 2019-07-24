@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace ReactDesk.Controllers
 {
@@ -23,7 +22,6 @@ namespace ReactDesk.Controllers
             string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
 
             var data = this.service.GetMyRequestsData(userId).ToArray();
-
 
             return Ok(data);
         }

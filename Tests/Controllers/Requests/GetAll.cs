@@ -11,7 +11,5 @@ namespace Tests.Controllers.Requests
 {
     public class GetAll
     {
-
-      
     }
 }

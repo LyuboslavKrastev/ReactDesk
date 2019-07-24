@@ -1,7 +1,6 @@
 ﻿using BasicDesk.Common.Constants;
 using BasicDesk.Common.Constants.Validation;
 using BasicDesk.Data.Models.Interfaces;
-using BasicDesk.Data.Models.Solution;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
