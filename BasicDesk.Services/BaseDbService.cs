@@ -17,34 +17,40 @@ namespace BasicDesk.Services
         {
             this.repository = repository;
         }
-        public Task AddAsync(T entity)
+
+        public virtual Task AddAsync(T entity)
         {
             return this.repository.AddAsync(entity);
         }
 
-        public Task AddRangeAsync(IEnumerable<T> entities)
+        public virtual Task AddRangeAsync(IEnumerable<T> entities)
         {
             return this.repository.AddRangeAsync(entities);
         }
 
-        public IQueryable<T> ById(int id)
+        public virtual IQueryable<T> ById(int id)
         {
             return this.repository.ById(id);
         }
 
-        public IQueryable<T> GetAll()
+        public virtual IQueryable<T> ById(int id, string userId, bool isTechnician)
+        {
+            return this.repository.ById(id);
+        }
+
+        public virtual IQueryable<T> GetAll()
         {
             return this.repository.All();
         }
 
-        public async Task DeleteRange(IEnumerable<int> ids)
+        public virtual async Task DeleteRange(IEnumerable<int> ids)
         {
             this.repository.DeleteRange(ids);
 
             await this.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public virtual async Task Delete(int id)
         {
             this.repository.Delete(id);
 

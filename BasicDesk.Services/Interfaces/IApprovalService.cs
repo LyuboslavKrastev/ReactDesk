@@ -6,8 +6,8 @@ namespace BasicDesk.Services.Interfaces
 {
     public interface IApprovalService 
     {
-        Task ApproveApproval(int approvalId, string userId);
-        Task DenyApproval(int approvalId, string userId);
+        Task Approve(int approvalId, string userId);
+        Task Deny(int approvalId, string userId);
         IQueryable<RequestApproval> GetUserApprovalsToApprove(string userId);
         IQueryable<RequestApproval> GetUserSubmittedApprovals(string userId);
     }

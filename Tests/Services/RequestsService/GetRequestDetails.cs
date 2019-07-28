@@ -53,7 +53,7 @@ namespace Tests.Services.RequestsService
             this.context.SaveChanges();
 
             // Act
-            var result = this.service.GetRequestDetails(1, userId, isTechnician).FirstOrDefault(); ;
+            var result = this.service.ById(1, userId, isTechnician).FirstOrDefault(); ;
 
             // Assert (expected, actual)
             Assert.Equal(request, result);
@@ -79,7 +79,7 @@ namespace Tests.Services.RequestsService
             this.context.SaveChanges();
 
             // Act
-            var result = this.service.GetRequestDetails(1, userId, isTechnician).FirstOrDefault(); ;
+            var result = this.service.ById(1, userId, isTechnician).FirstOrDefault(); ;
 
             // Assert (expected, actual)
             Assert.NotEqual(request, result);
@@ -105,7 +105,7 @@ namespace Tests.Services.RequestsService
             this.context.SaveChanges();
 
             // Act
-            var result = this.service.GetRequestDetails(1, userId, isTechnician).FirstOrDefault(); ;
+            var result = this.service.ById(1, userId, isTechnician).FirstOrDefault(); ;
 
             // Assert (expected, actual)
             Assert.Equal(request, result);
@@ -131,7 +131,7 @@ namespace Tests.Services.RequestsService
             this.context.SaveChanges();
 
             // Act
-            var result = this.service.GetRequestDetails(1, userId, isTechnician).FirstOrDefault(); ;
+            var result = this.service.ById(1, userId, isTechnician).FirstOrDefault(); ;
 
             // Assert (expected, actual)
             Assert.Equal(request, result);

@@ -68,7 +68,7 @@ namespace ReactDesk.Controllers
                 bool isTechnician = userIdentifier.IsTechnician(user.RoleId);
                 
                 RequestDetailsViewModel request = this.requestService
-                    .GetRequestDetails(id, user.Id, isTechnician)
+                    .ById(id, user.Id, isTechnician)
                     .ProjectTo<RequestDetailsViewModel>()
                     .FirstOrDefault();
 
@@ -85,7 +85,7 @@ namespace ReactDesk.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm]RequestCreationBindingModel model)
+        public async Task<IActionResult> PostAsync([FromForm]RequestCreationBindingModel model)
         {
             User user = userIdentifier.Identify(User);
 
@@ -163,7 +163,7 @@ namespace ReactDesk.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm]RequestEditingBindingModel model)
+        public async Task<IActionResult> PutAsync([FromForm]RequestEditingBindingModel model)
         {
             User currentUser = userIdentifier.Identify(User);
             bool isTechnician = userIdentifier.IsTechnician(currentUser.RoleId);

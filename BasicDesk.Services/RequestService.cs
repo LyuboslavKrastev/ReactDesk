@@ -94,7 +94,7 @@ namespace BasicDesk.Services
         public IQueryable<Request> GetAll(string currentUserId, bool isTechnician, TableFilteringModel model)
         {
             // Filter the requests, depending on the criteria in the model
-            IQueryable<Request> result = this.repository.All()
+            IQueryable<Request> result = base.GetAll()
                 .Where(r => isTechnician ? true : r.RequesterId == currentUserId)
                 .Where(r => model.HasStatusIdFilter() ?
                     r.StatusId == model.StatusId : true)
@@ -117,14 +117,15 @@ namespace BasicDesk.Services
             return result;
         }
 
-        public IQueryable<Request> GetRequestDetails(int id, string userId, bool isTechnician)
+        public override IQueryable<Request> ById(int id, string userId, bool isTechnician)
         {
             if (!isTechnician)
             {
-                return this.repository.ById(id).Where(r => r.RequesterId == userId);
+                return base.ById(id)
+                    .Where(r => r.RequesterId == userId);
             }
 
-            return this.repository.ById(id);
+            return base.ById(id);
         }
 
         public async Task UpdateRequestAsync(RequestEditingBindingModel model)

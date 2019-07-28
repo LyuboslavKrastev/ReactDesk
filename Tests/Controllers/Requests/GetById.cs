@@ -30,7 +30,7 @@ namespace Tests.Controllers.Requests
            IQueryable<Request> request = new[] { new Request() }.AsQueryable(); ;
 
             fakeRequstsService
-                .Setup(f => f.GetRequestDetails(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(f => f.ById(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(request);
 
             var fakeUserIdentifier = new Mock<IUserIdentifier>();
@@ -57,7 +57,7 @@ namespace Tests.Controllers.Requests
             IQueryable<Request> requestQueryable = new[] { request }.AsQueryable();
 
             fakeRequstsService
-                .Setup(f => f.GetRequestDetails(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(f => f.ById(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(requestQueryable);
 
             var fakeUserIdentifier = new Mock<IUserIdentifier>();
@@ -88,7 +88,7 @@ namespace Tests.Controllers.Requests
             IQueryable<Request> request = new[] { new Request() }.AsQueryable(); ;
 
             fakeRequstsService
-                .Setup(f => f.GetRequestDetails(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .Setup(f => f.ById(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(request);
             User user = null;
             var fakeUserIdentifier = new Mock<IUserIdentifier>();

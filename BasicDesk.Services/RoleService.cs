@@ -1,37 +1,35 @@
 ﻿using BasicDesk.Data;
 using BasicDesk.Data.Models;
 using BasicDesk.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BasicDesk.Services
 {
     public class RoleService : IRoleService
     {
-        private BasicDeskDbContext _context;
+        private BasicDeskDbContext context;
 
         public RoleService(BasicDeskDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public Role Create(Role role)
         {
-            _context.Roles.Add(role);
-            _context.SaveChanges();
+            this.context.Roles.Add(role);
+            this.context.SaveChanges();
             return role;
         }
 
         public IEnumerable<Role> GetAll()
         {
-            return _context.Roles;
+            return this.context.Roles;
         }
 
-        public Role GetById(int id)
+        public Role ById(int id)
         {
-            return _context.Roles.FirstOrDefault(r => r.Id == id);
+            return this.context.Roles.FirstOrDefault(r => r.Id == id);
         }
     }
 }

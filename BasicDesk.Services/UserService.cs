@@ -155,7 +155,7 @@ namespace BasicDesk.Services
 
         public void AddToRoleAsync(string userId, int roleId)
         {
-            Role role = this.roleService.GetById(roleId);
+            Role role = this.roleService.ById(roleId);
             User user = this.GetById(userId);
 
             if(user == null)

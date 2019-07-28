@@ -8,12 +8,13 @@ namespace BasicDesk.Services.Interfaces
     {
         IQueryable<T> ById(int id);
         IQueryable<T> GetAll();
+
         Task AddAsync(T entity);
         Task AddRangeAsync(IEnumerable<T> entities);
 
-        Task SaveChangesAsync();
-        Task DeleteRange(IEnumerable<int> ids);
         Task Delete(int id);
+        Task DeleteRange(IEnumerable<int> ids);
 
+        Task SaveChangesAsync();
     }
 }

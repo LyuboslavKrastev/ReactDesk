@@ -28,7 +28,7 @@ namespace BasicDesk.Services
             return approvals;
         }
 
-        public async Task ApproveApproval(int approvalId, string userId)
+        public async Task Approve(int approvalId, string userId)
         {
             RequestApproval approval = await this.repository.All().FirstOrDefaultAsync(ra => ra.Id == approvalId && ra.Status.Name == "Pending");
 
@@ -47,7 +47,7 @@ namespace BasicDesk.Services
         }
 
 
-        public async Task DenyApproval(int approvalId, string userId)
+        public async Task Deny(int approvalId, string userId)
         {
             RequestApproval approval = await this.repository.All().FirstOrDefaultAsync(ra => ra.Id == approvalId);
 

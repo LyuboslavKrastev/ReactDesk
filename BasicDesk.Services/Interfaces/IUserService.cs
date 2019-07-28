@@ -15,6 +15,5 @@ namespace BasicDesk.Services.Interfaces
         void AddToRoleAsync(string userId, int roleId);
         void Ban(string userId);
         void Unban(string userId);
-
     }
 }
