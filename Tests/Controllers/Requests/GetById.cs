@@ -25,7 +25,7 @@ namespace Tests.Controllers.Requests
         public void ShouldReturnNotFound_IfRequestDoesNotExist()
         {
             //Arrange  
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
 
            IQueryable<Request> request = new[] { new Request() }.AsQueryable(); ;
 
@@ -38,7 +38,7 @@ namespace Tests.Controllers.Requests
                 .Setup(f => f.Identify(It.IsAny<ClaimsPrincipal>()))
                 .Returns(new User());
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
             var requestId = 5;
 
             //Act  
@@ -52,7 +52,7 @@ namespace Tests.Controllers.Requests
         public void ShouldReturnOk_IfRequestDoesExist()
         {
             //Arrange  
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
             Request request = GetRequest();
             IQueryable<Request> requestQueryable = new[] { request }.AsQueryable();
 
@@ -69,7 +69,7 @@ namespace Tests.Controllers.Requests
                .Setup(f => f.IsTechnician(It.IsAny<int>()))
                .Returns(true);
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
             var requestId = 5;
 
             //Act  
@@ -83,7 +83,7 @@ namespace Tests.Controllers.Requests
         public void ShouldReturnBadRequest_IfUserIsNull()
         {
             //Arrange  
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
 
             IQueryable<Request> request = new[] { new Request() }.AsQueryable(); ;
 
@@ -96,7 +96,7 @@ namespace Tests.Controllers.Requests
                 .Setup(f => f.Identify(It.IsAny<ClaimsPrincipal>()))
                 .Returns(user);
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
             var requestId = 5;
 
             //Act  

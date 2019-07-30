@@ -13,10 +13,10 @@ namespace ReactDesk.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IUsersService userService;
         private readonly ICategoriesService categoriesService;
 
-        public CategoriesController(IUserService userService, ICategoriesService categoriesService)
+        public CategoriesController(IUsersService userService, ICategoriesService categoriesService)
         {
             this.userService = userService;
             this.categoriesService = categoriesService;

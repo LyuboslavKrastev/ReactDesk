@@ -1,13 +1,12 @@
 ﻿using BasicDesk.Data.Models.Interfaces;
 using BasicDesk.Services.Interfaces;
 using BasicDesk.Services.Repository;
-using System;
+using BasicDesk.Services.Repository.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace BasicDesk.Services
+namespace BasicDesk.Services.BaseClasses
 {
     public abstract class BaseDbService<T> : IDbService<T> where T : class, IEntity
     {

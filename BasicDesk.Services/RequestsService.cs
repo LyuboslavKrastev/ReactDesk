@@ -1,8 +1,5 @@
-﻿using AutoMapper.QueryableExtensions;
-using BasicDesk.App.Models.Common;
-using BasicDesk.App.Models.Common.ViewModels.Requests;
+﻿using BasicDesk.App.Models.Common;
 using BasicDesk.App.Models.Management.BindingModels;
-using BasicDesk.App.Models.Management.ViewModels;
 using BasicDesk.Common.Constants;
 using BasicDesk.Data.Models;
 using BasicDesk.Data.Models.Requests;
@@ -13,22 +10,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BasicDesk.Services.BaseClasses;
+using BasicDesk.Services.Repository.Interfaces;
 
 namespace BasicDesk.Services
 {
-    public class RequestService : BaseDbService<Request>, IRequestService, IDbService<Request>
+    public class RequestsService : BaseDbService<Request>, IRequestsService, IDbService<Request>
     {
         private readonly ICategoriesService categoriesService;
-        private readonly DbRepository<RequestStatus> statusRepository;
-        private readonly IUserService userService;
+        private readonly IRequestStatusesService statusService;
+        private readonly IUsersService userService;
         private readonly DbRepository<ApprovalStatus> approvalStatusRepository;
 
-        public RequestService(IRepository<Request> repository, IUserService userService, ICategoriesService categoriesService,
-            DbRepository<RequestStatus> statusRepository, DbRepository<ApprovalStatus> approvalStatusRepository) : base(repository)
+        public RequestsService(IRepository<Request> repository, IUsersService userService, ICategoriesService categoriesService,
+            IRequestStatusesService statusService, DbRepository<ApprovalStatus> approvalStatusRepository) : base(repository)
         {
             this.categoriesService = categoriesService;
+            this.statusService = statusService;
             this.userService = userService;
-            this.statusRepository = statusRepository;
             this.approvalStatusRepository = approvalStatusRepository;
         }
 
@@ -141,7 +140,7 @@ namespace BasicDesk.Services
 
             if (model.StatusId != null && model.StatusId != request.StatusId)
             {
-                RequestStatus status = await this.GetAllStatuses()
+                RequestStatus status = await this.statusService.GetAll()
                     .FirstOrDefaultAsync(s => s.Id == model.StatusId);
 
                 if (status == null)
@@ -187,106 +186,6 @@ namespace BasicDesk.Services
             Request request = await this.ById(id).FirstAsync();
             request.Resolution = resolution;
             await this.SaveChangesAsync();
-        }
-
-        public async Task AddNote(int requestId, string userId, string userName, bool isTechnician, string noteDescription)
-        {
-            Request request = await this.ById(requestId).FirstAsync();
-
-            if (isTechnician || userId == request.RequesterId)
-            {
-                RequestNote note = new RequestNote
-                {
-                    RequestId = requestId,
-                    Description = noteDescription,
-                    CreationTime = DateTime.UtcNow,
-                    Author = userName
-                };
-
-                request.Notes.Add(note);
-
-                await this.SaveChangesAsync();
-            }
-        }
-
-        public async Task AddReply(int requestId, string userId, bool isTechnician, string description)
-        {
-            Request request = await this.ById(requestId).FirstAsync();
-
-            User author = this.userService.GetById(userId);
-
-            if (isTechnician || userId == request.RequesterId)
-            {
-
-                RequestReply reply = new RequestReply
-                {
-                    Subject = $"Re: [{request.Subject}]",
-                    RequestId = requestId,
-                    Description = description,
-                    CreationTime = DateTime.UtcNow,
-                    Author = author
-                };
-
-                request.Repiles.Add(reply);
-
-                await this.SaveChangesAsync();
-            }
-        }
-
-        public async Task AddAproval(int requestId, string userId, bool isTechnician, string approverId, string subject, string description)
-        {
-            Request request = await this.repository.All().FirstOrDefaultAsync(r => r.Id == requestId);
-
-            User author = this.userService.GetById(userId);
-
-            if (isTechnician || userId == request.RequesterId)
-            {
-                ApprovalStatus pendingStatus = await this.approvalStatusRepository.All().FirstOrDefaultAsync(s => s.Name == "Pending");
-
-                RequestApproval approval = new RequestApproval
-                {
-                    Subject = subject,
-                    RequestId = requestId,
-                    Description = description,
-                    RequesterId = userId,
-                    ApproverId = approverId,
-                    StatusId = pendingStatus.Id
-                };
-
-                request.Approvals.Add(approval);
-
-                await this.SaveChangesAsync();
-            }
-        }
-
-
-        public async Task AddNote(IEnumerable<int> requestIds, string userId, string userName, bool isTechnician, string noteDescription)
-        {
-            foreach (var id in requestIds)
-            {
-                Request request = await this.repository.All().FirstOrDefaultAsync(r => r.Id == id);
-
-                if (isTechnician || userId == request.RequesterId)
-                {
-                    RequestNote note = new RequestNote
-                    {
-                        RequestId = id,
-                        Description = noteDescription,
-                        CreationTime = DateTime.UtcNow,
-                        Author = userName
-                    };
-
-                    request.Notes.Add(note);
-                }
-            }
-
-            await this.SaveChangesAsync();
-        }
-
-
-        public IQueryable<RequestStatus> GetAllStatuses()
-        {
-            return this.statusRepository.All().AsNoTracking();
-        }
+        }   
     }
 }

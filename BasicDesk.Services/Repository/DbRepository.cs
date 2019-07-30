@@ -1,5 +1,6 @@
 ﻿using BasicDesk.Data;
 using BasicDesk.Data.Models.Interfaces;
+using BasicDesk.Services.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -1,7 +1,6 @@
 ﻿import React, { Component } from 'react'
 import { requestService } from '../../../services/requests.service'
 import AddNoteModal from '../modals/AddNoteModal'
-import { showNotes, hideNotes } from '../modals/note-view-modal-controls'
 import Replies from './Replies';
 import AddReply from './AddReply';
 
@@ -15,6 +14,7 @@ import UserPanel from './UserPanel';
 import NoteViewingModal from './NoteViewingModal';
 import AttachmentsSection from './AttachmentsSection';
 import Menu from './Menu';
+import AddApprovalModal from '../modals/AddApprovalModal';
 
 
 
@@ -81,17 +81,17 @@ export default class RequestDetails extends Component {
                 }))
     }
 
-    showModal = () => {
-        document.getElementById('noteModal').style.display = 'block'
+    showModal = (modalName) => {
+        document.getElementById(modalName).style.display = 'block'
+    }
+
+    hideModal = (modalName) => {
+        document.getElementById(modalName).style.display = 'none'
     }
 
     getFile = (fileName, filePath, id) => {
         requestService.getFile(fileName, filePath, id)
             .then(res => console.log(res))
-    }
-
-    showAddReplyModal = () => {
-        document.getElementById('replyModal').style.display = 'block'
     }
 
     setStatus = (event) => {
@@ -151,9 +151,10 @@ export default class RequestDetails extends Component {
 
         return (
             <div>
-                <AddNoteModal requestId={request.id} reload={this.loadRequest} />
-                <NoteViewingModal notes={request.notes} requestId={request.id} hideNotes={hideNotes} />
-                <Menu notes={request.notes} approvals={request.approvals} resolution={request.resolution} showNotes={showNotes}
+                <AddNoteModal requestId={request.id} reload={this.loadRequest} hideModal={() => this.hideModal('noteModal')}/>
+                <AddApprovalModal technicians={technicians} requestId={request.id} reload={this.loadRequest} hideModal={() => this.hideModal('approvalModal')} />
+                <NoteViewingModal notes={request.notes} requestId={request.id} hideModal={() => this.hideModal(`notes_${request.id}`)} />
+                <Menu notes={request.notes} approvals={request.approvals} resolution={request.resolution}
                     requestId={request.id} showModal={this.showModal} />
 
                 <div className="panel-group" id="request">
@@ -177,12 +178,7 @@ export default class RequestDetails extends Component {
                             }
                             <AttachmentsSection attachments={request.attachments} getFile={this.getFile} />
               
-                            <br />
-                            <div className="panel-footer clearfix">
-                                <div className="col-md-offset-6">
-                                    <button className="btn btn-success" type="submit" onClick={this.updateRequest} > Save</button>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -193,7 +189,7 @@ export default class RequestDetails extends Component {
                         </div>
                         <div className="panel-body">
                             TO BE IMPLEMENTED
-        </div>
+                        </div>
                     </div>
                 </div>
                 <div className="panel-group" id="history" style={{ display: "none" }}>
@@ -209,7 +205,7 @@ export default class RequestDetails extends Component {
 
                 {request.replies !== undefined && request.replies.length > 0 ? <Replies replies={request.replies} /> : null}
                 <div className='text-center'>
-                    <button className="btn btn-success" onClick={this.showAddReplyModal}>Reply</button>
+                    <button className="btn btn-success" onClick={() => this.showModal('replyModal')}>Reply</button>
                 </div>
                 <AddReply requestId={request.id} loadRequest={this.loadRequest} />
 

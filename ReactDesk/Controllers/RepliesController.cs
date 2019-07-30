@@ -3,6 +3,7 @@ using BasicDesk.Common.Constants;
 using BasicDesk.Data.Models;
 using BasicDesk.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using ReactDesk.Helpers.Interfaces;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -12,23 +13,27 @@ namespace ReactDesk.Controllers
     [ApiController]
     public class RepliesController : ControllerBase
     {
-        private readonly IUserService userService;
-        private readonly IRequestService requestService;
+        private readonly IUserIdentifier userIdentifier;
+        private readonly IRepliesService repliesService;
 
-        public RepliesController(IUserService userService, IRequestService requestService)
+        public RepliesController(IUserIdentifier userIdentifier, IRepliesService repliesService)
         {
-            this.userService = userService;
-            this.requestService = requestService;
+            this.userIdentifier = userIdentifier;
+            this.repliesService = repliesService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(ReplyCreationBindingModel model)
         {
-            string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
-            var user = this.userService.GetById(userId);
-            bool isTechnician = user.RoleId == WebConstants.AdminRoleId || user.RoleId == WebConstants.HelpdeskRoleId;
+            User user = userIdentifier.Identify(User);
+            bool isTechnician = userIdentifier.IsTechnician(user.RoleId);
 
-            await this.requestService.AddReply(model.RequestId, userId, isTechnician, model.Description);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            await this.repliesService.AddAsync(model.RequestId, user.Id, isTechnician, model.Description);
 
             return Ok("Reply added successfully");
         }

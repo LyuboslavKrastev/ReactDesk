@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace BasicDesk.Services
 {
-    public class RoleService : IRoleService
+    public class RolesService : IRolesService
     {
         private BasicDeskDbContext context;
 
-        public RoleService(BasicDeskDbContext context)
+        public RolesService(BasicDeskDbContext context)
         {
             this.context = context;
         }

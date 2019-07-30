@@ -13,8 +13,8 @@ export default class TechnicianPanel extends Component {
 
         return (
             <div>
-                <div className="col-sm-3 pull-left">>
-                                    <label className="control-label pull-left col-sm-1">Status: </label>
+                <div className="col-sm-3 pull-left">
+                    <label className="control-label">Status: </label>
                     <select className="form-control" onChange={this.props.setStatus}>
                         {
                             statuses !== null && statuses !== undefined && statuses.length > 0 ?
@@ -26,11 +26,11 @@ export default class TechnicianPanel extends Component {
                         }
                     </select>
                 </div>
-                <br/>
+
                 <div className="pull-right">
-                    <label className="control-label pull-left col-sm-1">Technician: </label>
+                    <label className="control-label">Technician: </label>
                     <select className="form-control" onChange={this.props.setTechnician} >
-                        {!request.technician ? <option selected="selected">Unassigned</option>: null}
+                        {!request.technician ? <option selected="selected">Unassigned</option> : null}
                         {
                             technicians !== null && technicians !== undefined && technicians.length > 0 ?
                                 technicians.map((u, index) =>
@@ -38,7 +38,7 @@ export default class TechnicianPanel extends Component {
                                 ) : null
                         }
                     </select>
-                </div> 
+                </div>
 
                 <div className="pull-left">
                     <label className="control-label pull-left col-sm-1">Category: </label>
@@ -54,6 +54,9 @@ export default class TechnicianPanel extends Component {
                     </select>
                 </div>
 
+                    <div className="col-md-offset-6">
+                        <button className="btn btn-success" type="submit" onClick={this.updateRequest} > Save</button>
+                    </div>
             </div>
         )
     }

@@ -15,20 +15,21 @@ namespace Tests.Services.RequestsService
     public class UpdateRequestAsync : IDisposable
     {
         private readonly BasicDeskDbContext context;
-        private readonly IRequestService service;
+        private readonly IRequestsService service;
 
         public UpdateRequestAsync()
         {
             var options = new DbContextOptionsBuilder<BasicDeskDbContext>()
                   .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options;
             this.context = new BasicDeskDbContext(options);
-            var repository = new DbRepository<Request>(this.context);
             var statusRepository = new DbRepository<RequestStatus>(this.context);
-            var categoryRepository = new DbRepository<RequestCategory>(this.context);
+            var statusService = new RequestStatusesService(statusRepository);
 
+            var categoryRepository = new DbRepository<RequestCategory>(this.context);
             var categoriesService = new CategoriesService(categoryRepository);
 
-            this.service = new RequestService(repository, null, categoriesService, statusRepository, null);
+            var repository = new DbRepository<Request>(this.context);
+            this.service = new BasicDesk.Services.RequestsService(repository, null, categoriesService, statusService, null);
 
         }
 

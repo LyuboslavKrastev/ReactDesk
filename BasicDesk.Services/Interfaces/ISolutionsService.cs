@@ -5,7 +5,7 @@ using BasicDesk.Data.Models.Solution;
 
 namespace BasicDesk.Services.Interfaces
 {
-    public interface ISolutionService : IDbService<Solution>
+    public interface ISolutionsService : IDbService<Solution>
     {
         IQueryable<SolutionDetailsViewModel> GetSolutionDetails(int id);
         Task IncreaseViewCount(int solutionId);

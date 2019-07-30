@@ -13,10 +13,6 @@ export default class AddNoteModal extends Component{
         })
     }
 
-    hideModal = () => {
-        document.getElementById('noteModal').style.display = 'none'
-    }
-
     handleInputChange = (event) => {
         let inputName = event.target.name;
         let inputValue = event.target.value;
@@ -54,7 +50,7 @@ export default class AddNoteModal extends Component{
                     NotificationManager.success('Successfully added note.');
                     this.props.reload();
                     
-                    return this.hideModal();
+                    return this.props.hideModal();
 
                 }
                 else {
@@ -76,7 +72,7 @@ export default class AddNoteModal extends Component{
                             <textarea id="noteDescription" name='description' className="form-control" rows="4" style={{ minWidth: '100%', resize: 'none' }} onChange={this.handleInputChange} ></textarea>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-danger" onClick={this.hideModal}>Close</button>
+                            <button type="button" className="btn btn-danger" onClick={this.props.hideModal}>Close</button>
                             <button type="button" className="btn btn-success" id="noteBtn" onClick={this.handleSubmit}>Add Note</button>
                         </div>
                     </div>

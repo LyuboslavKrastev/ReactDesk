@@ -27,11 +27,11 @@ namespace ReactDesk.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private IUserService _userService;
+        private IUsersService _userService;
         private readonly AppSettings _appSettings;
 
         public UsersController(
-            IUserService userService,
+            IUsersService userService,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;

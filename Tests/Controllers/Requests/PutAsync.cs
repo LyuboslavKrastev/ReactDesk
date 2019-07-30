@@ -25,7 +25,7 @@ namespace Tests.Controllers.Requests
         [Fact]
         public async Task ShouldReturnUnauthorized_IfUserIsNotTechnician()
         {
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
             var fakeUserIdentifier = new Mock<IUserIdentifier>();
             User user = new User(); ;
 
@@ -37,7 +37,7 @@ namespace Tests.Controllers.Requests
                 .Setup(f => f.IsTechnician(It.IsAny<int>()))
                 .Returns(false);
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
             var model = new RequestEditingBindingModel()
             {
                 CategoryId = 1,

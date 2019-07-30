@@ -1,10 +1,9 @@
 ﻿using BasicDesk.Data.Models.Requests;
 using BasicDesk.Services.Interfaces;
-using BasicDesk.Services.Repository;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using BasicDesk.Services.BaseClasses;
+using BasicDesk.Services.Repository.Interfaces;
 
 namespace BasicDesk.Services
 {

@@ -17,9 +17,9 @@ namespace ReactDesk.Controllers
     [Route("api/[controller]")]
     public class RolesController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IUsersService userService;
 
-        public RolesController(IUserService userService)
+        public RolesController(IUsersService userService)
         {
             this.userService = userService;
         }

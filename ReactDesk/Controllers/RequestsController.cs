@@ -16,6 +16,7 @@ using BasicDesk.App.Models.Common;
 using BasicDesk.App.Models.Management.BindingModels;
 using BasicDesk.Data.Models;
 using System;
+using ReactDesk.BaseClasses;
 
 namespace ReactDesk.Controllers
 {
@@ -24,12 +25,14 @@ namespace ReactDesk.Controllers
     [Route("api/[controller]")]
     public class RequestsController : ControllerBaseWithDownloads<RequestAttachment>
     {
-        private readonly IRequestService requestService;
+        private readonly IRequestsService requestService;
         private readonly IFileUploader fileUploader;
         private readonly IUserIdentifier userIdentifier;
 
-        public RequestsController(IUserService userService, IRequestService requestService, IFileUploader fileUploader,
-            AttachmentService<RequestAttachment> attachmentService, IUserIdentifier userIdentifier) : base(attachmentService)
+        public RequestsController(IRequestsService requestService, 
+            IFileUploader fileUploader, 
+            AttachmentsService<RequestAttachment> attachmentService, 
+            IUserIdentifier userIdentifier) : base(attachmentService)
         {
             this.requestService = requestService;
             this.fileUploader = fileUploader;

@@ -6,16 +6,15 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BasicDesk.Services
 {
-    public class UserService : IUserService
+    public class UsersService : IUsersService
     {
         private BasicDeskDbContext _context;
-        private readonly IRoleService roleService;
+        private readonly IRolesService roleService;
 
-        public UserService(BasicDeskDbContext context, IRoleService roleService)
+        public UsersService(BasicDeskDbContext context, IRolesService roleService)
         {
             _context = context;
             this.roleService = roleService;

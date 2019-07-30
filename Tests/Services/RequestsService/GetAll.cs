@@ -17,7 +17,7 @@ namespace Tests.Services.RequestsService
     public class GetAll : IDisposable
     {
         private readonly BasicDeskDbContext  context;
-        private readonly IRequestService service;
+        private readonly IRequestsService service;
 
         public GetAll()
         {
@@ -25,7 +25,7 @@ namespace Tests.Services.RequestsService
                   .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options;
             context = new BasicDeskDbContext(options);
             var repository = new DbRepository<Request>(context);
-            this.service = new RequestService(repository, null, null, null, null);
+            this.service = new BasicDesk.Services.RequestsService(repository, null, null, null, null);
         }
 
         public void Dispose()
@@ -246,7 +246,7 @@ namespace Tests.Services.RequestsService
 
             var userId = "SomeGuidForFirstUser";
             var isTechnician = true;
-            var userService = new UserService(this.context, null);
+            var userService = new UsersService(this.context, null);
 
             var firstRequester = new User
             {
@@ -479,7 +479,7 @@ namespace Tests.Services.RequestsService
 
             var userId = "SomeGuidForFirstUser";
             var isTechnician = true;
-            var userService = new UserService(this.context, null);
+            var userService = new UsersService(this.context, null);
             var commonSubject = "Common Subject";
 
             var firstRequester = new User
@@ -577,7 +577,7 @@ namespace Tests.Services.RequestsService
 
             var userId = "SomeGuidForFirstUser";
             var isTechnician = true;
-            var userService = new UserService(this.context, null);
+            var userService = new UsersService(this.context, null);
             var commonSubject = "Common Subject";
             var firstStartTime = DateTime.Now;
             var secondStartTime = DateTime.Now.AddDays(1);
@@ -685,7 +685,7 @@ namespace Tests.Services.RequestsService
 
             var userId = "SomeGuidForFirstUser";
             var isTechnician = true;
-            var userService = new UserService(this.context, null);
+            var userService = new UsersService(this.context, null);
             var commonSubject = "Common Subject";
             var firstStartTime = DateTime.Now;
             var secondStartTime = DateTime.Now.AddDays(1);

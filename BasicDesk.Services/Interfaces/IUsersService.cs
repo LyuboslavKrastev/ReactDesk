@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BasicDesk.Services.Interfaces
 {
-    public interface IUserService
+    public interface IUsersService
     {
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();

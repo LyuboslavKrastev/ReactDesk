@@ -15,7 +15,7 @@ namespace Tests.Services.RequestsService
     public class GetRequestDetails : IDisposable
     {
         private readonly BasicDeskDbContext context;
-        private readonly IRequestService service;
+        private readonly IRequestsService service;
 
         public GetRequestDetails()
         {
@@ -23,7 +23,7 @@ namespace Tests.Services.RequestsService
                   .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options;
             this.context = new BasicDeskDbContext(options);
             var repository = new DbRepository<Request>(this.context);
-            this.service = new RequestService(repository, null, null, null, null);
+            this.service = new BasicDesk.Services.RequestsService(repository, null, null, null, null);
         }
 
         public void Dispose()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BasicDesk.Services.Interfaces
 {
-    public interface IRoleService
+    public interface IRolesService
     {
         IEnumerable<Role> GetAll();
         Role ById(int id);

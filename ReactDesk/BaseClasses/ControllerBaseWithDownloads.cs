@@ -9,16 +9,14 @@ using BasicDesk.Services;
 using Microsoft.AspNetCore.Mvc;
 using ReactDesk.Helpers;
 
-namespace ReactDesk.Controllers
+namespace ReactDesk.BaseClasses
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public abstract class ControllerBaseWithDownloads<T> : Controller
+    public abstract class ControllerBaseWithDownloads<T> : ControllerBase
         where T : class, IEntity, IAttachment
     {
-        protected readonly AttachmentService<T> attachmentService;
+        protected readonly AttachmentsService<T> attachmentService;
 
-        protected ControllerBaseWithDownloads(AttachmentService<T> attachmentService)
+        protected ControllerBaseWithDownloads(AttachmentsService<T> attachmentService)
         {
             this.attachmentService = attachmentService;
         }

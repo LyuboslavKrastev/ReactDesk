@@ -17,10 +17,10 @@ namespace ReactDesk.Controllers
     [ApiController]
     public class StatusesController : ControllerBase
     {
-		private readonly IUserService userService;
-        private readonly StatusService statusService;
+		private readonly IUsersService userService;
+        private readonly IRequestStatusesService statusService;
 
-        public StatusesController(IUserService userService, StatusService statusService)
+        public StatusesController(IUsersService userService, IRequestStatusesService statusService)
         {
             this.userService = userService;
             this.statusService = statusService;

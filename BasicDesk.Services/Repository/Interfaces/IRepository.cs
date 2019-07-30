@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BasicDesk.Services.Repository
+namespace BasicDesk.Services.Repository.Interfaces
 {
     public interface IRepository<TEntity>
         where TEntity : IEntity

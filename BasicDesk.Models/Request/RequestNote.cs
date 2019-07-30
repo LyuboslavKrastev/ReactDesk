@@ -15,7 +15,7 @@ namespace BasicDesk.Data.Models.Requests
         public string Description { get; set; }
 
         [Required]
-        public DateTime CreationTime { get; set; }
+        public DateTime CreationTime { get; set; } = DateTime.UtcNow;
 
         [Required]
         public string Author { get; set; }

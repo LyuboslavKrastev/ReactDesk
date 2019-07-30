@@ -69,8 +69,9 @@ export default class RequestsTable extends Component {
                     requests: res.requests,
                     pageCount: Math.ceil(res.total / this.state.perPage)
                 }, function () {
-                        NotificationManager.success("Requests loaded!")
-                    })})
+                    NotificationManager.success("Requests loaded!")
+                })
+            })
     }
 
     // filters the requests by status type (open, closed, rejected, etc.)
@@ -221,7 +222,7 @@ export default class RequestsTable extends Component {
                             <th>
                                 <a onClick={this.orderRequests}>
                                     Subject
-        </a>
+                                </a>
                             </th>
                             <th>
                                 <a onClick={this.orderRequests}>Requester</a>

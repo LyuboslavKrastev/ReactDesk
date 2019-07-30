@@ -19,14 +19,14 @@ namespace Tests.Controllers.Requests
         [Fact]
         public async Task ShouldReturnBadRequest_IfNoIdsAreProvided()
         {
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
 
             var fakeUserIdentifier = new Mock<IUserIdentifier>();
             //fakeUserIdentifier
             //    .Setup(f => f.Identify(It.IsAny<ClaimsPrincipal>()))
             //    .Returns(new User());
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
 
             var result = await controller.Merge(new List<int>());
 
@@ -36,7 +36,7 @@ namespace Tests.Controllers.Requests
         [Fact]
         public async Task ShouldReturnBadRequest_OnInvalidOperationException()
         {
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
 
             var fakeUserIdentifier = new Mock<IUserIdentifier>();
             User user = GetUser();
@@ -53,7 +53,7 @@ namespace Tests.Controllers.Requests
                 .Setup(f => f.Merge(It.IsAny<IEnumerable<int>>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Throws<InvalidOperationException>();
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
 
             var result = await controller.Merge(new List<int>() { 1 });
             var resultObject = result;
@@ -63,7 +63,7 @@ namespace Tests.Controllers.Requests
         [Fact]
         public async Task ShouldReturnBadRequest_OnArgumentException()
         {
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
             var fakeUserIdentifier = new Mock<IUserIdentifier>();
             User user = GetUser();
 
@@ -79,7 +79,7 @@ namespace Tests.Controllers.Requests
                 .Setup(f => f.Merge(It.IsAny<IEnumerable<int>>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Throws<ArgumentException>();
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
 
             var result = await controller.Merge(new List<int>() { 1 });
             var resultObject = result;
@@ -89,7 +89,7 @@ namespace Tests.Controllers.Requests
         [Fact]
         public async Task ShouldReturnOkObjectResult()
         {
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
 
             IQueryable<Request> request = new[] { new Request() }.AsQueryable(); ;
 
@@ -105,7 +105,7 @@ namespace Tests.Controllers.Requests
                 .Setup(f => f.IsTechnician(It.IsAny<int>()))
                 .Returns(true);
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
 
             var result = await controller.Merge(new List<int>() { 1, 2 });
 

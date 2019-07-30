@@ -22,14 +22,14 @@ namespace Tests.Controllers.Requests
         [Fact]
         public async Task ShouldReturnOkObjectResult()
         {
-            var fakeRequstsService = new Mock<IRequestService>();
+            var fakeRequstsService = new Mock<IRequestsService>();
             var fakeUserIdentifier = new Mock<IUserIdentifier>();
 
             fakeUserIdentifier
                 .Setup(f => f.Identify(It.IsAny<ClaimsPrincipal>()))
                 .Returns(new User());
 
-            var controller = new RequestsController(null, fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
+            var controller = new RequestsController(fakeRequstsService.Object, null, null, fakeUserIdentifier.Object);
             var model = new RequestCreationBindingModel()
             {
                 Subject = "First",

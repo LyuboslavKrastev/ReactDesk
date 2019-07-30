@@ -5,14 +5,15 @@ using BasicDesk.Services.Interfaces;
 using BasicDesk.Services.Repository;
 using System.Linq;
 using System.Threading.Tasks;
+using BasicDesk.Services.BaseClasses;
 
 namespace BasicDesk.Services
 {
-    public class SolutionService : BaseDbService<Solution>, ISolutionService, IDbService<Solution>
+    public class SolutionsService : BaseDbService<Solution>, ISolutionsService, IDbService<Solution>
     {
 
 
-        public SolutionService(DbRepository<Solution> repository) : base(repository)
+        public SolutionsService(DbRepository<Solution> repository) : base(repository)
         {
         }
 

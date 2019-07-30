@@ -9,9 +9,9 @@ namespace ReactDesk.Helpers
 {
     public class UserIdentifier : IUserIdentifier
     {
-        private readonly IUserService userService;
+        private readonly IUsersService userService;
 
-        public UserIdentifier(IUserService userService)
+        public UserIdentifier(IUsersService userService)
         {
             this.userService = userService;
         }

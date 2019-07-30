@@ -4,7 +4,7 @@ using BasicDesk.Data.Models.Requests;
 
 namespace BasicDesk.Services.Interfaces
 {
-    public interface IApprovalService 
+    public interface IApprovalsService : IDbService<RequestApproval>
     {
         Task Approve(int approvalId, string userId);
         Task Deny(int approvalId, string userId);

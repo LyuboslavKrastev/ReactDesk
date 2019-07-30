@@ -3,6 +3,7 @@ using BasicDesk.Mapping;
 using BasicDesk.Services;
 using BasicDesk.Services.Interfaces;
 using BasicDesk.Services.Repository;
+using BasicDesk.Services.Repository.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,23 +60,27 @@ namespace ReactDesk
              });
 
             // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IRolesService, RolesService>();
             services.AddScoped(typeof(DbRepository<>), typeof(DbRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(DbRepository<>));
-            services.AddScoped<ISolutionService, SolutionService>();
-            services.AddScoped<IApprovalService, ApprovalService>();
+            services.AddScoped<ISolutionsService, SolutionsService>();
+            services.AddScoped<IApprovalsService, ApprovalsService>();
+            services.AddScoped<IApprovalStatusesService, ApprovalStatusesService>();
             services.AddScoped<ICategoriesService, CategoriesService>();
-            services.AddScoped<IRequestService, RequestService>();
-            services.AddScoped<StatusService, StatusService>();
+            services.AddScoped<IRequestsService, RequestsService>();
+            services.AddScoped<INotesService, NotesService>();
+            services.AddScoped<IRepliesService, RepliesService>();
 
-            services.AddScoped(typeof(AttachmentService<>));
+            services.AddScoped<IRequestStatusesService, RequestStatusesService>();
+
+            services.AddScoped(typeof(AttachmentsService<>));
             services.AddScoped<IFileUploader, FileUploader>();
             services.AddScoped<ReportsService, ReportsService>();
             services.AddScoped<IUserIdentifier, UserIdentifier>();
 
 
-            // Since we will be serving the Angular application on a separate port, 
+            // Since we will be serving the React application on a separate port, 
             // for it to be able to access the SignalR server we will need to enable CORS on the Server.
             // Add the following inside of ConfigureServices, just before the code that adds SignalR to DI container.
             services.AddCors(options => options.AddPolicy("CorsPolicy",

@@ -14,6 +14,7 @@ using BasicDesk.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReactDesk.Helpers.Interfaces;
+using ReactDesk.BaseClasses;
 
 namespace ReactDesk.Controllers
 {
@@ -22,12 +23,12 @@ namespace ReactDesk.Controllers
     [ApiController]
     public class SolutionsController : ControllerBaseWithDownloads<SolutionAttachment>
     {
-		private readonly IUserService userService;
-        private readonly ISolutionService solutionService;
+		private readonly IUsersService userService;
+        private readonly ISolutionsService solutionService;
         private readonly IFileUploader fileUploader;
 
-        public SolutionsController(IUserService userService, ISolutionService solutionService, 
-            AttachmentService<SolutionAttachment> attachmentService, IFileUploader fileUploader) : base(attachmentService)
+        public SolutionsController(IUsersService userService, ISolutionsService solutionService, 
+            AttachmentsService<SolutionAttachment> attachmentService, IFileUploader fileUploader) : base(attachmentService)
         {
             this.userService = userService;
             this.solutionService = solutionService;
