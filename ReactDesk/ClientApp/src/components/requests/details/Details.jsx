@@ -15,6 +15,7 @@ import NoteViewingModal from './NoteViewingModal';
 import AttachmentsSection from './AttachmentsSection';
 import Menu from './Menu';
 import AddApprovalModal from '../modals/AddApprovalModal';
+import ApprovalsSection from './ApprovalsSection';
 
 
 
@@ -103,6 +104,9 @@ export default class RequestDetails extends Component {
 
     setTechnician = (event) => {
         let value = event.target.value;
+        if (value === 'Unassigned') {
+            return;
+        }
         this.setState({
             technician: value
         })
@@ -117,6 +121,7 @@ export default class RequestDetails extends Component {
     }
 
     updateRequest = () => {
+        debugger;
         let data = {
             id: this.state.request.id,
         };
@@ -170,8 +175,8 @@ export default class RequestDetails extends Component {
                         </div>
 
                         <div className="panel-footer clearfix">
-                            {this.state.currentUser !== null && (this.state.currentUser.role === "Admin" || this.state.currentUser.role == "Helpdesk") ?
-                                <TechnicianPanel request={request} statuses={statuses} technicians={technicians} categories={categories}
+                            {this.state.currentUser !== null && (this.state.currentUser.role === "Admin" || this.state.currentUser.role === "Helpdesk") ?
+                                <TechnicianPanel updateRequest={this.updateRequest} request={request} statuses={statuses} technicians={technicians} categories={categories}
                                     setCategory={this.setCategory} setStatus={this.setStatus} setTechnician={this.setTechnician} /> :
                                 <UserPanel request={request}/>
 
@@ -199,6 +204,10 @@ export default class RequestDetails extends Component {
                         </div>
                         <div className="panel-body"><p>TO BE IMPLEMENTED</p></div>
                     </div>
+                </div>
+
+                <div className="panel-group" id="approvals" style={{ display: 'none' }}>
+                    <ApprovalsSection approvals={request.approvals} currentUser={this.state.currentUser} />
                 </div>
 
 

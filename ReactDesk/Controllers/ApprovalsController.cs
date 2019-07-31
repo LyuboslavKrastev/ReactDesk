@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BasicDesk.App.Models.Common.BindingModels;
+using BasicDesk.Common.Constants;
 using BasicDesk.Data.Models;
 using BasicDesk.Data.Models.Requests;
 using BasicDesk.Services.Interfaces;
@@ -25,7 +26,7 @@ namespace ReactDesk.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromForm]ApprovalCreationBindingModel model)
+        public async Task<IActionResult> PostAsync(ApprovalCreationBindingModel model)
         {
             User user = userIdentifier.Identify(User);
 
@@ -34,7 +35,14 @@ namespace ReactDesk.Controllers
                 return BadRequest();
             }
 
-            RequestApproval approval = Mapper.Map<RequestApproval>(model);
+            RequestApproval approval = new RequestApproval
+            {
+                Subject = model.Subject,
+                Description = model.Description,
+                RequestId = model.RequestId,
+                RequesterId = user.Id,
+                ApproverId = model.ApproverId,
+            };
 
             await this.approvalsService.AddAsync(approval);
 

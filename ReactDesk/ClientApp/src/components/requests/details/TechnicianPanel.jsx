@@ -55,7 +55,7 @@ export default class TechnicianPanel extends Component {
                 </div>
 
                     <div className="col-md-offset-6">
-                        <button className="btn btn-success" type="submit" onClick={this.updateRequest} > Save</button>
+                        <button className="btn btn-success" type="submit" onClick={this.props.updateRequest} > Save</button>
                     </div>
             </div>
         )

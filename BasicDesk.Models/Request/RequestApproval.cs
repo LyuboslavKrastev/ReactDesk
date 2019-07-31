@@ -24,7 +24,7 @@ namespace BasicDesk.Data.Models.Requests
         public string ApproverId { get; set; }
         public User Approver { get; set; }
 
-        public int StatusId { get; set; }
+        public int StatusId { get; set; } = WebConstants.PendingApprovalStatusId;
         public ApprovalStatus Status { get; set; }
 
         public string ApproverComment { get; set; }

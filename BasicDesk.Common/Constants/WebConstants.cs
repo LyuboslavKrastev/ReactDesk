@@ -10,6 +10,14 @@
         public const int OnHoldStatusId = 4;
         public const int ForApprovalStatusId = 5;
 
+        public const int PendingApprovalStatusId = 1;
+        public const int ApprovedApprovalStatusId = 2;
+        public const int DeniedApprovalStatusId = 3;
+
+        public const string PendingApprovalStatusName = "Pending";
+        public const string ApprovedApprovalStatusName = "Approved";
+        public const string DeniedApprovalStatusName = "Denied";
+
         public const int FirstCategoryId = 1;
         public const int SecondCategoryId = 2;
         public const int ThirdCategoryId = 3;

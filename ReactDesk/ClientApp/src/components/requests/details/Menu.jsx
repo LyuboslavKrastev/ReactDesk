@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react'
-import { showHistory, showDetails, showResolution } from './DetailsButtonsFunctions'
+import { showHistory, showDetails, showResolution, showApprovals } from './DetailsButtonsFunctions'
+import ApprovalsSection from './ApprovalsSection';
 
 export default class Menu extends Component {
     constructor(props) {
@@ -26,26 +27,7 @@ export default class Menu extends Component {
                     <button id="btn_desc" className="btn btn btn-danger" onClick={showDetails}>Request</button>
                     <button id="btn_res" className="btn btn" onClick={showResolution}>Resolution</button>
                     <button id="btn_hist" className="btn btn" onClick={showHistory}>History</button>
-                    {approvals != undefined && approvals.length > 0 ?  <button id="btn_appr" className="btn btn">Approvals</button> : null}
-                </div>
-                <div className="panel-group" id="resolution" style={{ display: 'none' }}>
-                    <div className="panel">
-                        <div className="panel-heading clearfix">
-                            <div className="pull-left"><strong>Resolution</strong></div>
-                        </div>
-                        <div className="panel-body">
-                            {resolution}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="panel-group" id="history" style={{ display: 'none' }}>
-                    <div className="panel">
-                        <div className="panel-heading clearfix">
-                            <div className="pull-left"><strong>History</strong></div>
-                        </div>
-                        <div className="panel-body"><p>Model.History</p></div>
-                    </div>
+                    {approvals != undefined && approvals.length > 0 ? <button id="btn_appr" className="btn btn" onClick={showApprovals}>Approvals</button> : null}
                 </div>
             </div>)
     }

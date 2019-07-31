@@ -6,6 +6,7 @@ export const approvalsService = {
 };
 
 function createApproval(requestId, approverId, subject, description) {
+    debugger;
     const currentUser = authenticationService.currentUserValue;
 
     const requestOptions = {

@@ -56,9 +56,9 @@ namespace BasicDesk.Data
 
             //seed approval statuses
             builder.Entity<ApprovalStatus>().HasData(
-                new ApprovalStatus { Id = 1, Name = "Pending" },
-                new ApprovalStatus { Id = 2, Name = "Approved" },
-                new ApprovalStatus { Id = 3, Name = "Denied" }
+                new ApprovalStatus { Id = WebConstants.PendingApprovalStatusId, Name = WebConstants.PendingApprovalStatusName},
+                new ApprovalStatus { Id = WebConstants.ApprovedApprovalStatusId, Name = WebConstants.ApprovedApprovalStatusName},
+                new ApprovalStatus { Id = WebConstants.DeniedApprovalStatusId, Name = WebConstants.DeniedApprovalStatusName }
             );
 
             builder.Entity<Role>().HasData(

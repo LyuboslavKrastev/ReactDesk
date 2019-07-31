@@ -6,7 +6,7 @@ const hideNotes = (id) => {
     document.getElementById(`notes_${id}`).style.display = 'none'
 }
 
-export  {
+export {
     showNotes,
     hideNotes
 }
