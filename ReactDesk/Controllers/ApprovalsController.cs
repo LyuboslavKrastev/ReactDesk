@@ -7,6 +7,7 @@ using BasicDesk.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReactDesk.Helpers.Interfaces;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReactDesk.Controllers
@@ -23,6 +24,25 @@ namespace ReactDesk.Controllers
         {
             this.approvalsService = approvalsService;
             this.userIdentifier = userIdentifier;
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult GetCount(bool isApprover, string status = "Pending")
+        {
+            User user = userIdentifier.Identify(User);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            int approvals = this.approvalsService
+                .GetAll()
+                .Where(a => isApprover? a.ApproverId == user.Id: a.RequesterId == user.Id)
+                .Where(a => a.Status.Name == status)
+                .Count();
+
+            return Ok(new { status = status, count = approvals });
         }
 
         [HttpPost]
@@ -47,8 +67,24 @@ namespace ReactDesk.Controllers
             await this.approvalsService.AddAsync(approval);
 
             await this.approvalsService.SaveChangesAsync();
+            string message = $"Approval successfuly created successfully";
 
-            return Ok();
+            return Ok(new { message = message });
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> PutAsync(ApprovalUpdatingBindingModel model)
+        {
+            User user = userIdentifier.Identify(User);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            await this.approvalsService.Update(model.Id, user.Id, model.isApproved);
+            string message = $"Approval successfuly {(model.isApproved? "approved" : "denied")}.";
+            return Ok(new { message = message });
         }
     }
 }

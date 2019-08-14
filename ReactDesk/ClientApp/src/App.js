@@ -23,6 +23,8 @@ import ReportsIndex from './components/reports/ReportsIndex';
 import ReportWizard from './components/reports/ReportWizard';
 import PieReport from './components/reports/DeleteThisWhenDbIsImplemented/PieReport';
 import UsersTable from './components/admin/UsersTable';
+import Approvals from './components/requests/approvals/approvals';
+
 
 export default class App extends Component {
   displayName = App.name
@@ -61,6 +63,7 @@ export default class App extends Component {
                                 <Route exact path="/" component={Home} />
                                 <Route path="/login" component={Login} />
                                 <Route path="/register" component={Register} />
+                                <PrivateRoute path="/approvals" component={Approvals} />
 
                                 <PrivateRoute exact path="/admin" roles={[Role.Admin]} component={Admin} />
                                 <PrivateRoute path="/requests/create" component={CreateRequest} />

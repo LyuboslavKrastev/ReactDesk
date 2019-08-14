@@ -1,6 +1,7 @@
 import { authenticationService } from '../services/authentication.service';
 
 export function handleResponse(response) {
+    debugger;
     if (response.status >= 500) {
         return Promise.reject('error');;
     }

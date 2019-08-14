@@ -23,17 +23,24 @@ export default class Navbar extends Component {
         }));
     }
 
-    logout() {
+    logout = () => {
+        this.setState({
+            pendingApprovalsCount: 0
+        });
         authenticationService.logout();
+
         history.push('/login');
     }
 
     render() {
+        debugger;
         const isLoggedIn = this.state.currentUser;
         let button;
 
         if (isLoggedIn) {
             button = <a onClick={this.logout} className="nav-item nav-link ml-auto">Logout</a>
+
+
         } else {
             button = <Link to="/Login" className="nav-item nav-link ml-auto">Login</Link>
         }
@@ -68,10 +75,12 @@ export default class Navbar extends Component {
                                         Manage Users
                                 </Link>
                                 </li> : null}
-
-
                                 <li><Link to="/Reports">Reports</Link></li>
-                                <li><Link to="/Chat">Chat</Link></li></ul> : null
+                                <li><Link to="/Chat">Chat</Link></li>
+                            </ul>
+
+                            : null
+
                         }
 
 
@@ -81,8 +90,8 @@ export default class Navbar extends Component {
                             {!this.state.currentUser ? // display the Register button, only if there is no authenticated user
                                 <li><Link to="/Register">Register</Link></li> : null}
                             {this.state.currentUser ? <li><Link to={`/user/profile?id=` + this.state.currentUser.id}>Greetings, {this.state.currentUser.fullName}!</Link></li> : null}
-                            <li>{button}</li> 
-                          
+                            <li>{button}</li>
+
                         </ul>
                     </div>
                 </nav>

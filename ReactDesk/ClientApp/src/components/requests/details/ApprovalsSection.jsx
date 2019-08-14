@@ -1,8 +1,19 @@
 ﻿import React, { Component } from 'react'
+import { approvalsService } from '../../../services/approvals.service';
+import { NotificationManager } from 'react-notifications';
 
 export default class ApprovalsSection extends Component {
     constructor(props) {
         super(props)
+    }
+
+    updateApproval = (approvalId, isApproved) => {
+        debugger;
+        approvalsService.update(approvalId, isApproved)
+            .then(res => {
+                NotificationManager.info(res.message);
+                this.props.reload();
+            })
     }
 
     render() {
@@ -17,7 +28,7 @@ export default class ApprovalsSection extends Component {
                     approvals.map((a, index) =>
                         <div key={index} class="panel-group">
                             <div class="panel">
-                                <div class="panel-heading clearfix">
+                                <div class="panel-heading clearfix" style={a.status == "Approved" ? { backgroundColor: "green" } : a.status == "Denied" ? { backgroundColor: "red" } : null}>
                                     <div class="pull-left"><strong>Approval</strong></div>
                                 </div>
                                 <div class="panel-body">
@@ -29,31 +40,12 @@ export default class ApprovalsSection extends Component {
                                 </div>
                                 <div class="panel-footer">
                                     <div class="col-md-offset-5">
-                                        {a.status === 'Pending'  && a.approverId === currentUser.id? < button > Approve</button>: null}
-                                        @{
-                                            //if (approval.ApproverId == userManager.GetUserId(User))
-                                            //{
-                                            //    if (approval.Status == "Denied")
-                                            //    {
-                                            //                <p class="danger"><strong>Denied</strong></p>
-                                            //            }
-                                            //            else if (approval.Status == "Approved")
-                                            //    {
-                                            //                <p class="success"><strong>Approved</strong></p>
-                                            //            }
-                                            //            else
-                                            //    {
-                                            //                <form method="post" asp-area="" asp-controller="Approvals" asp-action="ApproveApproval" asp-route-approvalId="@approval.Id" asp-route-requestId="@approval.RequestId">
-                                            //                    <button type="submit" class="btn btn-success">Approve</button>
-                                            //                </form>
-                                            //                <form method="post" asp-area="" asp-controller="Approvals" asp-action="DenyApproval" asp-route-approvalId="@approval.Id" asp-route-requestId="@approval.RequestId">
-                                            //                    <button type="submit" class="btn btn-danger">Deny</button>
-                                            //                </form>
-                                            //    }
-
-                                            //            }
-                                            //        }
-                                        }
+                                        {a.status === 'Pending' && a.approverId === currentUser.id ?
+                                            <div>
+                                                <button className="btn btn-success" onClick={() => this.updateApproval(a.id, true)} > Approve</button>
+                                                <button className="btn btn-danger" onClick={() => this.updateApproval(a.id, false)} > Deny</button>
+                                            </div>:
+                                            null}
                                     </div>
                                 </div>
                             </div>

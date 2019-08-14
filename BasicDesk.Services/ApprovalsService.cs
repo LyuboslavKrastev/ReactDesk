@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BasicDesk.Services.BaseClasses;
 using BasicDesk.Services.Repository.Interfaces;
+using BasicDesk.Common.Constants;
 
 namespace BasicDesk.Services
 {
@@ -32,24 +33,6 @@ namespace BasicDesk.Services
         {
             var approvals = this.GetAll().Where(ap => ap.ApproverId == userId && ap.Status.Name == "Pending");
             return approvals;
-        }
-
-        public async Task Approve(int approvalId, string userId)
-        {
-            RequestApproval approval = await this.repository.All().FirstOrDefaultAsync(ra => ra.Id == approvalId && ra.Status.Name == "Pending");
-
-            if (approval != null)
-            {
-                if (approval.ApproverId == userId)
-                {
-                    ApprovalStatus status = await this.approvalsStatusService.GetAll().FirstOrDefaultAsync(s => s.Name == "Approved");
-                    if (status != null)
-                    {
-                        approval.StatusId = status.Id;
-                        await this.SaveChangesAsync();
-                    }
-                }
-            }
         }
 
         public async Task AddAsync(int requestId, string userId, bool isTechnician, string approverId, string subject, string description)
@@ -78,25 +61,25 @@ namespace BasicDesk.Services
         }
 
 
-        public async Task Deny(int approvalId, string userId)
+        public async Task Update(int approvalId, string userId, bool isApproved)
         {
-            RequestApproval approval = await this.repository.All().FirstOrDefaultAsync(ra => ra.Id == approvalId);
+            RequestApproval approval = await this.ById(approvalId).FirstOrDefaultAsync();
+
+            if (approval == null)
+            {
+                throw new ArgumentException("Invalid approval id");
+            }
 
             if (approval.ApproverId != userId)
             {
                 throw new InvalidOperationException("You are not authorized to approve this");
             }
 
-            ApprovalStatus status = await this.approvalsStatusService
-                .GetAll()
-                .FirstOrDefaultAsync(s => s.Name == "Denied");
 
-            if (status == null)
-            {
-                throw new ArgumentException("Invalid status");
-            }
+            int statusId = isApproved ? WebConstants.ApprovedApprovalStatusId :
+                WebConstants.DeniedApprovalStatusId;
 
-            approval.StatusId = status.Id;
+            approval.StatusId = statusId;
             await this.SaveChangesAsync();
         }
 

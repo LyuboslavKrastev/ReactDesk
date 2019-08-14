@@ -207,7 +207,7 @@ export default class RequestDetails extends Component {
                 </div>
 
                 <div className="panel-group" id="approvals" style={{ display: 'none' }}>
-                    <ApprovalsSection approvals={request.approvals} currentUser={this.state.currentUser} />
+                    <ApprovalsSection approvals={request.approvals} currentUser={this.state.currentUser} reload={this.loadRequest}/>
                 </div>
 
 
