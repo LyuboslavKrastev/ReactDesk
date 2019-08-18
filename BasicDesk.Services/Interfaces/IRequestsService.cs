@@ -13,7 +13,6 @@ namespace BasicDesk.Services.Interfaces
         IQueryable<Request> ById(int id, string userId, bool isTechnician);
         //Task AddAproval(int requestId, string userId, bool isTechnician, string approverId, string subject, string description); // to be extracted
         Task Merge(IEnumerable<int> requestIds, string userId, bool isTechnician );
-        Task SaveResolutionAsync(int id, string resolution);
         Task UpdateRequestAsync(RequestEditingBindingModel model);
     }
 }

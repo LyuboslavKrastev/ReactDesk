@@ -56,7 +56,7 @@ export default class CreateSolution extends Component {
     render() {
         return (
             <div>
-                <h2 class="text-center">Create a solution</h2>
+                <h2 class="text-center">Solution</h2>
 
                 <form method="post" class="form-horizontal" enctype="multipart/form-data" onSubmit={this.handleSubmit}>
                     <label htmlFor="Title">Title</label>

@@ -72,7 +72,6 @@ export default class UsersTable extends Component {
         return (
             <div>
                 <h2 className="text-center">All Users</h2>
-                <hr />
                 <table className="table table-striped">
                     <thead>
                         <tr>

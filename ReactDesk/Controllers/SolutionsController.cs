@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -23,16 +22,17 @@ namespace ReactDesk.Controllers
     [ApiController]
     public class SolutionsController : ControllerBaseWithDownloads<SolutionAttachment>
     {
-		private readonly IUsersService userService;
         private readonly ISolutionsService solutionService;
         private readonly IFileUploader fileUploader;
+        private readonly IUserIdentifier userIdentifier;
 
-        public SolutionsController(IUsersService userService, ISolutionsService solutionService, 
-            AttachmentsService<SolutionAttachment> attachmentService, IFileUploader fileUploader) : base(attachmentService)
+        public SolutionsController(ISolutionsService solutionService, 
+            AttachmentsService<SolutionAttachment> attachmentService, 
+            IFileUploader fileUploader, IUserIdentifier userIdentifier) : base(attachmentService)
         {
-            this.userService = userService;
             this.solutionService = solutionService;
             this.fileUploader = fileUploader;
+            this.userIdentifier = userIdentifier;
         }
 
 		[HttpGet("[action]")]
@@ -46,25 +46,31 @@ namespace ReactDesk.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            string userId = User.FindFirst(ClaimTypes.Name)?.Value; // gets the user id from the jwt token
-            var solution = this.solutionService.GetSolutionDetails(id).FirstOrDefault();
+            User user = userIdentifier.Identify(User);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            Solution solution = await this.solutionService.ByIdAndIncreaseViews(id);
 
             if (solution == null)
             {
                 return NotFound();
             }
 
-            await this.solutionService.IncreaseViewCount(solution.Id);
+            SolutionDetailsViewModel model = Mapper.Map<SolutionDetailsViewModel>(solution);
 
-            return Ok(solution);
+            return Ok(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromForm]SolutionCreationBindingModel model)
         {
-            string userId = User.FindFirst(ClaimTypes.Name)?.Value;
-            User user = this.userService.GetById(userId);
-            if(user == null)
+            User user = userIdentifier.Identify(User);
+
+            if (user == null)
             {
                 return BadRequest();
             }

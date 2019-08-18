@@ -61,6 +61,7 @@ export default class RequestDetails extends Component {
             .then(res => {
                 console.log(res);
                 this.setState({
+                    originalResolution: res.resolution,
                     request: res
                 })
             })
@@ -120,7 +121,28 @@ export default class RequestDetails extends Component {
         })
     }
 
-    updateRequest = () => {
+    resetResolution = () => {
+        let modifiedRequest = this.state.request;
+        modifiedRequest.resolution = this.state.originalResolution;
+
+        this.setState({
+            request: modifiedRequest
+        });
+    }
+
+    //TODO: remove all the setX methods and combine them into one
+    setResolution = (event) => {
+        debugger;
+        let value = event.target.value;
+        let modifiedRequest = this.state.request;
+        modifiedRequest.resolution = value;
+        this.setState({
+            request: modifiedRequest
+        })
+    }
+
+    updateRequest = (ev) => {
+        ev.preventDefault();
         debugger;
         let data = {
             id: this.state.request.id,
@@ -136,10 +158,15 @@ export default class RequestDetails extends Component {
             data['assignToId'] = this.state.technician
         }
 
+        if (this.state.request.resolution != undefined) {
+            data['resolution'] = this.state.request.resolution
+        }
+
         requestService.updateRequest(data)
             .then(res => {
                 if (res.message) {
                     NotificationManager.success(res.message)
+                    this.loadRequest();
                 } else if (res.error) {
                     debugger
                     let message = res.error
@@ -156,7 +183,7 @@ export default class RequestDetails extends Component {
 
         return (
             <div>
-                <AddNoteModal requestId={request.id} reload={this.loadRequest} hideModal={() => this.hideModal('noteModal')}/>
+                <AddNoteModal requestId={request.id} reload={this.loadRequest} hideModal={() => this.hideModal('noteModal')} />
                 <AddApprovalModal technicians={technicians} requestId={request.id} reload={this.loadRequest} hideModal={() => this.hideModal('approvalModal')} />
                 <NoteViewingModal notes={request.notes} requestId={request.id} hideModal={() => this.hideModal(`notes_${request.id}`)} />
                 <Menu notes={request.notes} approvals={request.approvals} resolution={request.resolution}
@@ -178,11 +205,11 @@ export default class RequestDetails extends Component {
                             {this.state.currentUser !== null && (this.state.currentUser.role === "Admin" || this.state.currentUser.role === "Helpdesk") ?
                                 <TechnicianPanel updateRequest={this.updateRequest} request={request} statuses={statuses} technicians={technicians} categories={categories}
                                     setCategory={this.setCategory} setStatus={this.setStatus} setTechnician={this.setTechnician} /> :
-                                <UserPanel request={request}/>
+                                <UserPanel request={request} />
 
                             }
                             <AttachmentsSection attachments={request.attachments} getFile={this.getFile} />
-              
+
 
                         </div>
                     </div>
@@ -193,7 +220,25 @@ export default class RequestDetails extends Component {
                             <div className="pull-left"><strong>Resolution</strong></div>
                         </div>
                         <div className="panel-body">
-                            TO BE IMPLEMENTED
+                            <p htmlFor="resolution" style={{ wordWrap: "break-word" }}>{this.state.originalResolution}</p>
+
+                            {this.state.currentUser !== null && (this.state.currentUser.role === "Admin" || this.state.currentUser.role === "Helpdesk") ?
+
+                                <form onSubmit={this.updateRequest} className="form-horizontal" encType="multipart/form-data">
+                                    <label htmlFor="resolution">Set to:</label>
+
+                                    <textarea rows="5" className="form-control" name="Resolution" onChange={this.setResolution} value={this.state.request.resolution} ></textarea>
+                                    <div className="form-group">
+                                        <br />
+                                        <div className="col-md-offset-5">
+                                            <input onClick={this.resetResolution} value="Cancel" className="btn btn-danger" />
+                                            <input type="submit" value="Set" className="btn btn-success" />
+                                        </div>
+                                    </div>
+                                </form> : null
+                            }
+                           
+                           
                         </div>
                     </div>
                 </div>
@@ -207,7 +252,7 @@ export default class RequestDetails extends Component {
                 </div>
 
                 <div className="panel-group" id="approvals" style={{ display: 'none' }}>
-                    <ApprovalsSection approvals={request.approvals} currentUser={this.state.currentUser} reload={this.loadRequest}/>
+                    <ApprovalsSection approvals={request.approvals} currentUser={this.state.currentUser} reload={this.loadRequest} />
                 </div>
 
 

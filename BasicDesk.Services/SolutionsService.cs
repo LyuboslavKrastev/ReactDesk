@@ -6,6 +6,8 @@ using BasicDesk.Services.Repository;
 using System.Linq;
 using System.Threading.Tasks;
 using BasicDesk.Services.BaseClasses;
+using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace BasicDesk.Services
 {
@@ -17,23 +19,17 @@ namespace BasicDesk.Services
         {
         }
 
-
-        public IQueryable<SolutionDetailsViewModel> GetSolutionDetails(int id)
+        public async Task<Solution> ByIdAndIncreaseViews(int id)
         {
-            IQueryable<SolutionDetailsViewModel> solution = this.ById(id).ProjectTo<SolutionDetailsViewModel>();
+            Solution solution = base.ById(id)
+                .Include(s => s.Author)
+                .FirstOrDefault();
+
+            solution.Views++;
+
+            await this.SaveChangesAsync();
 
             return solution;
         }
-
-        public async Task IncreaseViewCount(int solutionId)
-        {
-            Solution solution = this.ById(solutionId).FirstOrDefault();
-
-            if (solution != null)
-            {
-                solution.Views++;
-            }
-            await this.SaveChangesAsync();
-        } 
     }
 }

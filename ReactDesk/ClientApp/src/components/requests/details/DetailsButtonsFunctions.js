@@ -7,9 +7,16 @@ const showResolution = () => {
     document.getElementById('btn_desc').classList.remove('btn-danger')
     document.getElementById('btn_res').classList.add('btn-danger')
     document.getElementById('btn_hist').classList.remove('btn-danger')
-    document.getElementById('btn_appr').classList.remove('btn-danger')
+    unmarkApprovalsButton();
 
 }
+const unmarkApprovalsButton = () => {
+    let appr = document.getElementById('btn_appr')
+    if (appr != null) {
+        appr.classList.remove('btn-danger')
+    }
+}
+
 const showDetails = () => {
     document.getElementById('resolution').style.display = 'none'
     document.getElementById('history').style.display = 'none'
@@ -18,7 +25,8 @@ const showDetails = () => {
     document.getElementById('btn_desc').classList.add('btn-danger')
     document.getElementById('btn_res').classList.remove('btn-danger')
     document.getElementById('btn_hist').classList.remove('btn-danger')
-    document.getElementById('btn_appr').classList.remove('btn-danger')
+    unmarkApprovalsButton();
+
 
 }
 
@@ -32,7 +40,8 @@ const showHistory = () => {
 
     document.getElementById('btn_desc').classList.remove('btn-danger')
     document.getElementById('btn_res').classList.remove('btn-danger')
-    document.getElementById('btn_appr').classList.remove('btn-danger')
+    unmarkApprovalsButton();
+
 
 }
 

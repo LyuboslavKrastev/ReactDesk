@@ -1,6 +1,5 @@
 ﻿import React, { Component } from 'react'
 import { showHistory, showDetails, showResolution, showApprovals } from './DetailsButtonsFunctions'
-import ApprovalsSection from './ApprovalsSection';
 
 export default class Menu extends Component {
     constructor(props) {

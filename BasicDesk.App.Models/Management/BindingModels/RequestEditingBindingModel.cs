@@ -10,5 +10,7 @@ namespace BasicDesk.App.Models.Management.BindingModels
         public int? StatusId { get; set; }
 
         public int? CategoryId { get; set; }
+		
+		public string Resolution { get; set; }
     }
 }

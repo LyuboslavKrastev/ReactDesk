@@ -178,14 +178,11 @@ namespace BasicDesk.Services
 
                  request.AssignedToId = technician.Id;
             }
+            if (model.Resolution != request.Resolution)
+            {
+                request.Resolution = model.Resolution;
+            }
             await this.SaveChangesAsync();
         }
-
-        public async Task SaveResolutionAsync(int id, string resolution)
-        {
-            Request request = await this.ById(id).FirstAsync();
-            request.Resolution = resolution;
-            await this.SaveChangesAsync();
-        }   
     }
 }

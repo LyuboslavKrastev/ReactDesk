@@ -69,7 +69,7 @@ export default class CreateRequest extends Component {
         })
         return (
             <div>
-                <h2 className="text-center">Create a request</h2>
+                <h2 className="text-center">Request</h2>
 
                 <form onSubmit={this.handleSubmit} className="form-horizontal" encType="multipart/form-data">
                     <label htmlFor="Subject">Subject</label>
